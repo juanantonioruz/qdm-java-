@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sun.java.swing.plaf.gtk.GTKConstants.WidgetType;
+
 import processing.core.PApplet;
 
 public class ReticulaForo {
@@ -34,6 +36,10 @@ public class ReticulaForo {
 
 	public float alto;
 	List<InformacionDeReticula> infosReticula;
+
+	private int mouseX;
+
+	private int mouseY;
 	public void construyeReticula() {
 		infosReticula=new ArrayList<InformacionDeReticula>();
 		calculoAltura=new CalculoAltura();
@@ -44,23 +50,48 @@ public class ReticulaForo {
 		}
 		
 	}
-	public void pintaEstructuraReticular() {
+	public void pintaEstructuraReticular(int mouseX, int mouseY) {
+		this.mouseX = mouseX;
+		this.mouseY = mouseY;
 		for (InformacionDeReticula informacionDeReticula:infosReticula) {
 			repintaBis(informacionDeReticula);
 		}
 		
 	}
 	private void repintaBis(InformacionDeReticula repintaBis){
-		p5.fill(repintaBis.informacion.usuario.equipo.col, 30);
-		p5.ellipseMode(p5.CORNER);
-		p5.ellipse(repintaBis.origenX, repintaBis.origenY, diametro, diametro);
+		boolean coincideAncho = mouseX>=repintaBis.origenX && mouseX<=(repintaBis.origenX+diametro);
+		boolean coincideAlto = mouseY>=repintaBis.origenY && mouseY<=(repintaBis.origenY+diametro);
 		p5.fill(0);
-		pintaPantalla("id" + repintaBis.informacion.id, repintaBis.origenX + 30, repintaBis.origenY + 30);
+		float caida=0;
+		if(repintaBis.parent!=null){
+			caida=diametro*repintaBis.pos_columna;
+			System.out.println("caida:"+caida);
+		}
+		pintaPantalla(repintaBis.informacion.titulo, repintaBis.origenX + (diametro), repintaBis.origenY+diametro+caida );
+		if(coincideAncho && coincideAlto){
+			p5.fill(repintaBis.informacion.usuario.equipo.col, 100);
+			pintaCirculo(repintaBis, caida);
+			
+			p5.fill(repintaBis.informacion.usuario.equipo.col, 50);
+			p5.rect(0,0, p5.width, 100);
+
+			p5.fill(0);
+			pintaPantalla(repintaBis.informacion.titulo, 30, 30);
+
+		}else{
+			p5.fill(repintaBis.informacion.usuario.equipo.col, 30);
+			pintaCirculo(repintaBis, caida);
+		}
 		for (InformacionDeReticula child:repintaBis.children) {
 			
 			repintaBis(child);
 		}
 
+	}
+	private void pintaCirculo(InformacionDeReticula repintaBis, float caida) {
+		p5.ellipseMode(p5.CORNER);
+		p5.ellipse(repintaBis.origenX, repintaBis.origenY+(caida), diametro, diametro);
+			
 	}
 	
 	private void pintaEnReticula(ComentarioEscale mensajeParent, InformacionDeReticula informacionDeReticula) {
@@ -160,6 +191,12 @@ public class ReticulaForo {
 		return profLinea;
 	}
 
+	/**
+	 * profundidad mayor
+	 * altura mayor
+	 * en relacion a esto los tamanyos relativos
+	 * @param mensajesParent
+	 */
 	public void calculaEstructura(List<ComentarioEscale> mensajesParent) {
 		this.mensajesParent = mensajesParent;
 		// calculo de filas: altura
