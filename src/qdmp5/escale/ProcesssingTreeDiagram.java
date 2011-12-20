@@ -12,6 +12,8 @@ import qdmp5.GrabacionEnVideo;
 
 public class ProcesssingTreeDiagram extends PApplet {
 
+	
+	// experimentando branchs
 	Log log = LogFactory.getLog(getClass());
 
 	List<EquipoEscale> equiposDB = new ArrayList<EquipoEscale>();
