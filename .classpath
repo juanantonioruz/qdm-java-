@@ -85,9 +85,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/base/GSVideo/jna.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/itext.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/juanitu/Escritorio/processing-1.5.1/modes/java/libraries/pdf/library/itext.jar"/>
-	<classpathentry kind="lib" path="/home/juanitu/Documentos/workspacep5/recuperacion/lib/user/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/home/juanitu/Documentos/workspacep5/recuperacion/lib/user/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

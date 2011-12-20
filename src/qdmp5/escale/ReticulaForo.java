@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sun.java.swing.plaf.gtk.GTKConstants.WidgetType;
 
 import processing.core.PApplet;
 
