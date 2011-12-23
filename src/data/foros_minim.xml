@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comentarios type="array">
+  <comentario>
+    <created-at type="datetime">2008-05-26T09:55:00Z</created-at>
+    <comentario-id type="integer" nil="true"></comentario-id>
+    <id type="integer">1</id>
+    <textoes>texto</textoes>
+    <tituloes>titulo1</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario1</nombre>
+      <id type="integer">1</id>
+      <equipo-id type="integer">1</equipo-id>
+      <email>usuario1@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+  
+  <comentario>
+    <created-at type="datetime">2008-05-27T09:55:00Z</created-at>
+    <comentario-id type="integer" >1</comentario-id>
+    <id type="integer">2</id>
+    <textoes>texto2</textoes>
+    <tituloes>titulo2</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario2</nombre>
+      <id type="integer">2</id>
+      <equipo-id type="integer">2</equipo-id>
+      <email>usuario2@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+
+  <comentario>
+    <created-at type="datetime">2008-05-28T09:55:00Z</created-at>
+    <comentario-id type="integer" nil="true"></comentario-id>
+    <id type="integer">3</id>
+    <textoes>texto3</textoes>
+    <tituloes>titulo3</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario3</nombre>
+      <id type="integer">3</id>
+      <equipo-id type="integer">3</equipo-id>
+      <email>usuario3@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+  <comentario>
+    <created-at type="datetime">2008-05-29T09:55:00Z</created-at>
+    <comentario-id type="integer" nil="true"></comentario-id>
+    <id type="integer">4</id>
+    <textoes>texto4</textoes>
+    <tituloes>titulo4</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario4</nombre>
+      <id type="integer">4</id>
+      <equipo-id type="integer">4</equipo-id>
+      <email>usuario4@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+  <comentario>
+    <created-at type="datetime">2008-05-30T09:55:00Z</created-at>
+    <comentario-id type="integer" >2</comentario-id>
+    <id type="integer">5</id>
+    <textoes>texto5</textoes>
+    <tituloes>titulo5</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario5</nombre>
+      <id type="integer">5</id>
+      <equipo-id type="integer">5</equipo-id>
+      <email>usuario5@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+
+  <comentario>
+    <created-at type="datetime">2008-05-30T09:55:00Z</created-at>
+    <comentario-id type="integer" >2</comentario-id>
+    <id type="integer">6</id>
+    <textoes>texto6</textoes>
+    <tituloes>titulo6</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario6</nombre>
+      <id type="integer">6</id>
+      <equipo-id type="integer">6</equipo-id>
+      <email>usuario6@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+
+  <comentario>
+    <created-at type="datetime">2008-05-30T09:55:00Z</created-at>
+    <comentario-id type="integer" >6</comentario-id>
+    <id type="integer">7</id>
+    <textoes>texto7</textoes>
+    <tituloes>titulo7</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario7</nombre>
+      <id type="integer">7</id>
+      <equipo-id type="integer">7</equipo-id>
+      <email>usuario7@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+  <comentario>
+    <created-at type="datetime">2008-05-30T09:55:00Z</created-at>
+    <comentario-id type="integer" >6</comentario-id>
+    <id type="integer">8</id>
+    <textoes>texto8</textoes>
+    <tituloes>titulo8</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario8</nombre>
+      <id type="integer">8</id>
+      <equipo-id type="integer">8</equipo-id>
+      <email>usuario8@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+  <comentario>
+    <created-at type="datetime">2008-05-30T09:55:00Z</created-at>
+    <comentario-id type="integer" >6</comentario-id>
+    <id type="integer">9</id>
+    <textoes>texto9</textoes>
+    <tituloes>titulo9</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario9</nombre>
+      <id type="integer">9</id>
+      <equipo-id type="integer">9</equipo-id>
+      <email>usuario9@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+
+
+</comentarios>

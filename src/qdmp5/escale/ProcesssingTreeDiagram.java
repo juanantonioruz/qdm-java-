@@ -56,19 +56,20 @@ public class ProcesssingTreeDiagram extends PApplet {
 	}
 
 	private void iniciaEstructuraReticular() {
-		reticulaForo = new ReticulaForo(this, width / 4, height / 4, width / 2, height / 2, 3);
+		reticulaForo = new ReticulaForo(this, 100, 100, width / 1.2f, height / 1.5f, 3);
 
 		reticulaForo.calculaEstructura(mensajesRelacionados);
 
-		if (debug) {
-			reticulaForo.pintaLineas();
-		}
+		//if (debug) {
+//		}
 		// +++++ construye en reticula
 		reticulaForo.construyeReticula();
 	}
 
 	public void draw() {
 		background(100);
+		if(debug)
+		reticulaForo.pintaLineas();
 		reticulaForo.pintaEstructuraReticular(mouseX, mouseY);
 		grabacionEnVideo.addFotograma();
 
