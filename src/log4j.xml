@@ -22,6 +22,9 @@
     <logger name="processing">
         <level value="DEBUG"/>
     </logger>
+    <logger name="codigodelaimagen">
+        <level value="INFO"/>
+    </logger>
 
     <root>
         <level value="WARN"/>

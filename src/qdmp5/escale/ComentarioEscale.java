@@ -10,7 +10,7 @@ import processing.core.PGraphics;
 import qdmp5.ClaseP5;
 import toxi.physics2d.VerletParticle2D;
 
-public class ComentarioEscale extends ModeloEscaleBase {
+public class ComentarioEscale extends ModeloEscaleBase  implements Comparable<ComentarioEscale>{
 
 	public String texto;
 	public String titulo;
@@ -51,6 +51,12 @@ public class ComentarioEscale extends ModeloEscaleBase {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(ComentarioEscale o) {
+		if(this.id>o.id) return 1;
+		return 0;
 	}
 	
 

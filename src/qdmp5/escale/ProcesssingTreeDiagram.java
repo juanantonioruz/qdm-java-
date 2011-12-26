@@ -22,6 +22,7 @@ public class ProcesssingTreeDiagram extends PApplet {
 	private boolean grabando = false;
 
 	ReticulaForo reticulaForo;
+	ReticulaForo navegador;
 
 	boolean debug;
 	List<ComentarioEscale> comentarios;
@@ -29,7 +30,7 @@ public class ProcesssingTreeDiagram extends PApplet {
 
 	public void setup() {
 		colorMode(HSB, 100);
-		size(800, 600);
+		size(800, 500);
 		smooth();
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
 
@@ -51,12 +52,14 @@ public class ProcesssingTreeDiagram extends PApplet {
 		ServicioOrganizacionMensajes servicioOrganizacionMensajes = new ServicioOrganizacionMensajes(this);
 		mensajesRelacionados = servicioOrganizacionMensajes.relacionaParentChildrens(comentarios);
 
-		iniciaEstructuraReticular();
+		reticulaForo =iniciaEstructuraReticular(20, 20, width/2 , height*2 , 2);
+		navegador =iniciaEstructuraReticular(600, 10, 250, 250, 1);
+		
 
 	}
 
-	private void iniciaEstructuraReticular() {
-		reticulaForo = new ReticulaForo(this, 100, 100, width / 1.2f, height / 1.5f, 3);
+	private ReticulaForo iniciaEstructuraReticular(int i, int j, float f, float g, int k) {
+		ReticulaForo reticulaForo = new ReticulaForo(this, i, j, f, g, k);
 
 		reticulaForo.calculaEstructura(mensajesRelacionados);
 
@@ -64,13 +67,16 @@ public class ProcesssingTreeDiagram extends PApplet {
 //		}
 		// +++++ construye en reticula
 		reticulaForo.construyeReticula();
+		return reticulaForo;
 	}
 
+	
 	public void draw() {
 		background(100);
 		if(debug)
 		reticulaForo.pintaLineas();
-		reticulaForo.pintaEstructuraReticular(mouseX, mouseY);
+		reticulaForo.pintaEstructuraReticular(mouseX, mouseY, true);
+		navegador.pintaEstructuraReticular(mouseX, mouseY, false);
 		grabacionEnVideo.addFotograma();
 
 	}
@@ -93,7 +99,6 @@ public class ProcesssingTreeDiagram extends PApplet {
 
 	public void mouseReleased() {
 		System.out.println("click::: iniciaEstructuraReticular");
-		iniciaEstructuraReticular();
 	}
 
 	public void keyPressed() {

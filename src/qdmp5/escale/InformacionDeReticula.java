@@ -13,11 +13,23 @@ public class InformacionDeReticula {
 	int pos_columna;
 	float origenX;
 	float origenY;
-	public InformacionDeReticula(ComentarioEscale comentario) {
+
+	float diametro;
+	public InformacionDeReticula(ComentarioEscale comentario, float diametro) {
 		super();
 		this.informacion = comentario;
+		this.diametro = diametro;
 	}
-	
+	public int getColor() {
+		
+		return this.informacion.usuario.equipo.col;
+	}
+	protected boolean isOnMouseOver(float mouseX, float mouseY, float caida) {
+		boolean isMouseX_overWidth = mouseX>=this.origenX && mouseX<=(this.origenX+diametro);
+		boolean isMouseY_overHeight = mouseY>=(this.origenY+caida) && mouseY<=(this.origenY+diametro+caida);
+		boolean _mouseOver = isMouseX_overWidth && isMouseY_overHeight;
+		return _mouseOver;
+	}
 	
 	
 }

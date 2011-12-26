@@ -1,6 +1,7 @@
 package qdmp5.escale;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -30,7 +31,9 @@ public class ServicioOrganizacionMensajes {
 		clona.addAll(comentarios);
 
 		clona.removeAll(padres);
-
+		
+		Collections.sort(clona);
+		
 		while (clona.size() > 0) {
 			boolean encontrado = false;
 			ComentarioEscale ext = null;

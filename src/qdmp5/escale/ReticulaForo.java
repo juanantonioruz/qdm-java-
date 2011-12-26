@@ -43,67 +43,82 @@ public class ReticulaForo {
 		infosReticula=new ArrayList<InformacionDeReticula>();
 		calculoAltura=new CalculoAltura();
 		for (ComentarioEscale com:mensajesParent) {
-			InformacionDeReticula informacionDeReticula=new InformacionDeReticula(com);
+			InformacionDeReticula informacionDeReticula=new InformacionDeReticula(com, diametro);
 			infosReticula.add(informacionDeReticula);
 			reconstruyeOrganizacionMapaReticula(informacionDeReticula);
 		}
 		
 	}
-	public void pintaEstructuraReticular(int mouseX, int mouseY) {
+	public void pintaEstructuraReticular(int mouseX, int mouseY, boolean texto) {
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
 		for (InformacionDeReticula informacionDeReticula:infosReticula) {
-			pinta(informacionDeReticula);
+			pinta(informacionDeReticula, texto);
 		}
 		
 	}
-	private void pinta(InformacionDeReticula infoReticula){
-		float caida = calculaCaida(infoReticula);
-		boolean isMouseX_overWidth = mouseX>=infoReticula.origenX && mouseX<=(infoReticula.origenX+diametro);
-		boolean isMouseY_overHeight = mouseY>=(infoReticula.origenY+caida) && mouseY<=(infoReticula.origenY+diametro+caida);
-		p5.fill(0);
-		// aqui se posiciona mas abajo la forma para que quepa el texto en la cuadricula
+	
+	
+	private void pinta(InformacionDeReticula infoReticula, boolean texto){
+		// aqui (caida) se posiciona mas abajo la forma para que quepa el texto en la cuadricula
 		// fin de desviacion de altura para incluir mensaje de texto
+		
+		float caida = calculaCaida(infoReticula);
+		if(!texto) caida=0;
+		boolean mouseOVER = infoReticula.isOnMouseOver(mouseX, mouseY,  caida);
+		if(texto){
+		p5.fill(0);
 		mensajeTextoEnPantalla(infoReticula.informacion.titulo, infoReticula.origenX + (diametro), infoReticula.origenY+diametro+caida );
-		if(isMouseX_overWidth && isMouseY_overHeight){
-			
-			p5.fill(infoReticula.informacion.usuario.equipo.col, 50);
-			p5.rect(0,0, p5.width, 100);
-
-			p5.fill(0);
-			mensajeTextoEnPantalla(infoReticula.informacion.titulo, 30, 30);
-
-			p5.fill(infoReticula.informacion.usuario.equipo.col, 100);
+		}
+		if(mouseOVER){
+			pintaMensajeTexto(infoReticula);
+			p5.fill(infoReticula.getColor(), 100);
 		}else{
-			p5.fill(infoReticula.informacion.usuario.equipo.col, 100);
+			p5.fill(infoReticula.getColor(), 10);
 		}
-		if(infoReticula.parent!=null){
-		p5.pushStyle();
-		p5.stroke(0,20);
-		p5.noFill();
-		p5.strokeWeight(1);
-		float x1=infoReticula.parent.origenX+diametro;
-		float y1=infoReticula.parent.origenY+calculaCaida(infoReticula.parent)+diametro;
-		float x2=infoReticula.origenX+diametro/2;
-		float y2=infoReticula.origenY+caida+diametro/2;
-		float difH = y2-y1;
-		float difW = x2-x1;
-		p5.bezier(x1, y1, 
-				x1+difH/4, y1+difH/4, 
-				x2-difH/3, y2-difH/3, 
-				x2, y2);
-		p5.popStyle();
-		}
+		enlazaComentarioParentChild(infoReticula, caida, texto);
 		p5.ellipseMode(p5.CORNER);
-
 		p5.ellipse(infoReticula.origenX, infoReticula.origenY+(caida), diametro, diametro);
 		
-		for (InformacionDeReticula child:infoReticula.children) {
-			
-			pinta(child);
-		}
+		pintaInformacionesHijas(infoReticula, texto);
 
 	}
+	private void pintaInformacionesHijas(InformacionDeReticula infoReticula, boolean texto) {
+		for (InformacionDeReticula child:infoReticula.children) {
+			pinta(child, texto);
+		}
+	}
+	private void enlazaComentarioParentChild(InformacionDeReticula infoReticula, float caida, boolean texto) {
+		if(infoReticula.parent!=null){
+			p5.pushStyle();
+			p5.stroke(0,20);
+			p5.noFill();
+			p5.strokeWeight(1);
+			float x1=infoReticula.parent.origenX+diametro/2;
+			float calculaCaida = calculaCaida(infoReticula.parent);
+			if(!texto)calculaCaida=0;
+			float y1=infoReticula.parent.origenY+calculaCaida+diametro/2;
+			float x2=infoReticula.origenX+diametro/2;
+			float y2=infoReticula.origenY+caida+diametro/2;
+			float difH = y2-y1;
+			float difW = x2-x1;
+			p5.bezier(x1, y1, 
+					x1+difH/4, y1+difH/4, 
+					x2-difH/3, y2-difH/3, 
+					x2, y2);
+			p5.popStyle();
+		}
+	}
+	private void pintaMensajeTexto(InformacionDeReticula infoReticula) {
+		p5.fill(infoReticula.getColor(), 100);
+		p5.rect(0,0, p5.width, 300);
+		if(p5.brightness(infoReticula.getColor())>70)
+			p5.fill(0);
+		else
+			p5.fill(100);
+		mensajeTextoEnPantalla(infoReticula.informacion.texto, 30, 30);
+	}
+	
 	private float calculaCaida(InformacionDeReticula infoReticula) {
 		float caida=0;
 		if(infoReticula.parent!=null){
@@ -124,7 +139,7 @@ public class ReticulaForo {
 
 		for (int i = 0; i < mensajeParent.children.size(); i++) {
 			ComentarioEscale ce = mensajeParent.children.get(i);
-			InformacionDeReticula informacionChild=new InformacionDeReticula(ce);
+			InformacionDeReticula informacionChild=new InformacionDeReticula(ce, diametro);
 			informacionDeReticula.children.add(informacionChild);
 			informacionChild.parent=informacionDeReticula;
 			reconstruyeOrganizacionMapaReticula(informacionChild);

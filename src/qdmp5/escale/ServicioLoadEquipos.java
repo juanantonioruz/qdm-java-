@@ -32,7 +32,7 @@ public class ServicioLoadEquipos extends ClaseP5 {
 		for (int i = 0; i < equipos.size(); i++)
 			equipos.get(i).setColor((TColor) listaColoresEquipo.get(i));
 		ForosXMLLoadScale forosXMLLoad = new ForosXMLLoadScale(p5, equipos);
-		List<ComentarioEscale> comentarios = forosXMLLoad.procesaXML("foros_minim.xml");
+		List<ComentarioEscale> comentarios = forosXMLLoad.procesaXML("foros.xml");
 		Collections.reverse(comentarios);
 		return comentarios;
 	}
