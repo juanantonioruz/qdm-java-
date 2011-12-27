@@ -8,15 +8,15 @@ import processing.core.PFont;
 
 public class CDIBase extends PApplet{
 
-	Log log = LogFactory.getLog(getClass());
+	protected Log log = LogFactory.getLog(getClass());
 	PFont fontA;
 
 	public void setup() {
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
 		textFont(fontA, 20);
 		ponsize(300,300);
-		ponBackground(0);
 		ponModoDeColor(HSB, 100);
+		ponBackground(0);
 		smooth();
 	}
 
