@@ -3,29 +3,29 @@ package codigodelaimagen.cuadriculas;
 import codigodelaimagen.base.CDIBase;
 
 public class CuadriculaDinamica extends CDIBase {
+	float resultadoColumna;
 
 	public void setup() {
 		super.setup();
-		int resultadoColumna = extraeMedidaReticulaMinima(numeroColumnas);
-		int resultadoFila = extraeMedidaReticulaMinima(numeroFilas);
-		log.info("columnas" + numeroColumnas + ". resultadoColumna: " + resultadoColumna);
+		resultadoColumna = extraeMedidaReticulaMinima(numeroColumnas);
+		resultadoFila = extraeMedidaReticulaMinima(numeroFilas);
+
 		log.info("filas" + numeroFilas + ". resultadoFila: " + resultadoFila);
-		anchoModulo = width / resultadoColumna;
-		altoModulo = height / resultadoFila;
+		log.info("columnas" + numeroColumnas + ". resultadoColumna: " + resultadoColumna);
 	}
 
-	private int extraeMedidaReticulaMinima(int numeroColumnas) {
-		int resultadoColumna = 1;
-		for (int i = 1; i < numeroColumnas; i++) {
-			resultadoColumna += dame2(i, 1);
+	private int extraeMedidaReticulaMinima(int numeroPosiciones) {
+		int res = 1;
+		for (int i = 1; i < numeroPosiciones; i++) {
+			res += dame2(i, 1);
 		}
-		return resultadoColumna;
+		return res;
 	}
 
 	int numeroColumnas = 6;
-	int numeroFilas = 6;
-	private float anchoModulo;
-	private float altoModulo;
+	int numeroFilas = 10;
+
+	private float resultadoFila;
 
 	public void draw() {
 		noLoop();
@@ -40,22 +40,63 @@ public class CuadriculaDinamica extends CDIBase {
 
 		stroke(0);
 		strokeWeight(5);
-		pintaLineas(numeroColumnas, anchoModulo, true);
+		stroke(color(30, 50, 80));
+		pintaLineas(numeroColumnas,  100, 300, true);
+		stroke(color(60, 50, 80));
+		pintaLineas(numeroFilas,  100, 300, false);
+
+		// float alto=height/numeroColumnas;
+		// for(int i=0; i<numeroColumnas; i++){
+		// log.info("pintando linea: "+i);
+		// stroke(30);
+		// strokeWeight(0.5f);
+		// line(0,i*alto,width, i*alto);
+		// }
+
+		// pintaLineas(numeroFilas, altoModulo, false);
+
+		// for(int i=0; i<resultadoColumna; i++){
+		// log.info("pintando linea: "+i);
+		// stroke(30);
+		// strokeWeight(0.5f);
+		// line(i*anchoModulo,0,i*anchoModulo,height);
+		// }
+		// for(int i=0; i<resultadoFila; i++){
+		// log.info("pintando linea: "+i);
+		// stroke(30);
+		// strokeWeight(0.5f);
+		// line(0,i*altoModulo,width, i*altoModulo);
+		// }
 	}
 
-	private void pintaLineas(int numeroColumnas, float anchoModulo, boolean columnas) {
+	private void pintaLineas(int numeroPosiciones,  float origen, float fin, boolean columnas) {
+//		float anchoModulo = width / resultadoColumna;
+//		float altoModulo = height / resultadoFila;
+		float medidaModulo=0;
+		if (columnas) {
+			medidaModulo=(fin-origen)/resultadoColumna;
+		} else {
+			medidaModulo=(fin-origen)/resultadoFila;
+
+		}
 		float inicioColumna = 0;
-		for (int c = numeroColumnas; c > 0; c--) {
+		for (int c = numeroPosiciones; c > 0; c--) {
 			if (c > 1) {
+				strokeWeight(1);
+
 				int multiplicador = dame2((c - 1), 1);
-				strokeWeight(c);
-				inicioColumna += anchoModulo * multiplicador;
+				inicioColumna += medidaModulo * multiplicador;
 				if (columnas)
-					line(inicioColumna, 0, inicioColumna, height);
-			}else{
-				stroke(color(50,100,100));
-					line(inicioColumna+anchoModulo, 0,inicioColumna+anchoModulo, height);
-				
+					line(inicioColumna, origen, inicioColumna, fin);
+				else
+					line(origen, inicioColumna, fin, inicioColumna);
+
+			} else {
+				if (columnas)
+					line(inicioColumna + medidaModulo, origen, inicioColumna + medidaModulo, fin);
+				else
+					line(origen, inicioColumna + medidaModulo, fin, inicioColumna + medidaModulo);
+
 			}
 		}
 	}
@@ -75,7 +116,7 @@ public class CuadriculaDinamica extends CDIBase {
 
 	@Override
 	protected void ponsize(int i, int j) {
-		super.ponsize(500, 500);
+		super.ponsize(600, 600);
 	}
 
 }
