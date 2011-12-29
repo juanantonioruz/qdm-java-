@@ -1,5 +1,7 @@
 package codigodelaimagen.base;
 
+import java.awt.event.MouseEvent;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -21,6 +23,20 @@ public class CDIBase extends PApplet{
 	}
 
 	
+	@Override
+	public void mouseMoved() {
+		super.mouseMoved();
+	}
+
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		super.mouseMoved(arg0);
+	}
+
+
+
+
 	protected void ponModoDeColor(int modo, int escala) {
 		colorMode(modo, escala);
 	}
