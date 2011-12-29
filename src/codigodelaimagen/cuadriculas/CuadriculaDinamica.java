@@ -96,7 +96,7 @@ class CeldaRet {
 	}
 
 	public float getX1() {
-		Calculo calculo = new Calculo();
+		CalculoRecursivo calculo = new CalculoRecursivo();
 		float res = calculo.calcula(this);
 		return res;
 	}
@@ -126,7 +126,6 @@ class FilaRet {
 	private final float coordenada_x;
 	private final float coordenada_y;
 	private final float widthTotal;
-	private float medidaModulo;
 	public Log log = LogFactory.getLog(getClass());
 	private final PApplet p5;
 
@@ -144,33 +143,20 @@ class FilaRet {
 		this.widthTotal = widthTotal;
 		this.heightTotal = heightTotal;
 		this.p5 = p5;
-		float numeroDivisionesReticula = extraNumeroDivisionesReticula(numeroCeldas);
-		medidaModulo = widthTotal / numeroDivisionesReticula;
 		// marca 1 (inicio)
 		log.info("add moduloRect");
-		marcas.add(new MarcaPosicion(coordenada_x, coordenada_y));
+		CalculoMarcas calculoMarcasHorizontal = new CalculoMarcas(coordenada_x, coordenada_y, widthTotal, numeroCeldas);
 
-		// log.info("celdas: " + numeroCeldas + ". numeroDivisionesReticula: " +
-		// fila.numeroDivisionesReticula);
+		celdas = generaCeldas(heightTotal,calculoMarcasHorizontal);
 
-		float fin = coordenada_x + heightTotal;
-		float inicioColumna_x = coordenada_x;
-		for (int c = numeroCeldas; c > 0; c--) {
-			if (c > 1) {
-				int multiplicador = dame2((c - 1), 1);
-				inicioColumna_x += medidaModulo * multiplicador;
-				log.info("add moduloRect");
-				marcas.add(new MarcaPosicion(inicioColumna_x, coordenada_y));
-			} else {
-				log.info("add moduloRect");
-				marcas.add(new MarcaPosicion(inicioColumna_x + medidaModulo, coordenada_y));
-			}
-		}
+	}
 
-		for (int i = 0; i < marcas.size(); i++) {
-			if (i < marcas.size() - 1) {
-				MarcaPosicion marcaActual = marcas.get(i);
-				MarcaPosicion marcaSig = marcas.get(i + 1);
+	private List<CeldaRet> generaCeldas(float heightTotal,CalculoMarcas calculoMarcas) {
+		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
+		for (int i = 0; i < calculoMarcas.marcas.size(); i++) {
+			if (i < calculoMarcas.marcas.size() - 1) {
+				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
+				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);
 				float anchoInicial = marcaSig.coordenada_x - marcaActual.coordenada_x;
 
 				CeldaRet celdaAnterior = null;
@@ -185,24 +171,7 @@ class FilaRet {
 			}
 
 		}
-
-	}
-
-	private int extraNumeroDivisionesReticula(int numeroPosiciones) {
-		int res = 1;
-		for (int i = 1; i < numeroPosiciones; i++) {
-			res += dame2(i, 1);
-		}
-		return res;
-	}
-
-	private int dame2(int i, int res) {
-		while (i > 0) {
-			res *= 2;
-			i--;
-			return dame2(i, res);
-		}
-		return res;
+		return celdas;
 	}
 
 	public void raton(int mouseX, int mouseY) {
@@ -239,7 +208,9 @@ class FilaRet {
 						CeldaRet celdaInt = celdas.get(j + i);
 						CeldaRet celdaSig = celdas.get(j);
 
-						// TODO falta por calcular el sobrante y aplicarlo a los demas...
+						// TODO falta por calcular el sobrante y aplicarlo a los
+						// demas...
+						// reemplazar por nuevo calculo de marcas y seteo de nuevos anchos
 						if (j == 1)
 							celdaInt.setAncho(celdaSig.getAnchoInicial() / 2);
 						else
@@ -251,7 +222,10 @@ class FilaRet {
 						CeldaRet celdaInt = celdas.get(j);
 						pos++;
 						CeldaRet celdaSig = celdas.get(pos);
-						// TODO falta por calcular el sobrante y aplicarlo a los demas...
+						// TODO falta por calcular el sobrante y aplicarlo a los
+						// demas...
+						// reemplazar por nuevo calculo de marcas y seteo de nuevos anchos
+
 						if (pos == 1)
 							celdaInt.setAncho(celdaSig.getAnchoInicial() / 2);
 						else
@@ -276,8 +250,7 @@ class FilaRet {
 		}
 	}
 
-	List<MarcaPosicion> marcas = new ArrayList<MarcaPosicion>();
-	List<CeldaRet> celdas = new ArrayList<CeldaRet>();
+	List<CeldaRet> celdas;
 
 }
 
@@ -293,7 +266,53 @@ class MarcaPosicion {
 
 }
 
-class Calculo {
+class CalculoMarcas {
+	public CalculoMarcas(float coordenada_x, float coordenada_y, float widthTotal, int numeroCeldas) {
+		MarcaPosicion inicio = new MarcaPosicion(coordenada_x, coordenada_y);
+		marcas.add(inicio);
+
+		float inicioColumna_x = coordenada_x;
+		float numeroDivisionesReticula = extraNumeroDivisionesReticula(numeroCeldas);
+
+		float medidaModulo = widthTotal / numeroDivisionesReticula;
+
+		for (int c = numeroCeldas; c > 0; c--) {
+			if (c > 1) {
+				int multiplicador = dame2((c - 1), 1);
+				inicioColumna_x += medidaModulo * multiplicador;
+				log.info("add moduloRect");
+				marcas.add(new MarcaPosicion(inicioColumna_x, coordenada_y));
+			} else {
+				log.info("add moduloRect");
+				marcas.add(new MarcaPosicion(inicioColumna_x + medidaModulo, coordenada_y));
+			}
+		}
+
+	}
+
+	public Log log = LogFactory.getLog(getClass());
+
+	List<MarcaPosicion> marcas = new ArrayList<MarcaPosicion>();
+
+	private int extraNumeroDivisionesReticula(int numeroPosiciones) {
+		int res = 1;
+		for (int i = 1; i < numeroPosiciones; i++) {
+			res += dame2(i, 1);
+		}
+		return res;
+	}
+
+	private int dame2(int i, int res) {
+		while (i > 0) {
+			res *= 2;
+			i--;
+			return dame2(i, res);
+		}
+		return res;
+	}
+}
+
+class CalculoRecursivo {
 	float res;
 	CeldaRet parent;
 
