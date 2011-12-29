@@ -6,13 +6,15 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import processing.core.PApplet;
+
 import codigodelaimagen.base.CDIBase;
 
 public class CuadriculaDinamica extends CDIBase {
 
 	public void setup() {
 		super.setup();
-		 fila = creaCeldas(5, 100, 10, width-200, 200);
+		 fila = creaCeldas(5, 10, 10, width-20, 200);
 
 	}
 
@@ -30,17 +32,16 @@ public class CuadriculaDinamica extends CDIBase {
 	// 5=1+2+4+8+16=31
 	FilaRet fila;
 	public void draw() {
-		background(random(80,100));
+//		noLoop();
+		background(100);
 		stroke(0);
-		strokeWeight(1);
-		stroke(color(30, 50, 80));
+		strokeWeight(2);
 		noFill();
-		float posX=fila.getCoordenada_x();
 		for(CeldaRet celda:fila.celdas){
-//			fill(100);
-//			if(celda.sel) fill(40,50,100);
-			rect(posX, celda.y1, celda.getAncho(), celda.getAlto());
-			posX+=celda.getAncho();
+			fill(100);
+			if(celda.sel) fill(celda.color);
+			stroke(celda.color);
+			rect(fila.getCoordenada_x()+celda.getX1(), celda.y1, celda.getAncho(), celda.getAlto());
 		}
 	}
 
@@ -48,7 +49,7 @@ public class CuadriculaDinamica extends CDIBase {
 	
 	
 	private FilaRet creaCeldas(int numeroCeldas, float coordenada_x,float coordenada_y,  float widthTotal, float heightTotal) {
-		FilaRet fila=new FilaRet(numeroCeldas,coordenada_x, coordenada_y,  widthTotal, heightTotal);
+		FilaRet fila=new FilaRet(numeroCeldas,coordenada_x, coordenada_y,  widthTotal, heightTotal, this);
 		return fila;
 	}
 
@@ -69,29 +70,30 @@ public class CuadriculaDinamica extends CDIBase {
 class CeldaRet{
 	public boolean sel;
 
-	private float x1;
 	public final float y1;
-	public final float x2;
 	private final float y2;
 	private  float ancho;
 	private  float anchoInicial;
 	private float alto;
 	public CeldaRet parent;
+	
+	int color;
 
-	public CeldaRet(float x1, float y1, float x2, float y2, CeldaRet parent) {
-		this.x1 = x1;
+	final FilaRet fila;
+
+
+	public CeldaRet(float y1,  float y2, CeldaRet parent, FilaRet fila, int color, float anchoInicial) {
 		this.y1 = y1;
-		this.x2 = x2;
 		this.y2 = y2;
 		this.parent = parent;
-		anchoInicial=x2-x1;
+		this.fila = fila;
+		this.color = color;
+		this.anchoInicial = anchoInicial;
 		ancho=anchoInicial;
 		alto=y2-y1;
 	}
 
-	public void setX1(float x1) {
-		this.x1 = x1;
-	}
+
 
 	public void setAncho(float ancho) {
 		this.ancho = ancho;
@@ -100,10 +102,13 @@ class CeldaRet{
 	public void setAlto(float alto) {
 		this.alto = alto;
 	}
-
 	public float getX1() {
-		return x1;
+		Calculo calculo = new Calculo();
+		float res=calculo.calcula(this);
+		return res;
 	}
+	
+
 	public float getY2() {
 		return y2;
 	}
@@ -120,10 +125,6 @@ class CeldaRet{
 		return alto;
 	}
 
-	@Override
-	public String toString() {
-		return "CeldaRet [x1=" + x1 + ", y1=" + y1 + "]";
-	}
 
 	
 	
@@ -138,11 +139,12 @@ class FilaRet{
 	private final float widthTotal;
 	private float medidaModulo;
 	public Log log = LogFactory.getLog(getClass());
+	private final PApplet p5;
 
 	public float getCoordenada_x() {
 		return coordenada_x;
 	}
-	public FilaRet( int numeroCeldas, float coordenada_x, float coordenada_y, float widthTotal, float heightTotal) {
+	public FilaRet( int numeroCeldas, float coordenada_x, float coordenada_y, float widthTotal, float heightTotal, PApplet p5) {
 		super();
 
 		this.numeroCeldas = numeroCeldas;
@@ -150,6 +152,7 @@ class FilaRet{
 		this.coordenada_y = coordenada_y;
 		this.widthTotal = widthTotal;
 		this.heightTotal = heightTotal;
+		this.p5 = p5;
 		float numeroDivisionesReticula = extraNumeroDivisionesReticula(numeroCeldas);
 		medidaModulo = widthTotal / numeroDivisionesReticula;
 		// marca 1 (inicio)
@@ -171,14 +174,18 @@ class FilaRet{
 				marcas.add(new MarcaPosicion(inicioColumna_x + medidaModulo, coordenada_y));
 			}
 		}
+		
+		
 		for(int i=0; i<marcas.size(); i++){
 			if(i<marcas.size()-1){
-				//ultimo modulo
 				MarcaPosicion marcaActual = marcas.get(i);
 				MarcaPosicion marcaSig = marcas.get(i+1);
+				float anchoInicial=marcaSig.coordenada_x-marcaActual.coordenada_x;
+
 				CeldaRet celdaAnterior=null;
-				if(celdas.size()>0)celdaAnterior=celdas.get(celdas.size()-1);
-				celdas.add(new CeldaRet(marcaActual.coordenada_x, marcaActual.coordenada_y,marcaSig.coordenada_x, marcaSig.coordenada_y+heightTotal, celdaAnterior));
+				if(i>0)celdaAnterior=celdas.get(i-1);
+				
+				celdas.add(new CeldaRet(marcaActual.coordenada_y,marcaSig.coordenada_y+heightTotal, celdaAnterior,this,  p5.color(p5.random(100), 100, 80),anchoInicial));
 				
 			}else{
 				//es el ultimo modulo se dibuja el rect desde el anterior
@@ -207,7 +214,8 @@ class FilaRet{
 	public void raton(int mouseX, int mouseY) {
 		for(int i=0; i<celdas.size(); i++){
 			CeldaRet celda=celdas.get(i);
-			if(mouseX>celda.getX1() && mouseX<celda.x2 && mouseY>celda.y1 && mouseY<celda.getY2()){
+			float x1 = celda.fila.coordenada_x+celda.getX1();
+			if(mouseX>x1 && mouseX<(x1+celda.getAncho()) && mouseY>celda.y1 && mouseY<celda.getY2()){
 				celda.sel=true;
 				// todo: order sensibles
 				log.info("celda pos sel: "+i);
@@ -231,13 +239,15 @@ class FilaRet{
 					for(int j=0; j<celdas.size(); j++){
 						CeldaRet celdaRet=celdas.get(j);
 						celdaRet.setAncho(celdaRet.getAnchoInicial());
-//						celdaSen.y1
 					}
 
 				}
 			}else{
 				celda.sel=false;
-				// todo order por la primera
+				for(int j=0; j<celdas.size(); j++){
+					CeldaRet celdaRet=celdas.get(j);
+					celdaRet.setAncho(celdaRet.getAnchoInicial());
+				}
 			}
 		}
 	}
@@ -259,3 +269,20 @@ class FilaRet{
 	}
 	
 }
+	class Calculo{
+		float res;
+		CeldaRet parent;
+		public float calcula(CeldaRet celdaRet) {
+			parent=celdaRet.parent;
+			sumaParent();
+			return res;
+		}
+		private void sumaParent() {
+			if(parent!=null) {
+				res+=parent.getAncho();
+				parent=parent.parent;
+				sumaParent();
+			}
+			
+		}
+	}
