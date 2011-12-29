@@ -10,7 +10,7 @@ import processing.core.PFont;
 
 public class CDIBase extends PApplet{
 
-	protected Log log = LogFactory.getLog(getClass());
+	public Log log = LogFactory.getLog(getClass());
 	PFont fontA;
 
 	public void setup() {
