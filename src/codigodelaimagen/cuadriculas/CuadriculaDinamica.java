@@ -45,6 +45,9 @@ public class CuadriculaDinamica extends CDIBase {
 	public void draw() {
 		// noLoop();
 		background(100);
+		fill(20);
+		noStroke();
+		rect(100, 10, width - 200, height);
 		stroke(0);
 		strokeWeight(2);
 		noFill();
@@ -54,7 +57,7 @@ public class CuadriculaDinamica extends CDIBase {
 			if (posicion==fila.posicionSeleccionada)
 				fill(celda.color);
 			stroke(celda.color);
-			rect(fila.getCoordenada_x() + celda.getX1(), celda.y1, celda.getAncho(), celda.getAlto());
+			rect(fila.getX1() + celda.getX1(), celda.y1, celda.getAncho(), celda.getAlto());
 		}
 	}
 

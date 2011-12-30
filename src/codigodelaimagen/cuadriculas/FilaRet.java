@@ -18,7 +18,7 @@ public class FilaRet {
 	public Log log = LogFactory.getLog(getClass());
 	private final PApplet p5;
 
-	public float getCoordenada_x() {
+	public float getX1() {
 		return x1;
 	}
 
@@ -34,8 +34,8 @@ public class FilaRet {
 		this.p5 = p5;
 		posicionSeleccionada=(int)(p5.random(numeroCeldas));
 		log.info("posicionSeleccionada: "+posicionSeleccionada);
-		CalculoMarcas calculoMarcasHorizontal = new CalculoMarcas(x1, y1, ancho, numeroCeldas, posicionSeleccionada);
-		celdas = generaCeldas(calculoMarcasHorizontal);
+		CalculoMarcas calculoMarcas = new CalculoMarcas(x1, y1, ancho, numeroCeldas, posicionSeleccionada);
+		celdas = generaCeldas(calculoMarcas);
 
 	}
 
