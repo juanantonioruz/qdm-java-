@@ -24,6 +24,12 @@ public class CDIBase extends PApplet{
 
 	
 	@Override
+	public void mouseClicked() {
+		super.mouseClicked();
+	}
+
+
+	@Override
 	public void mouseMoved() {
 		super.mouseMoved();
 	}
