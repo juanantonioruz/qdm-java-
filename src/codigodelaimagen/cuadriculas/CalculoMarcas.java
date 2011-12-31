@@ -7,19 +7,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
-public class CalculoMarcas {
+public  class CalculoMarcas {
 	public Log log = LogFactory.getLog(getClass());
-
+	
 	List<MarcaPosicion> marcas = new ArrayList<MarcaPosicion>();
 	/**
 	 * 
-	 * @param x1
-	 * @param y1
-	 * @param ancho
+	 * @param limite
 	 * @param numeroCeldas indexadas en 1
 	 * @param posicionSeleccionada indexada en 0
 	 */
-	public CalculoMarcas(float x1, float y1, float ancho, int numeroCeldas, int posicionSeleccionada) {
+	public CalculoMarcas(float limite, int numeroCeldas, int posicionSeleccionada) {
 		// marca 1 (inicio)
 
 		// analizando posicionSeleccionada y numero de celdas se elabora una
@@ -33,13 +31,13 @@ public class CalculoMarcas {
 		log.info(jerarquizaPosiciones);
 			
 		// add marca inicial
-		MarcaPosicion inicio = new MarcaPosicion(x1, y1);
+		MarcaPosicion inicio = new MarcaPosicion(0);
 		marcas.add(inicio);
 
-		float inicioColumna_x = x1;
+		float inicioColumna_x = inicio.marca;
 		float numeroDivisionesReticula = extraNumeroUnidadesReticula(jerarquizaPosiciones);
 
-		float medidaModulo = ancho / numeroDivisionesReticula;
+		float medidaModulo = limite / numeroDivisionesReticula;
 
 		for(Integer j:jerarquizaPosiciones){
 			CalculoUnidadesPorPosicionDeModulo calculo = new CalculoUnidadesPorPosicionDeModulo(j);
@@ -47,21 +45,9 @@ public class CalculoMarcas {
 			int multiplicador = calculo.unidades;
 			inicioColumna_x += medidaModulo * multiplicador;
 			log.debug("add moduloRect");
-			marcas.add(new MarcaPosicion(inicioColumna_x, y1));
+			marcas.add(new MarcaPosicion(inicioColumna_x));
 
 		}
-//		for (int c = numeroCeldas; c > 0; c--) {
-//			if (c > 1) {
-//				CalculoUnidadesPorPosicionDeModulo calculo = new CalculoUnidadesPorPosicionDeModulo(c - 1);
-//				int multiplicador = calculo.unidades;
-//				inicioColumna_x += medidaModulo * multiplicador;
-//				log.debug("add moduloRect");
-//				marcas.add(new MarcaPosicion(inicioColumna_x, y1));
-//			} else {
-//				log.debug("add marca final");
-//				marcas.add(new MarcaPosicion(inicioColumna_x + medidaModulo, y1));
-//			}
-//		}
 
 	}
 
@@ -74,7 +60,7 @@ public class CalculoMarcas {
 		log.info(jerarquiaPosiciones);
 		
 		
-//		disminuyejerarquias partiendo de la unidad...
+//		disminuye jerarquias partiendo de la unidad...
 		int menor=encuentraMenor(jerarquiaPosiciones);
 		List<Integer> jerarquiaPosiciones2=new ArrayList<Integer>();
 		for(Integer i:jerarquiaPosiciones)

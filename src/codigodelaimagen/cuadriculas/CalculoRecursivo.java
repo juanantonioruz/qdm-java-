@@ -2,18 +2,18 @@ package codigodelaimagen.cuadriculas;
 
 public class CalculoRecursivo {
 	float res;
-	CeldaRet parent;
+	TieneParent parent;
 
-	public float calcula(CeldaRet celdaRet) {
-		parent = celdaRet.parent;
+	public float calcula(TieneParent celdaRet) {
+		parent = celdaRet.getParent();
 		sumaParent();
 		return res;
 	}
 
 	private void sumaParent() {
 		if (parent != null) {
-			res += parent.getAncho();
-			parent = parent.parent;
+			res += parent.getMedidaVariable();
+			parent = parent.getParent();
 			sumaParent();
 		}
 

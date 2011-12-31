@@ -3,23 +3,18 @@ package codigodelaimagen.cuadriculas;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import processing.core.PApplet;
-
 import codigodelaimagen.base.CDIBase;
 
 public class CuadriculaDinamica extends CDIBase {
 
 	public void setup() {
 		super.setup();
-		inicializaFila();
-
+		inicializaContenedor();
 	}
-
-	private void inicializaFila() {
-		fila = new FilaRet(5, 100, 10, width - 200, 200, this);
+	Contenedor contenedor;
+	private void inicializaContenedor() {
+		
+		contenedor=new Contenedor(100, 0,width-200, 300,13,this);
 	}
 
 	@Override
@@ -30,7 +25,7 @@ public class CuadriculaDinamica extends CDIBase {
 
 	@Override
 	public void mouseClicked() {
-		inicializaFila();
+		inicializaContenedor();
 		draw();
 	}
 
@@ -40,10 +35,10 @@ public class CuadriculaDinamica extends CDIBase {
 	// 3=1+2+4=7
 	// 4=1+2+4+8=15
 	// 5=1+2+4+8+16=31
-	FilaRet fila;
 
 	public void draw() {
 		// noLoop();
+		println(frameCount);
 		background(100);
 		fill(20);
 		noStroke();
@@ -51,13 +46,18 @@ public class CuadriculaDinamica extends CDIBase {
 		stroke(0);
 		strokeWeight(2);
 		noFill();
+		for(FilaRet fila:contenedor.filas)
+		pintaFila(fila);
+	}
+
+	private void pintaFila(FilaRet fila) {
 		for (int posicion=0; posicion<fila.celdas.size(); posicion++) {
 			CeldaRet celda=fila.celdas.get(posicion);
-			fill(100);
+			fill(celda.color);
 			if (posicion==fila.posicionSeleccionada)
-				fill(celda.color);
+				fill(100);
 			stroke(celda.color);
-			rect(fila.getX1() + celda.getX1(), celda.y1, celda.getAncho(), celda.getAlto());
+			rect(contenedor.getX1() + celda.getPosicion(), fila.getPosicion(), celda.getMedidaVariable(), fila.getMedidaVariable());
 		}
 	}
 

@@ -8,33 +8,26 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 
-public class FilaRet {
+public class FilaRet implements TieneParent{
 
-	private final float alto;
 	private final int numeroCeldas;
-	private final float x1;
-	private final float y1;
-	private final float ancho;
+	float y1;
 	public Log log = LogFactory.getLog(getClass());
 	private final PApplet p5;
+	private final Contenedor contenedor;
+	private final FilaRet parent;
+	private final float medidaVariable;
 
-	public float getX1() {
-		return x1;
-	}
-
-	public FilaRet(int numeroCeldas, float x1, float y1, float ancho, float alto,
-			PApplet p5) {
+	public FilaRet(FilaRet parent, int numeroCeldas, Contenedor contenedor, PApplet p5, float altoInicial) {
 		super();
-
+		this.parent = parent;
 		this.numeroCeldas = numeroCeldas;
-		this.x1 = x1;
-		this.y1 = y1;
-		this.ancho = ancho;
-		this.alto = alto;
+		this.contenedor = contenedor;
 		this.p5 = p5;
-		posicionSeleccionada=(int)(p5.random(numeroCeldas));
-		log.info("posicionSeleccionada: "+posicionSeleccionada);
-		CalculoMarcas calculoMarcas = new CalculoMarcas(x1, y1, ancho, numeroCeldas, posicionSeleccionada);
+		this.medidaVariable = altoInicial;
+		posicionSeleccionada = (int) (p5.random(numeroCeldas));
+		log.info("posicionSeleccionada: " + posicionSeleccionada);
+		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroCeldas, posicionSeleccionada);
 		celdas = generaCeldas(calculoMarcas);
 
 	}
@@ -45,14 +38,13 @@ public class FilaRet {
 			if (i < calculoMarcas.marcas.size() - 1) {
 				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
 				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);
-				float anchoInicial = marcaSig.coordenada_x - marcaActual.coordenada_x;
+				float anchoInicial = marcaSig.marca - marcaActual.marca;
 
 				CeldaRet celdaAnterior = null;
 				if (i > 0)
 					celdaAnterior = celdas.get(i - 1);
 
-				celdas.add(new CeldaRet(marcaActual.coordenada_y, marcaSig.coordenada_y + alto, celdaAnterior,
-						this, p5.color(p5.random(100), 100, 80), anchoInicial));
+				celdas.add(new CeldaRet(celdaAnterior, this, p5.color(p5.random(100), 100, 80), anchoInicial));
 
 			} else {
 				// es el ultimo modulo se dibuja el rect desde el anterior
@@ -65,8 +57,8 @@ public class FilaRet {
 	public void raton(int mouseX, int mouseY) {
 		for (int i = 0; i < celdas.size(); i++) {
 			CeldaRet celda = celdas.get(i);
-			float x1 = celda.fila.x1 + celda.getX1();
-			if (mouseX > x1 && mouseX < (x1 + celda.getAncho()) && mouseY > celda.y1 && mouseY < celda.getY2()) {
+			float x1 = contenedor.getX1() + celda.getPosicion();
+			if (mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable()) && mouseY > y1 && mouseY < y1 + getPosicion()) {
 				celda.sel = true;
 				// todo: order sensibles
 				log.info("celda pos sel: " + i);
@@ -81,7 +73,7 @@ public class FilaRet {
 						int indexSen = celdas.size() - j - 1;
 						CeldaRet celdaRet = celdas.get(j);
 						CeldaRet celdaSen = celdas.get(indexSen);
-						celdaSen.setAncho(celdaRet.getAnchoInicial());
+						celdaSen.setMedidaVariable(celdaRet.getMedidaVariable());
 						// celdaSen.y1
 					}
 				} else if (celdas.size() > 2) {
@@ -89,7 +81,7 @@ public class FilaRet {
 
 					// si es menor que dos valen las condiciones anteriores
 					log.info("en la mitad" + i);
-					float anchoBMitad = celdas.get(1).getAnchoInicial() / 2;
+					float anchoBMitad = celdas.get(1).getMedidaVariable() / 2;
 					int restantesDcha = celdas.size() - i;
 					log.info("en la restantesDcha" + restantesDcha);
 					for (int j = 0; j < restantesDcha; j++) {
@@ -98,11 +90,12 @@ public class FilaRet {
 
 						// TODO falta por calcular el sobrante y aplicarlo a los
 						// demas...
-						// reemplazar por nuevo calculo de marcas y seteo de nuevos anchos
+						// reemplazar por nuevo calculo de marcas y seteo de
+						// nuevos anchos
 						if (j == 1)
-							celdaInt.setAncho(celdaSig.getAnchoInicial() / 2);
+							celdaInt.setMedidaVariable(celdaSig.getMedidaVariable() / 2);
 						else
-							celdaInt.setAncho(celdaSig.getAnchoInicial());
+							celdaInt.setMedidaVariable(celdaSig.getMedidaVariable());
 						System.out.println(celdaInt);
 					}
 					int pos = 0;
@@ -112,12 +105,13 @@ public class FilaRet {
 						CeldaRet celdaSig = celdas.get(pos);
 						// TODO falta por calcular el sobrante y aplicarlo a los
 						// demas...
-						// reemplazar por nuevo calculo de marcas y seteo de nuevos anchos
+						// reemplazar por nuevo calculo de marcas y seteo de
+						// nuevos anchos
 
 						if (pos == 1)
-							celdaInt.setAncho(celdaSig.getAnchoInicial() / 2);
+							celdaInt.setMedidaVariable(celdaSig.getMedidaVariable() / 2);
 						else
-							celdaInt.setAncho(celdaSig.getAnchoInicial());
+							celdaInt.setMedidaVariable(celdaSig.getMedidaVariable());
 
 					}
 
@@ -134,11 +128,28 @@ public class FilaRet {
 	private void resetInicial() {
 		for (int j = 0; j < celdas.size(); j++) {
 			CeldaRet celdaRet = celdas.get(j);
-			celdaRet.setAncho(celdaRet.getAnchoInicial());
+			celdaRet.setMedidaVariable(celdaRet.getMedidaVariable());
 		}
 	}
 
 	List<CeldaRet> celdas;
 	public int posicionSeleccionada;
+
+	@Override
+	public TieneParent getParent() {
+		return parent;
+	}
+
+	@Override
+	public float getMedidaVariable() {
+		return medidaVariable;
+	}
+
+	@Override
+	public float getPosicion() {
+		CalculoRecursivo calculo = new CalculoRecursivo();
+		float res = calculo.calcula(this);
+		return res;
+	}
 
 }
