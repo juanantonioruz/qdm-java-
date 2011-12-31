@@ -24,11 +24,11 @@ public  class CalculoMarcas {
 		// lista de posiciones jerarquizadas es decir identificadas en relacion a la unidad
 		// se suma 1 para tener en cuentra el indexado...
 		posicionSeleccionada++;
-		log.info("posicion calculo: "+(posicionSeleccionada));
-		log.info("numeroCeldas: "+numeroCeldas);
+		log.debug("posicion calculo: "+(posicionSeleccionada));
+		log.debug("numeroCeldas: "+numeroCeldas);
 		
 		List<Integer> jerarquizaPosiciones = jerarquizaPosiciones(numeroCeldas, posicionSeleccionada);
-		log.info(jerarquizaPosiciones);
+		log.debug(jerarquizaPosiciones);
 			
 		// add marca inicial
 		MarcaPosicion inicio = new MarcaPosicion(0);
@@ -41,10 +41,9 @@ public  class CalculoMarcas {
 
 		for(Integer j:jerarquizaPosiciones){
 			CalculoUnidadesPorPosicionDeModulo calculo = new CalculoUnidadesPorPosicionDeModulo(j);
-			log.info(j+"+"+calculo.unidades);
+			log.debug(j+"+"+calculo.unidades);
 			int multiplicador = calculo.unidades;
 			inicioColumna_x += medidaModulo * multiplicador;
-			log.debug("add moduloRect");
 			marcas.add(new MarcaPosicion(inicioColumna_x));
 
 		}
@@ -57,7 +56,7 @@ public  class CalculoMarcas {
 			Integer jerarquia=dameJerarquia(i, posicionSeleccionada, numeroCeldas);
 			jerarquiaPosiciones.add(jerarquia);
 		}
-		log.info(jerarquiaPosiciones);
+		log.debug(jerarquiaPosiciones);
 		
 		
 //		disminuye jerarquias partiendo de la unidad...
@@ -79,7 +78,7 @@ public  class CalculoMarcas {
 	private Integer dameJerarquia(int posicionCelda, int posicionSeleccionada, int numeroCeldas) {
 		posicionCelda++;
 		int distancia = Math.abs(posicionCelda-posicionSeleccionada); 
-		log.info("posicionCelda"+posicionCelda+" posicionSeleccionada: "+posicionSeleccionada+" distancia: "+distancia);
+		log.debug("posicionCelda"+posicionCelda+" posicionSeleccionada: "+posicionSeleccionada+" distancia: "+distancia);
 		
 		return Math.abs(distancia-numeroCeldas);
 	}

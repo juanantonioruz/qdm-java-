@@ -10,11 +10,10 @@ public class CeldaRet implements TieneParent{
 
 	final FilaRet fila;
 
-	public CeldaRet(CeldaRet parent, FilaRet fila, int color, float medida) {
+	public CeldaRet(CeldaRet parent, FilaRet fila, int color) {
 		this.parent = parent;
 		this.fila = fila;
 		this.color = color;
-		this.medidaVariable = medida;
 	}
 
 	public void setMedidaVariable(float ancho) {

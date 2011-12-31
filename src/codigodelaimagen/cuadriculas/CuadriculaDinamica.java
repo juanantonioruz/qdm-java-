@@ -14,12 +14,12 @@ public class CuadriculaDinamica extends CDIBase {
 	Contenedor contenedor;
 	private void inicializaContenedor() {
 		
-		contenedor=new Contenedor(100, 0,width-200, 300,13,this);
+		contenedor=new Contenedor(100, 0,width-200, height,13,this);
 	}
 
 	@Override
 	public void mouseMoved() {
-		//fila.raton(mouseX, mouseY);
+		contenedor.raton(mouseX, mouseY);
 	}
 	
 
@@ -38,14 +38,13 @@ public class CuadriculaDinamica extends CDIBase {
 
 	public void draw() {
 		// noLoop();
-		println(frameCount);
 		background(100);
-		fill(20);
+//		fill(20);
+//		noStroke();
+//		rect(100, 10, width - 200, height);
+//		stroke(0);
 		noStroke();
-		rect(100, 10, width - 200, height);
-		stroke(0);
-		strokeWeight(2);
-		noFill();
+//		noFill();
 		for(FilaRet fila:contenedor.filas)
 		pintaFila(fila);
 	}
@@ -54,8 +53,8 @@ public class CuadriculaDinamica extends CDIBase {
 		for (int posicion=0; posicion<fila.celdas.size(); posicion++) {
 			CeldaRet celda=fila.celdas.get(posicion);
 			fill(celda.color);
-			if (posicion==fila.posicionSeleccionada)
-				fill(100);
+			if (celda.sel)
+				fill(celda.color,30);
 			stroke(celda.color);
 			rect(contenedor.getX1() + celda.getPosicion(), fila.getPosicion(), celda.getMedidaVariable(), fila.getMedidaVariable());
 		}
@@ -68,7 +67,7 @@ public class CuadriculaDinamica extends CDIBase {
 
 	@Override
 	protected void ponsize(int i, int j) {
-		super.ponsize(600, 300);
+		super.ponsize(800, 600);
 	}
 
 }
