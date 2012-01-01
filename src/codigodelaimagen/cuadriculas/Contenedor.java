@@ -129,6 +129,25 @@ public class Contenedor implements Evaluable{
 			}
 		}
 	}
+	/**
+	 * over!
+	 * @param mouseX
+	 * @param mouseY
+	 */
+	public void ratonEncima(int mouseX, int mouseY) {
+		for(int i=0; i<filas.size(); i++){
+			FilaRet f=filas.get(i);
+			float y1 = getY1() + f.getPosicionEnRelacionDeSumasParentPosition();
+			boolean coincideHor = mouseX > getX1() && mouseX < (getX1() + ancho);
+			boolean coindiceV =mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
+			if (coincideHor &&  coindiceV) {
+				log.debug("coindice fila: "+i);
+				f.ratonOver(mouseX, mouseY);
+				Behavior1.seleccionaEncima(filas, f);
+				break;
+			}
+		}
+	}
 
 
 

@@ -29,7 +29,8 @@ public class CuadriculaDinamica extends CDIBase {
 
 	@Override
 	public void mouseMoved() {
-		//contenedor.raton(mouseX, mouseY);
+		if(mouseX!=pmouseX && mouseY!=pmouseY)
+		contenedor.ratonEncima(mouseX, mouseY);
 	}
 	
 
@@ -70,8 +71,9 @@ public class CuadriculaDinamica extends CDIBase {
 			CeldaRet celda=fila.celdas.get(posicion);
 			celda.actualiza();
 			fill(celda.color,30);
-			if (celda.isSel())
+			if (celda.isEncima())
 				fill(celda.color);
+			
 			stroke(0);
 			float mix = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
 			float miy = fila.getPosicionEnRelacionDeSumasParentPosition();

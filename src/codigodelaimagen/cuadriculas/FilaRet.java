@@ -56,28 +56,43 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		return celdas;
 	}
 
+	public void ratonOver(int mouseX, int mouseY) {
+		for (int i = 0; i < celdas.size(); i++) {
+			CeldaRet celda = celdas.get(i);
+			boolean encima = isOverCelda(mouseX, mouseY, celda);
+			if (encima) {
+				celda.setEncima(true);
+				log.debug("celda.encima"+celda.isEncima());
+				Behavior1.seleccionaEncima(celdas, celda);
+				log.debug(celda+""+celda.isEncima());
+				break;
+			}
+		}
+		
+	}
 	public void raton(int mouseX, int mouseY) {
 		for (int i = 0; i < celdas.size(); i++) {
 			CeldaRet celda = celdas.get(i);
-			float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
-			float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasParentPosition();
-			
-			boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable());
-			boolean coindiceV =mouseY > y1 && mouseY < y1 + getMedidaVariable();
-			if (coincideHor &&  coindiceV) {
+			boolean encima = isOverCelda(mouseX, mouseY, celda);
+			if (encima) {
 				Behavior1.selecciona(celdas, celda);
 
-				log.info("celda pos sel: " + i);
+				log.debug("celda pos sel: " + i);
 				evalua(i);
 				// TODO pon es select(false) el resto de las celdas
 				break;
-			} else {
-				celda.setSel(false);
-//				resetInicial();
-				// TODO : pasados unos segundos resetear --- resetInicial();
-
 			}
 		}
+	}
+
+	private boolean isOverCelda(int mouseX, int mouseY, CeldaRet celda) {
+		float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
+		float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasParentPosition();
+		
+		boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable());
+		boolean coindiceV =mouseY > y1 && mouseY < y1 + getMedidaVariable();
+		boolean encima = coincideHor &&  coindiceV;
+		return encima;
 	}
 
 	private void resetInicial() {

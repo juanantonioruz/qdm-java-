@@ -68,7 +68,7 @@ public  class CalculoMarcas {
 		List<Integer> jerarquiaPosiciones2=new ArrayList<Integer>();
 		for(Integer i:jerarquiaPosiciones)
 			jerarquiaPosiciones2.add(i-menor);
-		log.info(jerarquiaPosiciones2);
+		log.debug(jerarquiaPosiciones2);
 		return jerarquiaPosiciones2;
 	}
 

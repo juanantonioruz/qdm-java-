@@ -7,6 +7,7 @@ import processing.core.PApplet;
 
 public class Behavior1 {
 	private boolean sel;
+	private boolean encima;
 
 	float medidaVariableAnterior;
 	private float medidaVariable;
@@ -20,17 +21,25 @@ public class Behavior1 {
 	}
 
 	public static void selecciona(List filas2, Behavior1 f) {
-		sas(filas2, f);
+		seleccionaSel(filas2, f, true);
+		
+	}
+	public static void seleccionaEncima(List filas2, Behavior1 f) {
+		seleccionaSel(filas2, f, false);
 		
 	}
 
-	private static void sas(List<FilaRet> filas2, Behavior1 f) {
+	private static void seleccionaSel(List<FilaRet> filas2, Behavior1 f, boolean clickOver) {
 		List<Behavior1> operar=new ArrayList<Behavior1>();
 		operar.addAll(filas2);
 		operar.remove(f);
-		f.setSel(true);
+		if(clickOver)f.setSel(true);
+		else{
+			f.setEncima(true);
+		}
 		for(Behavior1 fi:operar)
-			fi.setSel(false);
+			if(clickOver)fi.setSel(false);
+			else fi.setEncima(false);
 	}
 
 	int contador = 0;
@@ -50,6 +59,14 @@ public class Behavior1 {
 	public void actualiza() {
 		if(contador<pasos)
 		contador++;
+	}
+
+	public boolean isEncima() {
+		return encima;
+	}
+
+	public void setEncima(boolean encima) {
+		this.encima = encima;
 	}
 	
 	
