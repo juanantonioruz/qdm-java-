@@ -1,9 +1,8 @@
 package codigodelaimagen.cuadriculas;
 
-public class CeldaRet implements TieneParent{
-	public boolean sel;
 
-	private float medidaVariable;
+public class CeldaRet extends Behavior1 implements TieneParent {
+
 	public CeldaRet parent;
 
 	int color;
@@ -16,22 +15,14 @@ public class CeldaRet implements TieneParent{
 		this.color = color;
 	}
 
-	public void setMedidaVariable(float ancho) {
-		this.medidaVariable = ancho;
-	}
+	
 
-
-	public float getPosicion() {
+	public float getPosicionEnRelacionDeSumasParentPosition() {
 		CalculoRecursivo calculo = new CalculoRecursivo();
 		float res = calculo.calcula(this);
 		return res;
 	}
 
-
-
-	public float getMedidaVariable() {
-		return medidaVariable;
-	}
 
 	public float getAlto() {
 		return fila.getMedidaVariable();
@@ -42,5 +33,6 @@ public class CeldaRet implements TieneParent{
 		return parent;
 	}
 
+	
 
 }

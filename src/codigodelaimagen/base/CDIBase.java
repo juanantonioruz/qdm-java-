@@ -30,6 +30,13 @@ public class CDIBase extends PApplet{
 
 
 	@Override
+	public void mouseReleased() {
+		// TODO Auto-generated method stub
+		super.mouseReleased();
+	}
+
+
+	@Override
 	public void mouseMoved() {
 		super.mouseMoved();
 	}

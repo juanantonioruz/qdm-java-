@@ -3,30 +3,44 @@ package codigodelaimagen.cuadriculas;
 import java.util.ArrayList;
 import java.util.List;
 
+import qdmp5.ServicioToxiColor;
+import toxi.color.ColorList;
+import toxi.color.TColor;
+
 import codigodelaimagen.base.CDIBase;
 
 public class CuadriculaDinamica extends CDIBase {
 
+
 	public void setup() {
 		super.setup();
+		listaColoresEquipo = new ServicioToxiColor(this).iniciaColoresEquiposBis();
 		inicializaContenedor();
 	}
 	Contenedor contenedor;
+	private ColorList listaColoresEquipo;
 	private void inicializaContenedor() {
+
+
+
 		
-		contenedor=new Contenedor(100, 0,width-200, height,13,this);
+		contenedor=new Contenedor(10, 0,width-20, height,13,this, listaColoresEquipo);
 	}
 
 	@Override
 	public void mouseMoved() {
-		contenedor.raton(mouseX, mouseY);
+		//contenedor.raton(mouseX, mouseY);
 	}
 	
 
 	@Override
 	public void mouseClicked() {
-		inicializaContenedor();
-		draw();
+		log.info("raton");
+		contenedor.raton(mouseX, mouseY);
+	}
+	@Override
+	public void mouseReleased() {
+//		contenedor.raton(mouseX, mouseY);
 	}
 
 
@@ -50,13 +64,15 @@ public class CuadriculaDinamica extends CDIBase {
 	}
 
 	private void pintaFila(FilaRet fila) {
+		fila.actualiza();
 		for (int posicion=0; posicion<fila.celdas.size(); posicion++) {
 			CeldaRet celda=fila.celdas.get(posicion);
+			celda.actualiza();
 			fill(celda.color);
-			if (celda.sel)
-				fill(celda.color,30);
-			stroke(celda.color);
-			rect(contenedor.getX1() + celda.getPosicion(), fila.getPosicion(), celda.getMedidaVariable(), fila.getMedidaVariable());
+			if (celda.isSel())
+				fill(celda.color,80);
+			stroke(0);
+			rect(contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition(), fila.getPosicionEnRelacionDeSumasParentPosition(), celda.getMedidaVariable(), fila.getMedidaVariable());
 		}
 	}
 

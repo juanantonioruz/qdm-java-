@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 
-public class FilaRet implements TieneParent, Evaluable {
+public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 
 	private final int numeroCeldas;
 	float y1;
@@ -16,11 +16,7 @@ public class FilaRet implements TieneParent, Evaluable {
 	private final PApplet p5;
 	private final Contenedor contenedor;
 	private final FilaRet parent;
-	private float medidaVariable;
 
-	public void setMedidaVariable(float medidaVariable) {
-		this.medidaVariable = medidaVariable;
-	}
 
 	public FilaRet(FilaRet parent, int numeroCeldas, Contenedor contenedor, PApplet p5) {
 		super();
@@ -34,6 +30,7 @@ public class FilaRet implements TieneParent, Evaluable {
 	}
 
 	public void evalua(int posicionSeleccionada) {
+		log.info("evalua "+posicionSeleccionada);
 		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroCeldas, posicionSeleccionada);
 		for (int i = 0; i < calculoMarcas.marcas.size()-1; i++) {
 				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
@@ -53,7 +50,7 @@ public class FilaRet implements TieneParent, Evaluable {
 			if (i > 0)
 				celdaAnterior = celdas.get(i - 1);
 
-			celdas.add(new CeldaRet(celdaAnterior, this, p5.color(p5.random(100), 100, 80)));
+			celdas.add(new CeldaRet(celdaAnterior, this, contenedor.getColor()));
 
 		}
 		return celdas;
@@ -62,17 +59,19 @@ public class FilaRet implements TieneParent, Evaluable {
 	public void raton(int mouseX, int mouseY) {
 		for (int i = 0; i < celdas.size(); i++) {
 			CeldaRet celda = celdas.get(i);
-			float x1 = contenedor.getX1() + celda.getPosicion();
-			float y1 = contenedor.getY1() + getPosicion();
+			float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
+			float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasParentPosition();
 			
 			boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable());
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
-				celda.sel = true;
+				celda.setSel(true);
 				log.info("celda pos sel: " + i);
 				evalua(i);
+				// TODO pon es select(false) el resto de las celdas
+				break;
 			} else {
-				celda.sel = false;
+				celda.setSel(false);
 //				resetInicial();
 				// TODO : pasados unos segundos resetear --- resetInicial();
 
@@ -86,20 +85,15 @@ public class FilaRet implements TieneParent, Evaluable {
 
 	List<CeldaRet> celdas;
 	public int posicionSeleccionada=0;
-	public boolean sel;
 
 	@Override
 	public TieneParent getParent() {
 		return parent;
 	}
 
-	@Override
-	public float getMedidaVariable() {
-		return medidaVariable;
-	}
 
 	@Override
-	public float getPosicion() {
+	public float getPosicionEnRelacionDeSumasParentPosition() {
 		CalculoRecursivo calculo = new CalculoRecursivo();
 		float res = calculo.calcula(this);
 		return res;

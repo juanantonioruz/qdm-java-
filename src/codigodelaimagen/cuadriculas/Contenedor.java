@@ -2,11 +2,14 @@ package codigodelaimagen.cuadriculas;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
+import toxi.color.ColorList;
+import toxi.color.TColor;
 
 public class Contenedor implements Evaluable{
 
@@ -21,8 +24,9 @@ public class Contenedor implements Evaluable{
 	public Log log = LogFactory.getLog(getClass());
 	private final PApplet p5;
 	private final int numeroFilas;
+	private final ColorList listaColoresEquipo;
 
-	public Contenedor(float x1, float y1, float ancho, float alto, int numeroFilas, PApplet p5) {
+	public Contenedor(float x1, float y1, float ancho, float alto, int numeroFilas, PApplet p5, ColorList listaColoresEquipo) {
 		super();
 		this.x1 = x1;
 		this.y1 = y1;
@@ -30,6 +34,7 @@ public class Contenedor implements Evaluable{
 		this.alto = alto;
 		this.numeroFilas = numeroFilas;
 		this.p5 = p5;
+		this.listaColoresEquipo = listaColoresEquipo;
 
 		log.info("posicionSeleccionada: " + posicionSeleccionada);
 		filas = generaFilas();
@@ -63,6 +68,17 @@ public class Contenedor implements Evaluable{
 		}
 		return filas;
 	}
+	public int getColor(){
+		return getColor(listaColoresEquipo.get((int)p5.random(listaColoresEquipo.size())));
+	}
+	public int getColor(TColor tColor) {
+		return p5.color(mapeaValor(tColor.hue()), mapeaValor(tColor.saturation()),
+				mapeaValor(tColor.brightness()));
+	}
+
+	float mapeaValor(float ta) {
+	return p5.map(ta, 0, 1, 0, 100);
+	}
 
 	public float getX1() {
 		return x1;
@@ -79,17 +95,22 @@ public class Contenedor implements Evaluable{
 	}
 
 
-
+	/**
+	 * click!
+	 * @param mouseX
+	 * @param mouseY
+	 */
 	public void raton(int mouseX, int mouseY) {
 		for(int i=0; i<filas.size(); i++){
 			FilaRet f=filas.get(i);
-			float y1 = getY1() + f.getPosicion();
+			float y1 = getY1() + f.getPosicionEnRelacionDeSumasParentPosition();
 			boolean coincideHor = mouseX > getX1() && mouseX < (getX1() + ancho);
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
 				f.raton(mouseX, mouseY);
-				f.sel=true;
+				f.setSel(true);
 				evalua(i);
+				break;
 				// TODO EXIT del bucle y poner en sel=false las demas filas
 			}
 		}

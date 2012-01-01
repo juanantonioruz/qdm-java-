@@ -6,6 +6,6 @@ public interface TieneParent {
 
 	float getMedidaVariable();
 	
-	float getPosicion();
+	float getPosicionEnRelacionDeSumasParentPosition();
 
 }
