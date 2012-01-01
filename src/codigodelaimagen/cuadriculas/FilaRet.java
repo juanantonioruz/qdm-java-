@@ -24,14 +24,14 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		this.numeroCeldas = numeroCeldas;
 		this.contenedor = contenedor;
 		this.p5 = p5;
-		log.info("posicionSeleccionada: " + posicionSeleccionada);
+		log.debug("posicionSeleccionada: " + posicionSeleccionada);
 		celdas = generaCeldas();
 		evalua(posicionSeleccionada);
 	}
 
 	public void evalua(int posicionSeleccionada) {
-		log.info("evalua "+posicionSeleccionada);
-		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroCeldas, posicionSeleccionada);
+		log.debug("evalua "+posicionSeleccionada);
+		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroCeldas, posicionSeleccionada,2);
 		for (int i = 0; i < calculoMarcas.marcas.size()-1; i++) {
 				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
 				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);
@@ -65,7 +65,8 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 			boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable());
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
-				celda.setSel(true);
+				Behavior1.selecciona(celdas, celda);
+
 				log.info("celda pos sel: " + i);
 				evalua(i);
 				// TODO pon es select(false) el resto de las celdas
@@ -97,6 +98,12 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		CalculoRecursivo calculo = new CalculoRecursivo();
 		float res = calculo.calcula(this);
 		return res;
+	}
+
+	public int getPosicionSeleccionada() {
+		for(int i=0; i<celdas.size(); i++)
+			if(celdas.get(i).isSel())return i;
+		return 0;
 	}
 
 }

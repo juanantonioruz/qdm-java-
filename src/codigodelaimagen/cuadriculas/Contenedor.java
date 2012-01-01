@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
+import qdmp5.escale.Fila;
 import toxi.color.ColorList;
 import toxi.color.TColor;
 
@@ -38,13 +39,24 @@ public class Contenedor implements Evaluable{
 
 		log.info("posicionSeleccionada: " + posicionSeleccionada);
 		filas = generaFilas();
+		filas.get(0).setSel(true);
 		evalua(posicionSeleccionada);
 	}
 
 
 
 	public  void evalua(int seleccionada) {
-		CalculoMarcas calculoMarcas = new CalculoMarcas(alto, numeroFilas, seleccionada);
+		float base=2;
+		for(FilaRet f:filas){
+			if(f.isSel()){
+				int posicion=f.getPosicionSeleccionada();
+				if(posicion>0 )
+					base=p5.map(posicion, 0,f.celdas.size(),2,5);
+				System.out.println(base+" base");
+				break;
+			}
+		}
+		CalculoMarcas calculoMarcas = new CalculoMarcas(alto, numeroFilas, seleccionada, base);
 //		se tiene en cuenta una iteracion menos por la forma de tomar marcas
 		// es decir no se itera por las filas sino por las marcas
 		for (int i = 0; i < calculoMarcas.marcas.size()-1; i++) {
@@ -62,10 +74,12 @@ public class Contenedor implements Evaluable{
 				if (i > 0)
 					filaAnterior = filas.get(i - 1);
 
-				filas.add(new FilaRet(filaAnterior, 5, this, p5));
+				filas.add(new FilaRet(filaAnterior, 10, this, p5));
 
 
 		}
+		for(FilaRet f:filas)
+			f.celdas.get(0).setSel(true);
 		return filas;
 	}
 	public int getColor(){
@@ -108,13 +122,16 @@ public class Contenedor implements Evaluable{
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
 				f.raton(mouseX, mouseY);
-				f.setSel(true);
+				Behavior1.selecciona(filas, f);
 				evalua(i);
 				break;
 				// TODO EXIT del bucle y poner en sel=false las demas filas
 			}
 		}
 	}
+
+
+
 
 
 }

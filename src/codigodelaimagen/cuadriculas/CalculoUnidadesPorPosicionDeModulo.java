@@ -2,10 +2,12 @@ package codigodelaimagen.cuadriculas;
 
 public class CalculoUnidadesPorPosicionDeModulo {
 	int unidades=1;
+	private final float baseMultiplicadora;
 	
 	
-	public CalculoUnidadesPorPosicionDeModulo(int posicion) {
+	public CalculoUnidadesPorPosicionDeModulo(int posicion, float baseMultiplicadora) {
 		super();
+		this.baseMultiplicadora = baseMultiplicadora;
 		dameCantidadDeUnidadesPorPosicionDeModulo(posicion);
 	}
 
@@ -19,7 +21,6 @@ public class CalculoUnidadesPorPosicionDeModulo {
 	 * @return
 	 */
 	private int dameCantidadDeUnidadesPorPosicionDeModulo(int i) {
-		int baseMultiplicadora = 2;
 		while (i > 0) {
 			unidades *= baseMultiplicadora;
 			i--;

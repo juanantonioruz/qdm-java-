@@ -59,20 +59,28 @@ public class CuadriculaDinamica extends CDIBase {
 //		stroke(0);
 		noStroke();
 //		noFill();
+		contador=0;
 		for(FilaRet fila:contenedor.filas)
 		pintaFila(fila);
 	}
-
+	int contador;
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
 		for (int posicion=0; posicion<fila.celdas.size(); posicion++) {
 			CeldaRet celda=fila.celdas.get(posicion);
 			celda.actualiza();
-			fill(celda.color);
+			fill(celda.color,30);
 			if (celda.isSel())
-				fill(celda.color,80);
+				fill(celda.color);
 			stroke(0);
-			rect(contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition(), fila.getPosicionEnRelacionDeSumasParentPosition(), celda.getMedidaVariable(), fila.getMedidaVariable());
+			float mix = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
+			float miy = fila.getPosicionEnRelacionDeSumasParentPosition();
+			rect(mix, miy, celda.getMedidaVariable(), fila.getMedidaVariable());
+			contador++;
+			fill(100);
+			text(contador, mix, miy+30);
+			fill(0);
+			text(contador, mix-2, miy+30-2);
 		}
 	}
 
