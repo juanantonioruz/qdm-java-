@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,12 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import codigodelaimagen.cuadriculas.HelperRet;
+import codigodelaimagen.cuadriculas.calculos.CalculoMarcas;
+import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
+import codigodelaimagen.cuadriculas.interfaces.Behavior1;
+import codigodelaimagen.cuadriculas.interfaces.Evaluable;
 
 import processing.core.PApplet;
 import qdmp5.escale.Fila;
@@ -51,7 +57,7 @@ public class Contenedor implements Evaluable{
 			if(f.isSel()){
 				int posicion=f.getPosicionSeleccionada();
 				if(posicion>0 )
-					base=p5.map(posicion, 0,f.celdas.size(),2,5);
+					base=p5.map(posicion, 0,f.columnas.size(),2,5);
 				System.out.println(base+" base");
 				break;
 			}
@@ -79,7 +85,7 @@ public class Contenedor implements Evaluable{
 
 		}
 		for(FilaRet f:filas)
-			f.celdas.get(0).setSel(true);
+			f.columnas.get(0).setSel(true);
 		return filas;
 	}
 	public int getColor(){
@@ -122,7 +128,7 @@ public class Contenedor implements Evaluable{
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
 				f.raton(mouseX, mouseY);
-				Behavior1.selecciona(filas, f);
+				HelperRet.selecciona(filas, f);
 				evalua(i);
 				break;
 				// TODO EXIT del bucle y poner en sel=false las demas filas
@@ -143,7 +149,7 @@ public class Contenedor implements Evaluable{
 			if (coincideHor &&  coindiceV) {
 				log.debug("coindice fila: "+i);
 				f.ratonOver(mouseX, mouseY);
-				Behavior1.seleccionaEncima(filas, f);
+				HelperRet.seleccionaEncima(filas, f);
 				break;
 			}
 		}

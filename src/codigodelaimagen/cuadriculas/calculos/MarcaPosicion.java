@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.calculos;
 
 public class MarcaPosicion {
 

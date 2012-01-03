@@ -8,8 +8,11 @@ import toxi.color.ColorList;
 import toxi.color.TColor;
 
 import codigodelaimagen.base.CDIBase;
+import codigodelaimagen.cuadriculas.model.CeldaRet;
+import codigodelaimagen.cuadriculas.model.Contenedor;
+import codigodelaimagen.cuadriculas.model.FilaRet;
 
-public class CuadriculaDinamica extends CDIBase {
+public class CuadriculaDinamicaP5 extends CDIBase {
 
 
 	public void setup() {
@@ -20,10 +23,6 @@ public class CuadriculaDinamica extends CDIBase {
 	Contenedor contenedor;
 	private ColorList listaColoresEquipo;
 	private void inicializaContenedor() {
-
-
-
-		
 		contenedor=new Contenedor(10, 0,width-20, height,13,this, listaColoresEquipo);
 	}
 
@@ -67,8 +66,8 @@ public class CuadriculaDinamica extends CDIBase {
 	int contador;
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
-		for (int posicion=0; posicion<fila.celdas.size(); posicion++) {
-			CeldaRet celda=fila.celdas.get(posicion);
+		for (int posicion=0; posicion<fila.columnas.size(); posicion++) {
+			CeldaRet celda=fila.columnas.get(posicion);
 			celda.actualiza();
 			fill(celda.color,30);
 			if (celda.isEncima())

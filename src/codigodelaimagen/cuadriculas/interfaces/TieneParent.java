@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.interfaces;
 
 public interface TieneParent {
 

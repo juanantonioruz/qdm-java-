@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,45 +6,55 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import codigodelaimagen.cuadriculas.HelperRet;
+import codigodelaimagen.cuadriculas.calculos.CalculoMarcas;
+import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
+import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
+import codigodelaimagen.cuadriculas.interfaces.Behavior1;
+import codigodelaimagen.cuadriculas.interfaces.Evaluable;
+import codigodelaimagen.cuadriculas.interfaces.TieneParent;
+
 import processing.core.PApplet;
 
 public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 
-	private final int numeroCeldas;
+	private final int numeroColumnas;
 	float y1;
-	public Log log = LogFactory.getLog(getClass());
 	private final PApplet p5;
 	private final Contenedor contenedor;
 	private final FilaRet parent;
+	public List<CeldaRet> columnas;
+	public int posicionSeleccionada=0;
+
 
 
 	public FilaRet(FilaRet parent, int numeroCeldas, Contenedor contenedor, PApplet p5) {
 		super();
 		this.parent = parent;
-		this.numeroCeldas = numeroCeldas;
+		this.numeroColumnas = numeroCeldas;
 		this.contenedor = contenedor;
 		this.p5 = p5;
 		log.debug("posicionSeleccionada: " + posicionSeleccionada);
-		celdas = generaCeldas();
+		columnas = generaColumnas();
 		evalua(posicionSeleccionada);
 	}
 
 	public void evalua(int posicionSeleccionada) {
 		log.debug("evalua "+posicionSeleccionada);
-		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroCeldas, posicionSeleccionada,2);
+		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroColumnas, posicionSeleccionada,2);
 		for (int i = 0; i < calculoMarcas.marcas.size()-1; i++) {
 				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
 				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);
 				float anchoInicial = marcaSig.marca - marcaActual.marca;
-				celdas.get(i).setMedidaVariable(anchoInicial);
+				columnas.get(i).setMedidaVariable(anchoInicial);
 
 
 		}
 	}
 
-	private List<CeldaRet> generaCeldas() {
+	private List<CeldaRet> generaColumnas() {
 		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
-		for (int i = 0; i < numeroCeldas; i++) {
+		for (int i = 0; i < numeroColumnas; i++) {
 
 			CeldaRet celdaAnterior = null;
 			if (i > 0)
@@ -57,13 +67,13 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 	}
 
 	public void ratonOver(int mouseX, int mouseY) {
-		for (int i = 0; i < celdas.size(); i++) {
-			CeldaRet celda = celdas.get(i);
+		for (int i = 0; i < columnas.size(); i++) {
+			CeldaRet celda = columnas.get(i);
 			boolean encima = isOverCelda(mouseX, mouseY, celda);
 			if (encima) {
 				celda.setEncima(true);
 				log.debug("celda.encima"+celda.isEncima());
-				Behavior1.seleccionaEncima(celdas, celda);
+				HelperRet.seleccionaEncima(columnas, celda);
 				log.debug(celda+""+celda.isEncima());
 				break;
 			}
@@ -71,11 +81,11 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		
 	}
 	public void raton(int mouseX, int mouseY) {
-		for (int i = 0; i < celdas.size(); i++) {
-			CeldaRet celda = celdas.get(i);
+		for (int i = 0; i < columnas.size(); i++) {
+			CeldaRet celda = columnas.get(i);
 			boolean encima = isOverCelda(mouseX, mouseY, celda);
 			if (encima) {
-				Behavior1.selecciona(celdas, celda);
+				HelperRet.selecciona(columnas, celda);
 
 				log.debug("celda pos sel: " + i);
 				evalua(i);
@@ -95,13 +105,6 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		return encima;
 	}
 
-	private void resetInicial() {
-		evalua(0);
-	}
-
-	List<CeldaRet> celdas;
-	public int posicionSeleccionada=0;
-
 	@Override
 	public TieneParent getParent() {
 		return parent;
@@ -116,8 +119,8 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 	}
 
 	public int getPosicionSeleccionada() {
-		for(int i=0; i<celdas.size(); i++)
-			if(celdas.get(i).isSel())return i;
+		for(int i=0; i<columnas.size(); i++)
+			if(columnas.get(i).isSel())return i;
 		return 0;
 	}
 

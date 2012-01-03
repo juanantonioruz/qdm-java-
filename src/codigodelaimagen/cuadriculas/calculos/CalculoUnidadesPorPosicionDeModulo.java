@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.calculos;
 
 public class CalculoUnidadesPorPosicionDeModulo {
 	int unidades=1;

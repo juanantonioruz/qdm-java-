@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.calculos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
+
 public  class CalculoMarcas {
 	public Log log = LogFactory.getLog(getClass());
 	
-	List<MarcaPosicion> marcas = new ArrayList<MarcaPosicion>();
+	public List<MarcaPosicion> marcas = new ArrayList<MarcaPosicion>();
 
 	private float baseMultiplicadora;
 

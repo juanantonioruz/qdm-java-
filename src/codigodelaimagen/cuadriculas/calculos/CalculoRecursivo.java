@@ -1,4 +1,6 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.cuadriculas.calculos;
+
+import codigodelaimagen.cuadriculas.interfaces.TieneParent;
 
 public class CalculoRecursivo {
 	float res;
