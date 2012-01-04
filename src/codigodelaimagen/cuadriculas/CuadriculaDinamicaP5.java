@@ -86,7 +86,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			float colX=filaX+col.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 			float colY=filaY;
 			float colWeight=col.getMedidaVariable();
-			float colHeight=col.getAlto();
+			float colHeight=col.getHeight();
 //			fill(HelperColors.getColor(),80);
 			fill(100);
 			stroke(0);
@@ -96,10 +96,10 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				CeldaRet celda = (CeldaRet) col.elementos.get(posCelda);
 				celda.actualiza();
 				
-				float celdaX=colX;
-				float celdaY=colY+celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-				float celdaWeight=colWeight;
-				float celdaHeight=celda.getAlto();
+				float celdaX=celda.getX();
+				float celdaY=celda.getY();
+				float celdaWeight=celda.getWidth();
+				float celdaHeight=celda.getHeight();
 				fill(celda.color);
 				rect(celdaX, celdaY, celdaWeight, celdaHeight);
 
@@ -203,8 +203,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		float x1 = reticulaRet.getX1() + celda.kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		float y1 = reticulaRet.getY1() + celda.kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores()+celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		
-		boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.kolumna.getAncho());
-		boolean coindiceV = mouseY > y1 && mouseY < y1 + celda.getAlto();
+		boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.kolumna.getWidth());
+		boolean coindiceV = mouseY > y1 && mouseY < y1 + celda.getHeight();
 		boolean encima = coincideHor && coindiceV;
 		return encima;
 	}
@@ -233,7 +233,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				HelperRet.selecciona(col.elementos, celda);
 				
 				log.debug("celda pos sel: " + i);
-				HelperRet.recalculaPosiciones(i, col.elementos, col.getAlto());
+				HelperRet.recalculaPosiciones(i, col.elementos, col.getHeight());
 				// TODO pon es select(false) el resto de las celdas
 				break;
 			}

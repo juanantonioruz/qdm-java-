@@ -60,7 +60,7 @@ public class ReticulaRet  {
 			f.elementos = generaColumnas(f,(int)HelperRandom.random(2,5));
 			f.elementos.get(0).setSel(true);
 
-			HelperRet.recalculaPosiciones(0, f.elementos, f.getAncho());
+			HelperRet.recalculaPosiciones(0, f.elementos, f.getWidth());
 			
 			log.info("numero de columnas:"+f.elementos.size());
 		}
@@ -70,7 +70,7 @@ public class ReticulaRet  {
 				ColRet c=(ColRet) f.elementos.get(j);
 				c.elementos=generaCeldas(c, 5);
 				c.elementos.get(0).setSel(true);
-				HelperRet.recalculaPosiciones(0, c.elementos, c.getAlto());
+				HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
 				log.info("numero de celdas:"+c.elementos.size());
 			}
 

@@ -18,12 +18,22 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 
 	}
 
-	public float getAlto() {
+	public float getHeight() {
 		return getMedidaVariable();
 	}
 
-	public float getAncho() {
-		return kolumna.getMedidaVariable();
+	public float getWidth() {
+		return kolumna.getWidth();
+	}
+
+	@Override
+	public float getX() {
+		return kolumna.getX();
+	}
+
+	@Override
+	public float getY() {
+		return kolumna.getY()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
 	}
 	
 	

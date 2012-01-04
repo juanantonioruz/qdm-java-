@@ -19,13 +19,24 @@ public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVaria
 	}
 
 
-	public float getAncho(){
+	public float getWidth(){
 		return getMedidaVariable();
 		
 	}
 	
-	public float getAlto(){
-		return fila.getAlto();
+	public float getHeight(){
+		return fila.getHeight();
+	}
+
+
+	@Override
+	public float getX() {
+		return fila.getX()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
+	}
+
+	@Override
+	public float getY() {
+		return fila.getY();
 	}
 
 	

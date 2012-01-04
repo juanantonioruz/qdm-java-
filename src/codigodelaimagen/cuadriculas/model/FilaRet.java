@@ -16,9 +16,6 @@ import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
 public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
 
-
-
-
 	private final ReticulaRet reticulaRet;
 
 	public FilaRet(FilaRet anterior, ReticulaRet reticulaRet) {
@@ -27,18 +24,22 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 		this.reticulaRet = reticulaRet;
 	}
 
-	public float getAncho(){
+	public float getWidth() {
 		return reticulaRet.getAncho();
 	}
-	
-	public float getAlto(){
+
+	public float getHeight() {
 		return getMedidaVariable();
 	}
 
+	@Override
+	public float getX() {
+		return reticulaRet.getX1();
+	}
 
-	
+	@Override
+	public float getY() {
+		return getPosicionEnRelacionDeSumasPosicionesAnteriores();
+	}
 
-	
-
-	
 }

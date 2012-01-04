@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import processing.core.PApplet;
 import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
 
-public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable{
+public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable, Displayable{
 	public Log log = LogFactory.getLog(getClass());
 
 	
