@@ -10,10 +10,6 @@ import processing.core.PApplet;
 import toxi.color.ColorList;
 import toxi.color.TColor;
 import codigodelaimagen.cuadriculas.HelperRet;
-import codigodelaimagen.cuadriculas.calculos.CalculoMarcas;
-import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
-import codigodelaimagen.cuadriculas.interfaces.Evaluable;
-import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
 public class Contenedor  {
 
@@ -86,7 +82,7 @@ public class Contenedor  {
 		return p5.color(mapeaValor(tColor.hue()), mapeaValor(tColor.saturation()), mapeaValor(tColor.brightness()));
 	}
 
-	float mapeaValor(float ta) {
+	private float mapeaValor(float ta) {
 		return p5.map(ta, 0, 1, 0, 100);
 	}
 
@@ -115,7 +111,7 @@ public class Contenedor  {
 			boolean coincideHor = mouseX > getX1() && mouseX < (getX1() + ancho);
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor && coindiceV) {
-				f.raton(mouseX, mouseY);
+				raton(f, mouseX, mouseY);
 				HelperRet.selecciona(filas, f);
 				HelperRet.recalculaPosiciones(i, filas, alto);
 
@@ -139,8 +135,45 @@ public class Contenedor  {
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor && coindiceV) {
 				log.debug("coindice fila: " + i);
-				f.ratonOver(mouseX, mouseY);
+				ratonOverFila(f, mouseX, mouseY);
 				HelperRet.seleccionaEncima(filas, f);
+				break;
+			}
+		}
+	}
+	public void ratonOverFila(FilaRet fila, int mouseX, int mouseY) {
+		for (int i = 0; i < fila.columnas.size(); i++) {
+			ColRet celda = fila.columnas.get(i);
+			boolean encima = isOverCelda(mouseX, mouseY, celda);
+			if (encima) {
+				celda.setEncima(true);
+				log.debug("celda.encima"+celda.isEncima());
+				HelperRet.seleccionaEncima(fila.columnas, celda);
+				log.debug(celda+""+celda.isEncima());
+				break;
+			}
+		}
+		
+	}
+	private boolean isOverCelda(int mouseX, int mouseY, ColRet kolumna) {
+		float x1 = getX1() + kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		float y1 = getY1() + kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		
+		boolean coincideHor = mouseX > x1 && mouseX < (x1 + kolumna.getMedidaVariable());
+		boolean coindiceV =mouseY > y1 && mouseY < y1 + kolumna.fila.getMedidaVariable();
+		boolean encima = coincideHor &&  coindiceV;
+		return encima;
+	}
+	public void raton(FilaRet fila, int mouseX, int mouseY) {
+		for (int i = 0; i < fila.columnas.size(); i++) {
+			ColRet celda = fila.columnas.get(i);
+			boolean encima = isOverCelda(mouseX, mouseY, celda);
+			if (encima) {
+				HelperRet.selecciona(fila.columnas, celda);
+
+				log.debug("celda pos sel: " + i);
+				HelperRet.recalculaPosiciones(i,fila.columnas, getAncho());
+				// TODO pon es select(false) el resto de las celdas
 				break;
 			}
 		}

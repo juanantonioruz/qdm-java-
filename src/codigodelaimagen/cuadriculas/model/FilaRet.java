@@ -8,10 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import codigodelaimagen.cuadriculas.HelperRet;
-import codigodelaimagen.cuadriculas.calculos.CalculoMarcas;
 import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
-import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
-import codigodelaimagen.cuadriculas.interfaces.Evaluable;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
@@ -54,45 +51,23 @@ public class FilaRet  implements TieneMedidaVariableAnterior, Seleccionable {
 		}
 		return celdas;
 	}
+//
+//	public void ratonOverFila(FilaRet fila, int mouseX, int mouseY) {
+//		for (int i = 0; i < fila.columnas.size(); i++) {
+//			ColRet celda = fila.columnas.get(i);
+//			boolean encima = isOverCelda(mouseX, mouseY, celda);
+//			if (encima) {
+//				celda.setEncima(true);
+//				log.debug("celda.encima"+celda.isEncima());
+//				HelperRet.seleccionaEncima(fila.columnas, celda);
+//				log.debug(celda+""+celda.isEncima());
+//				break;
+//			}
+//		}
+//		
+//	}
 
-	public void ratonOver(int mouseX, int mouseY) {
-		for (int i = 0; i < columnas.size(); i++) {
-			ColRet celda = columnas.get(i);
-			boolean encima = isOverCelda(mouseX, mouseY, celda);
-			if (encima) {
-				celda.setEncima(true);
-				log.debug("celda.encima"+celda.isEncima());
-				HelperRet.seleccionaEncima(columnas, celda);
-				log.debug(celda+""+celda.isEncima());
-				break;
-			}
-		}
-		
-	}
-	public void raton(int mouseX, int mouseY) {
-		for (int i = 0; i < columnas.size(); i++) {
-			ColRet celda = columnas.get(i);
-			boolean encima = isOverCelda(mouseX, mouseY, celda);
-			if (encima) {
-				HelperRet.selecciona(columnas, celda);
 
-				log.debug("celda pos sel: " + i);
-				HelperRet.recalculaPosiciones(i,columnas, contenedor.getAncho());
-				// TODO pon es select(false) el resto de las celdas
-				break;
-			}
-		}
-	}
-
-	private boolean isOverCelda(int mouseX, int mouseY, ColRet celda) {
-		float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-		float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasPosicionesAnteriores();
-		
-		boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable());
-		boolean coindiceV =mouseY > y1 && mouseY < y1 + getMedidaVariable();
-		boolean encima = coincideHor &&  coindiceV;
-		return encima;
-	}
 
 	@Override
 	public TieneMedidaVariableAnterior getAnterior() {
