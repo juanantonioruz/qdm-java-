@@ -6,26 +6,26 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import processing.core.PApplet;
 import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.calculos.CalculoMarcas;
 import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
 import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
-import codigodelaimagen.cuadriculas.interfaces.Behavior1;
 import codigodelaimagen.cuadriculas.interfaces.Evaluable;
+import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneParent;
 
-import processing.core.PApplet;
-
-public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
+public class FilaRet  implements TieneParent, Evaluable, Seleccionable {
 
 	private final int numeroColumnas;
 	float y1;
 	private final PApplet p5;
 	private final Contenedor contenedor;
 	private final FilaRet parent;
-	public List<CeldaRet> columnas;
+	public List<ColRet> columnas;
 	public int posicionSeleccionada=0;
 
+	public Log log = LogFactory.getLog(getClass());
 
 
 	public FilaRet(FilaRet parent, int numeroCeldas, Contenedor contenedor, PApplet p5) {
@@ -52,15 +52,15 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		}
 	}
 
-	private List<CeldaRet> generaColumnas() {
-		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
+	private List<ColRet> generaColumnas() {
+		List<ColRet> celdas = new ArrayList<ColRet>();
 		for (int i = 0; i < numeroColumnas; i++) {
 
-			CeldaRet celdaAnterior = null;
+			ColRet celdaAnterior = null;
 			if (i > 0)
 				celdaAnterior = celdas.get(i - 1);
 
-			celdas.add(new CeldaRet(celdaAnterior, this, contenedor.getColor()));
+			celdas.add(new ColRet(celdaAnterior, this, contenedor.getColor()));
 
 		}
 		return celdas;
@@ -68,7 +68,7 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 
 	public void ratonOver(int mouseX, int mouseY) {
 		for (int i = 0; i < columnas.size(); i++) {
-			CeldaRet celda = columnas.get(i);
+			ColRet celda = columnas.get(i);
 			boolean encima = isOverCelda(mouseX, mouseY, celda);
 			if (encima) {
 				celda.setEncima(true);
@@ -82,7 +82,7 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 	}
 	public void raton(int mouseX, int mouseY) {
 		for (int i = 0; i < columnas.size(); i++) {
-			CeldaRet celda = columnas.get(i);
+			ColRet celda = columnas.get(i);
 			boolean encima = isOverCelda(mouseX, mouseY, celda);
 			if (encima) {
 				HelperRet.selecciona(columnas, celda);
@@ -95,7 +95,7 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 		}
 	}
 
-	private boolean isOverCelda(int mouseX, int mouseY, CeldaRet celda) {
+	private boolean isOverCelda(int mouseX, int mouseY, ColRet celda) {
 		float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
 		float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasParentPosition();
 		
@@ -123,5 +123,47 @@ public class FilaRet extends Behavior1 implements TieneParent, Evaluable {
 			if(columnas.get(i).isSel())return i;
 		return 0;
 	}
+	
+	private boolean sel;
+	private boolean encima;
+	float medidaVariableAnterior;
+	private float medidaVariable;
+	public void setMedidaVariable(float ancho) {
+		if(medidaVariable!=0)
+		medidaVariableAnterior = medidaVariable;
+		else
+			medidaVariableAnterior=ancho;
+		this.medidaVariable = ancho;
+		contador = 0;
+	}
+
+
+	int contador = 0;
+
+	int pasos = 10;
+
+	public float getMedidaVariable() {
+		return PApplet.map(contador, 0, pasos, medidaVariableAnterior, medidaVariable);
+//		return medidaVariable;
+	}
+	public boolean isSel() {
+		return sel;
+	}
+	public void setSel(boolean sel) {
+		this.sel = sel;
+	}
+	public void actualiza() {
+		if(contador<pasos)
+		contador++;
+	}
+
+	public boolean isEncima() {
+		return encima;
+	}
+
+	public void setEncima(boolean encima) {
+		this.encima = encima;
+	}
+	
 
 }

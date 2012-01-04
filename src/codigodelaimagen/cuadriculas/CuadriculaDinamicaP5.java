@@ -8,7 +8,7 @@ import toxi.color.ColorList;
 import toxi.color.TColor;
 
 import codigodelaimagen.base.CDIBase;
-import codigodelaimagen.cuadriculas.model.CeldaRet;
+import codigodelaimagen.cuadriculas.model.ColRet;
 import codigodelaimagen.cuadriculas.model.Contenedor;
 import codigodelaimagen.cuadriculas.model.FilaRet;
 
@@ -67,7 +67,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
 		for (int posicion=0; posicion<fila.columnas.size(); posicion++) {
-			CeldaRet celda=fila.columnas.get(posicion);
+			ColRet celda=fila.columnas.get(posicion);
 			celda.actualiza();
 			fill(celda.color,30);
 			if (celda.isEncima())

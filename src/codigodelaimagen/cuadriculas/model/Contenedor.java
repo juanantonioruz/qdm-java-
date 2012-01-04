@@ -2,21 +2,17 @@ package codigodelaimagen.cuadriculas.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import processing.core.PApplet;
+import toxi.color.ColorList;
+import toxi.color.TColor;
 import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.calculos.CalculoMarcas;
 import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
-import codigodelaimagen.cuadriculas.interfaces.Behavior1;
 import codigodelaimagen.cuadriculas.interfaces.Evaluable;
-
-import processing.core.PApplet;
-import qdmp5.escale.Fila;
-import toxi.color.ColorList;
-import toxi.color.TColor;
 
 public class Contenedor implements Evaluable{
 
