@@ -8,4 +8,6 @@ public interface TieneMedidaVariableAnterior {
 	
 	float getPosicionEnRelacionDeSumasPosicionesAnteriores();
 
+	void setMedidaVariable(float anchoInicial);
+
 }

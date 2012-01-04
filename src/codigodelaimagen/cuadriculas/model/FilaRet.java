@@ -15,7 +15,7 @@ import codigodelaimagen.cuadriculas.interfaces.Evaluable;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
-public class FilaRet  implements TieneMedidaVariableAnterior, Evaluable, Seleccionable {
+public class FilaRet  implements TieneMedidaVariableAnterior, Seleccionable {
 
 	private final int numeroColumnas;
 	float y1;
@@ -36,21 +36,10 @@ public class FilaRet  implements TieneMedidaVariableAnterior, Evaluable, Selecci
 		this.p5 = p5;
 		log.debug("posicionSeleccionada: " + posicionSeleccionada);
 		columnas = generaColumnas();
-		evalua(posicionSeleccionada);
+		HelperRet.recalculaPosiciones(posicionSeleccionada, columnas, contenedor.getAncho());
 	}
 
-	public void evalua(int posicionSeleccionada) {
-		log.debug("evalua "+posicionSeleccionada);
-		CalculoMarcas calculoMarcas = new CalculoMarcas(contenedor.getAncho(), numeroColumnas, posicionSeleccionada,2);
-		for (int i = 0; i < calculoMarcas.marcas.size()-1; i++) {
-				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
-				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);
-				float anchoInicial = marcaSig.marca - marcaActual.marca;
-				columnas.get(i).setMedidaVariable(anchoInicial);
-
-
-		}
-	}
+	
 
 	private List<ColRet> generaColumnas() {
 		List<ColRet> celdas = new ArrayList<ColRet>();
@@ -88,7 +77,7 @@ public class FilaRet  implements TieneMedidaVariableAnterior, Evaluable, Selecci
 				HelperRet.selecciona(columnas, celda);
 
 				log.debug("celda pos sel: " + i);
-				evalua(i);
+				HelperRet.recalculaPosiciones(i,columnas, contenedor.getAncho());
 				// TODO pon es select(false) el resto de las celdas
 				break;
 			}
@@ -146,6 +135,8 @@ public class FilaRet  implements TieneMedidaVariableAnterior, Evaluable, Selecci
 		return PApplet.map(contador, 0, pasos, medidaVariableAnterior, medidaVariable);
 //		return medidaVariable;
 	}
+	
+	
 	public boolean isSel() {
 		return sel;
 	}
@@ -164,6 +155,8 @@ public class FilaRet  implements TieneMedidaVariableAnterior, Evaluable, Selecci
 	public void setEncima(boolean encima) {
 		this.encima = encima;
 	}
+
+	
 	
 
 }

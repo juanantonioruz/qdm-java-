@@ -1,6 +1,8 @@
 package codigodelaimagen.cuadriculas.interfaces;
 
+import java.util.List;
+
 public interface Evaluable {
-	void evalua(int posicionSeleccionada);
+	void recalculaPosiciones(int posicionSeleccionada, List elementos, float limite);
 
 }
