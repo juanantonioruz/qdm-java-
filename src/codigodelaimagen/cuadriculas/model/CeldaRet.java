@@ -4,19 +4,22 @@ import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
-public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
-	public FilaRet contiene;
+public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
+	public ColRet contiene;
 
-	public ColRet(ColRet anterior, FilaRet fila, int color) {
+	public CeldaRet(CeldaRet anterior, ColRet kolumna, int color) {
 		this.anterior = anterior;
-		this.contiene = fila;
+		this.contiene = kolumna;
 		this.color = color;
 	}
 
 	public float getAlto() {
-		return contiene.getMedidaVariable();
+		return getMedidaVariable();
 	}
 
+	public float getAncho() {
+		return contiene.getMedidaVariable();
+	}
 	
 	
 

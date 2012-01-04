@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas.model;
+package codigodelaimagen.cuadriculas.comentarios.model;
 
 import java.util.ArrayList;
 import java.util.List;
