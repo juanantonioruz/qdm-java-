@@ -13,9 +13,9 @@ import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
 import codigodelaimagen.cuadriculas.calculos.MarcaPosicion;
 import codigodelaimagen.cuadriculas.interfaces.Evaluable;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
-import codigodelaimagen.cuadriculas.interfaces.TieneParent;
+import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
-public class FilaRet  implements TieneParent, Evaluable, Seleccionable {
+public class FilaRet  implements TieneMedidaVariableAnterior, Evaluable, Seleccionable {
 
 	private final int numeroColumnas;
 	float y1;
@@ -96,8 +96,8 @@ public class FilaRet  implements TieneParent, Evaluable, Seleccionable {
 	}
 
 	private boolean isOverCelda(int mouseX, int mouseY, ColRet celda) {
-		float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
-		float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasParentPosition();
+		float x1 = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		float y1 = contenedor.getY1() + getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		
 		boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.getMedidaVariable());
 		boolean coindiceV =mouseY > y1 && mouseY < y1 + getMedidaVariable();
@@ -106,13 +106,13 @@ public class FilaRet  implements TieneParent, Evaluable, Seleccionable {
 	}
 
 	@Override
-	public TieneParent getParent() {
+	public TieneMedidaVariableAnterior getAnterior() {
 		return parent;
 	}
 
 
 	@Override
-	public float getPosicionEnRelacionDeSumasParentPosition() {
+	public float getPosicionEnRelacionDeSumasPosicionesAnteriores() {
 		CalculoRecursivo calculo = new CalculoRecursivo();
 		float res = calculo.calcula(this);
 		return res;

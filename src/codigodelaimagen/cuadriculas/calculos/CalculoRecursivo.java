@@ -1,13 +1,13 @@
 package codigodelaimagen.cuadriculas.calculos;
 
-import codigodelaimagen.cuadriculas.interfaces.TieneParent;
+import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
 public class CalculoRecursivo {
 	float res;
-	TieneParent parent;
+	TieneMedidaVariableAnterior parent;
 
-	public float calcula(TieneParent celdaRet) {
-		parent = celdaRet.getParent();
+	public float calcula(TieneMedidaVariableAnterior celdaRet) {
+		parent = celdaRet.getAnterior();
 		sumaParent();
 		return res;
 	}
@@ -15,7 +15,7 @@ public class CalculoRecursivo {
 	private void sumaParent() {
 		if (parent != null) {
 			res += parent.getMedidaVariable();
-			parent = parent.getParent();
+			parent = parent.getAnterior();
 			sumaParent();
 		}
 

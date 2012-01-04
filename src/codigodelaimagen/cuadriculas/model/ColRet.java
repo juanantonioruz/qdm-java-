@@ -3,9 +3,9 @@ package codigodelaimagen.cuadriculas.model;
 import processing.core.PApplet;
 import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
-import codigodelaimagen.cuadriculas.interfaces.TieneParent;
+import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
-public class ColRet  implements TieneParent, Seleccionable {
+public class ColRet  implements TieneMedidaVariableAnterior, Seleccionable {
 
 	public ColRet parent;
 
@@ -19,7 +19,7 @@ public class ColRet  implements TieneParent, Seleccionable {
 		this.color = color;
 	}
 
-	public float getPosicionEnRelacionDeSumasParentPosition() {
+	public float getPosicionEnRelacionDeSumasPosicionesAnteriores() {
 		CalculoRecursivo calculo = new CalculoRecursivo();
 		float res = calculo.calcula(this);
 		return res;
@@ -30,7 +30,7 @@ public class ColRet  implements TieneParent, Seleccionable {
 	}
 
 	@Override
-	public TieneParent getParent() {
+	public TieneMedidaVariableAnterior getAnterior() {
 		return parent;
 	}
 	private boolean sel;

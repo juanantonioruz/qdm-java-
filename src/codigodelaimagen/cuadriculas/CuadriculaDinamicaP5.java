@@ -74,8 +74,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				fill(celda.color);
 			
 			stroke(0);
-			float mix = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasParentPosition();
-			float miy = fila.getPosicionEnRelacionDeSumasParentPosition();
+			float mix = contenedor.getX1() + celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+			float miy = fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 			rect(mix, miy, celda.getMedidaVariable(), fila.getMedidaVariable());
 			contador++;
 			fill(100);

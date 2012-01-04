@@ -119,7 +119,7 @@ public class Contenedor implements Evaluable{
 	public void raton(int mouseX, int mouseY) {
 		for(int i=0; i<filas.size(); i++){
 			FilaRet f=filas.get(i);
-			float y1 = getY1() + f.getPosicionEnRelacionDeSumasParentPosition();
+			float y1 = getY1() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 			boolean coincideHor = mouseX > getX1() && mouseX < (getX1() + ancho);
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
@@ -139,7 +139,7 @@ public class Contenedor implements Evaluable{
 	public void ratonEncima(int mouseX, int mouseY) {
 		for(int i=0; i<filas.size(); i++){
 			FilaRet f=filas.get(i);
-			float y1 = getY1() + f.getPosicionEnRelacionDeSumasParentPosition();
+			float y1 = getY1() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 			boolean coincideHor = mouseX > getX1() && mouseX < (getX1() + ancho);
 			boolean coindiceV =mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor &&  coindiceV) {
