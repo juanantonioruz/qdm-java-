@@ -9,10 +9,12 @@ import org.apache.commons.logging.LogFactory;
 import processing.core.PApplet;
 import toxi.color.ColorList;
 import toxi.color.TColor;
+import codigodelaimagen.cuadriculas.HelperRandom;
 import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 
 public class ReticulaRet  {
+	public Log log = LogFactory.getLog(getClass());
 
 	private final float x1;
 	private final float y1;
@@ -52,11 +54,59 @@ public class ReticulaRet  {
 			}
 		}
 		HelperRet.recalculaPosiciones(posicionSeleccionada, filas, alto);
+		
+		// inicia celdas de filas
+		for(FilaRet f:filas){
+			f.elementos = generaColumnas(f,(int)HelperRandom.random(2,5));
+			f.elementos.get(0).setSel(true);
+
+			HelperRet.recalculaPosiciones(0, f.elementos, f.getAncho());
+			
+			log.info("numero de columnas:"+f.elementos.size());
+		}
+
+		for(FilaRet f:filas){
+			for(int j=0; j<f.elementos.size(); j++){
+				ColRet c=(ColRet) f.elementos.get(j);
+				c.elementos=generaCeldas(c, 5);
+				c.elementos.get(0).setSel(true);
+				HelperRet.recalculaPosiciones(0, c.elementos, c.getAlto());
+				log.info("numero de celdas:"+c.elementos.size());
+			}
+
+		}
+		
+	}
+	private List  generaCeldas(ColRet kolumna, int random) {
+		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
+		for (int i = 0; i < random; i++) {
+
+			CeldaRet celdaAnterior = null;
+			if (i > 0)
+				celdaAnterior = celdas.get(i - 1);
+
+			celdas.add(new CeldaRet(celdaAnterior,  kolumna));
+
+		}
+		return celdas;
+
 	}
 
+	private List generaColumnas(FilaRet f, int numeroColumnas) {
+		List<ColRet> columnas = new ArrayList<ColRet>();
+		for (int i = 0; i < numeroColumnas; i++) {
 
+			ColRet columnaAnterior = null;
+			if (i > 0)
+				columnaAnterior = columnas.get(i - 1);
+
+			ColRet nuevaColumna = new ColRet(columnaAnterior, f);
+			columnas.add(nuevaColumna);
+
+		}
+		return columnas;
+	}
 	private int getPosicionSeleccionada(FilaRet f) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -69,11 +119,12 @@ public class ReticulaRet  {
 			if (i > 0)
 				filaAnterior = filas.get(i - 1);
 
-			filas.add(new FilaRet(filaAnterior,  this, (int)p5.random(1,20)));
+			filas.add(new FilaRet(filaAnterior,  this));
 
 		}
 		for (FilaRet f : filas)
-			f.elementos.get(0).setSel(true);
+			filas.get(0).setSel(true);
+			
 		return filas;
 	}
 

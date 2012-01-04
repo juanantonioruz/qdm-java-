@@ -12,11 +12,6 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 	public Log log = LogFactory.getLog(getClass());
 
 	
-	/**
-	 * esto pasa a comentario
-	 */
-	@Deprecated
-	public int color;
 	private boolean sel;
 	private boolean encima;
 	float medidaVariableAnterior;

@@ -1,16 +1,21 @@
 package codigodelaimagen.cuadriculas.model;
 
+import codigodelaimagen.cuadriculas.HelperColors;
+import codigodelaimagen.cuadriculas.HelperRandom;
+import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
 public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
-	public ColRet contiene;
+	public ColRet kolumna;
+	public  int color;
 
-	public CeldaRet(CeldaRet anterior, ColRet kolumna, int color) {
+	public CeldaRet(CeldaRet anterior, ColRet kolumna) {
 		this.anterior = anterior;
-		this.contiene = kolumna;
-		this.color = color;
+		this.kolumna = kolumna;
+		this.color = HelperColors.getColor();
+
 	}
 
 	public float getAlto() {
@@ -18,7 +23,7 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	}
 
 	public float getAncho() {
-		return contiene.getMedidaVariable();
+		return kolumna.getMedidaVariable();
 	}
 	
 	

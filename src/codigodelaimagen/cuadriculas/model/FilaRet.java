@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import codigodelaimagen.cuadriculas.HelperColors;
+import codigodelaimagen.cuadriculas.HelperRandom;
 import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
@@ -18,26 +19,20 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 
 
 
-	public FilaRet(FilaRet anterior, ReticulaRet reticulaRet, int numeroColumnas) {
+	private final ReticulaRet reticulaRet;
+
+	public FilaRet(FilaRet anterior, ReticulaRet reticulaRet) {
 		super();
 		this.anterior = anterior;
-		elementos = generaColumnas(numeroColumnas);
-		HelperRet.recalculaPosiciones(0, elementos, reticulaRet.getAncho());
+		this.reticulaRet = reticulaRet;
 	}
 
-	private List generaColumnas(int numeroColumnas) {
-		List<ColRet> columnas = new ArrayList<ColRet>();
-		for (int i = 0; i < numeroColumnas; i++) {
-
-			ColRet columnaAnterior = null;
-			if (i > 0)
-				columnaAnterior = columnas.get(i - 1);
-
-			ColRet nuevaColumna = new ColRet(columnaAnterior, this, HelperColors.getColor());
-			columnas.add(nuevaColumna);
-
-		}
-		return columnas;
+	public float getAncho(){
+		return reticulaRet.getAncho();
+	}
+	
+	public float getAlto(){
+		return getMedidaVariable();
 	}
 
 
