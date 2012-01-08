@@ -16,7 +16,7 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 	private boolean sel;
 	private boolean encima;
 	float medidaVariableAnterior;
-	private float medidaVariable;
+	protected float medidaVariable;
 
 
 	public void setMedidaVariable(float ancho) {

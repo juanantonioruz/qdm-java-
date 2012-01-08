@@ -42,6 +42,16 @@ public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVaria
 		return fila.getY();
 	}
 
+
+	public CeldaRet getSeleccionada() {
+		for (int i = 0; i < elementos.size(); i++) {
+			CeldaRet sel = (CeldaRet) elementos.get(i);
+			if (sel.isSel())
+				return sel;
+		}
+//		throw new RuntimeException("no hay ninguna col seleccionada! siempre debe haber una!");
+		return (CeldaRet) elementos.get(0);	}
+
 	
 	
 

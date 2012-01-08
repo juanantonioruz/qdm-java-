@@ -13,7 +13,7 @@ import codigodelaimagen.cuadriculas.HelperRandom;
 import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 
-public class ReticulaRet  {
+public class ReticulaRet {
 	public Log log = LogFactory.getLog(getClass());
 
 	private final float x1;
@@ -33,14 +33,14 @@ public class ReticulaRet  {
 		this.y1 = y1;
 		this.ancho = ancho;
 		this.alto = alto;
-		//TODO: change el random
-		this.numeroFilas = (int)p5.random(1,10);
+		// TODO: change el random
+		this.numeroFilas = (int) p5.random(1, 10);
 		this.p5 = p5;
 
 		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
 		filas = generaFilas();
 		filas.get(0).setSel(true);
-		//desactivado hasta que interese 
+		// desactivado hasta que interese
 		if (false) {
 			for (FilaRet f : filas) {
 				if (f.isSel()) {
@@ -55,34 +55,45 @@ public class ReticulaRet  {
 			}
 		}
 		HelperRet.recalculaPosiciones(posicionSeleccionada, filas, alto);
-		
+
 		// inicia celdas de filas
-		for(FilaRet f:filas){
-			f.elementos = generaColumnas(f,(int)HelperRandom.random(1,15));
-			f.elementos.get(0).setSel(true);
+		for (FilaRet f : filas) {
+			f.elementos = generaColumnas(f, (int) HelperRandom.random(1, 15));
 
 			HelperRet.recalculaPosiciones(0, f.elementos, f.getWidth());
-			
-			log.info("numero de columnas:"+f.elementos.size());
+
+			log.debug("numero de columnas:" + f.elementos.size());
 		}
 
-		for(FilaRet f:filas){
-			for(int j=0; j<f.elementos.size(); j++){
-				ColRet c=(ColRet) f.elementos.get(j);
-				if(j==0)
-				c.elementos=generaCeldas(c, 1);
-				else
-					c.elementos=generaCeldas(c, (int)p5.random(1,10));
-					
-				c.elementos.get(0).setSel(true);
-				HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
-				log.info("numero de celdas:"+c.elementos.size());
-			}
+		for (FilaRet f : filas) {
+			for (int j = 0; j < f.elementos.size(); j++) {
+				ColRet c = (ColRet) f.elementos.get(j);
+				if (j == 0){
+					c.elementos = generaCeldas(c, null, 1);
+				// aqui recalcula altos de celda en funcion de columna
+					HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
+				}else {
+					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
+					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
+						CeldaRet celdaInt = (CeldaRet) cAnt.elementos.get(celI);
 
+						c.elementos = generaCeldas(c, celdaInt, (int) p5.random(1, 5));
+						HelperRet.recalculaPosiciones(0, celdaInt.children, celdaInt.getHeight());
+					}
+				}
+				log.debug("numero de celdas:" + c.elementos.size());
+			}
 		}
 		
+		// activando el primer comentario!
+		filas.get(0).setSel(true);
+		filas.get(0).elementos.get(0).setSel(true);
+		filas.get(0).elementos.get(0).elementos.get(0).setSel(true);
+		// fin activar primer comentario
+
 	}
-	private List  generaCeldas(ColRet kolumna, int random) {
+
+	private List generaCeldas(ColRet kolumna, CeldaRet parent, int random) {
 		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
 		for (int i = 0; i < random; i++) {
 
@@ -90,7 +101,7 @@ public class ReticulaRet  {
 			if (i > 0)
 				celdaAnterior = celdas.get(i - 1);
 
-			celdas.add(new CeldaRet(celdaAnterior,  kolumna));
+			celdas.add(new CeldaRet(celdaAnterior, parent, kolumna));
 
 		}
 		return celdas;
@@ -111,10 +122,10 @@ public class ReticulaRet  {
 		}
 		return columnas;
 	}
+
 	private int getPosicionSeleccionada(FilaRet f) {
 		return 0;
 	}
-
 
 	private List<FilaRet> generaFilas() {
 		List<FilaRet> filas = new ArrayList<FilaRet>();
@@ -124,13 +135,12 @@ public class ReticulaRet  {
 			if (i > 0)
 				filaAnterior = filas.get(i - 1);
 
-			filas.add(new FilaRet(filaAnterior,  this));
+			filas.add(new FilaRet(filaAnterior, this));
 
 		}
-			
+
 		return filas;
 	}
-
 
 	public float getX1() {
 		return x1;
@@ -143,7 +153,12 @@ public class ReticulaRet  {
 	public float getY1() {
 		return y1;
 	}
-
 	
+	public FilaRet getSeleccionada(){
+		for(FilaRet fila:filas){
+			if(fila.isSel())return fila;
+		}
+		throw new RuntimeException("no hay ninguna fila seleccionada! siempre debe haber una!");
+	}
 
 }

@@ -8,6 +8,7 @@ import toxi.color.ColorList;
 import toxi.color.TColor;
 
 import codigodelaimagen.base.CDIBase;
+import codigodelaimagen.cuadriculas.calculos.SeleccionParentCeldRectRecursivo;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 import codigodelaimagen.cuadriculas.model.ColRet;
@@ -73,21 +74,21 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
-		float filaX=reticulaRet.getX1();
-		float filaY=reticulaRet.getY1()+fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-		float filaHeight=fila.getMedidaVariable();
-		float filaWeight=reticulaRet.getAncho();
-		fill(HelperColors.getColor(),10);
+		float filaX = reticulaRet.getX1();
+		float filaY = reticulaRet.getY1() + fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		float filaHeight = fila.getMedidaVariable();
+		float filaWeight = reticulaRet.getAncho();
+		fill(HelperColors.getColor(), 10);
 		noFill();
 		rect(filaX, filaY, filaWeight, filaHeight);
 		for (int posicion = 0; posicion < fila.elementos.size(); posicion++) {
 			ColRet col = (ColRet) fila.elementos.get(posicion);
 			col.actualiza();
-			float colX=filaX+col.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-			float colY=filaY;
-			float colWeight=col.getMedidaVariable();
-			float colHeight=col.getHeight();
-//			fill(HelperColors.getColor(),80);
+			float colX = filaX + col.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+			float colY = filaY;
+			float colWeight = col.getMedidaVariable();
+			float colHeight = col.getHeight();
+			// fill(HelperColors.getColor(),80);
 			fill(100);
 			stroke(0);
 			rect(colX, colY, colWeight, colHeight);
@@ -95,33 +96,41 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			for (int posCelda = 0; posCelda < col.elementos.size(); posCelda++) {
 				CeldaRet celda = (CeldaRet) col.elementos.get(posCelda);
 				celda.actualiza();
-				
-				float celdaX=celda.getX();
-				float celdaY=celda.getY();
-				float celdaWeight=celda.getWidth();
-				float celdaHeight=celda.getHeight();
-				if(fila.isSel() && col.isSel() && celda.isSel()){
-				fill(celda.color);
-				rect(celdaX, celdaY, celdaWeight, celdaHeight);
-				}else{
-				fill(0);
-				rect(celdaX, celdaY, celdaWeight, celdaHeight);
-				fill(celda.color,60);
-				rect(celdaX, celdaY, celdaWeight, celdaHeight);
+
+				float celdaX = celda.getX();
+				float celdaY = celda.getY();
+				float celdaWeight = celda.getWidth();
+				float celdaHeight = celda.getHeight();
+				if (fila.isSel() && col.isSel() && celda.isSel()) {
+					stroke(100);
+					strokeWeight(2);
+					fill(celda.color);
+					rect(celdaX, celdaY, celdaWeight, celdaHeight);
+					fill(100);
+					rect(celdaX, celdaY, 20, 20);
+				} else {
+					noStroke();
+					fill(0);
+					rect(celdaX, celdaY, celdaWeight, celdaHeight);
+					fill(celda.color, 60);
+					rect(celdaX, celdaY, celdaWeight, celdaHeight);
 				}
-//				fill(celda.color, 30);
-//				if (celda.isEncima())
-//					fill(celda.color);
-//
-//				stroke(0);
-//				float mix = reticulaRet.getX1() + celda.kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-//				float miy = reticulaRet.getY1()+celda.kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores()+celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-//				rect(mix, miy, celda.kolumna.getMedidaVariable(), celda.getMedidaVariable());
-//				contador++;
-//				fill(100);
-//				text(contador, mix, miy + 30);
-//				fill(0);
-//				text(contador, mix - 2, miy + 30 - 2);
+				// fill(celda.color, 30);
+				// if (celda.isEncima())
+				// fill(celda.color);
+				//
+				// stroke(0);
+				// float mix = reticulaRet.getX1() +
+				// celda.kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+				// float miy =
+				// reticulaRet.getY1()+celda.kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores()+celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+				// rect(mix, miy, celda.kolumna.getMedidaVariable(),
+				// celda.getMedidaVariable());
+				// contador++;
+				// fill(100);
+				// text(contador, mix, miy + 30);
+				// fill(0);
+				// text(contador, mix - 2, miy + 30 - 2);
 			}
 		}
 	}
@@ -145,24 +154,20 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		FilaRet f = null;
 		boolean encimaFila = false;
 		for (int i = 0; i < reticulaRet.filas.size(); i++) {
-			 f = reticulaRet.filas.get(i);
+			f = reticulaRet.filas.get(i);
 			float y1 = reticulaRet.getY1() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 			boolean coincideHor = mouseX > reticulaRet.getX1() && mouseX < (reticulaRet.getX1() + reticulaRet.ancho);
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
-			 encimaFila = coincideHor && coindiceV;
+			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
-				HelperRet.selecciona(reticulaRet.filas, f);
-				HelperRet.recalculaPosiciones(i, reticulaRet.filas, reticulaRet.alto);
 				ratonFila(f, mouseX, mouseY);
-
-
 				break;
-				// TODO EXIT del bucle y poner en sel=false las demas filas
 			}
 		}
-		if(encimaFila){
-			recalculaDemasCeldasDeColumnasDeFilasDeReticula(reticulaRet, f);
-		}
+		// TODO
+		// if(encimaFila){
+		// recalculaDemasCeldasDeColumnasDeFilasDeReticula(reticulaRet, f);
+		// }
 	}
 
 	/**
@@ -202,79 +207,79 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	private boolean isOverColumna(int mouseX, int mouseY, ColRet kolumna) {
-		float x1 = reticulaRet.getX1() + kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-		float y1 = reticulaRet.getY1() + kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		float x1 = reticulaRet.getX1() + kolumna.getX();
+		float y1 = reticulaRet.getY1() + kolumna.getY();
 
-		boolean coincideHor = mouseX > x1 && mouseX < (x1 + kolumna.getMedidaVariable());
-		boolean coindiceV = mouseY > y1 && mouseY < y1 + kolumna.fila.getMedidaVariable();
+		boolean coincideHor = mouseX > x1 && mouseX < (x1 + kolumna.getWidth());
+		boolean coindiceV = mouseY > y1 && mouseY < y1 + kolumna.getHeight();
 		boolean encima = coincideHor && coindiceV;
 		return encima;
 	}
-	private boolean isOverCelda(int mouseX, int mouseY, CeldaRet celda) {
-		
-		float x1 = reticulaRet.getX1() + celda.kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-		float y1 = reticulaRet.getY1() + celda.kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores()+celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-		
-		boolean coincideHor = mouseX > x1 && mouseX < (x1 + celda.kolumna.getWidth());
-		boolean coindiceV = mouseY > y1 && mouseY < y1 + celda.getHeight();
+
+	private boolean isOverCelda(int mouseX, int mouseY, CeldaRet selda) {
+
+		float x1 = reticulaRet.getX1() + selda.getX();
+		float y1 = reticulaRet.getY1() + selda.getY();
+
+		boolean coincideHor = mouseX > x1 && mouseX < (x1 + selda.kolumna.getWidth());
+		boolean coindiceV = mouseY > y1 && mouseY < y1 + selda.getHeight();
 		boolean encima = coincideHor && coindiceV;
 		return encima;
 	}
 
 	public void ratonFila(FilaRet fila, int mouseX, int mouseY) {
-		ColRet kolumna = null;
-		boolean encima = false;
 		for (int i = 0; i < fila.elementos.size(); i++) {
-				kolumna = (ColRet) fila.elementos.get(i);
-			encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
+			ColRet kolumna = (ColRet) fila.elementos.get(i);
+			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
 			if (encima) {
-
-				HelperRet.selecciona(fila.elementos, kolumna);
-
 				log.debug("KOLumna pos sel: " + i);
-				HelperRet.recalculaPosiciones(i, fila.elementos, reticulaRet.getAncho());
 				ratonColumna((ColRet) kolumna, mouseX, mouseY);
-				// TODO pon es select(false) el resto de las celdas
-				break;
 			}
 		}
-		if(encima){
-			recalculaDemasCeldasDeColumnasDeFilas(fila,kolumna);
-		}
-		
-	}
-	private void recalculaDemasCeldasDeColumnasDeFilasDeReticula(ReticulaRet reticulaRet2, FilaRet fila) {
-		for (int i = 0; i < reticulaRet2.filas.size(); i++) {
-			FilaRet fofo = reticulaRet2.filas.get(i);
-			if(fofo!=fila){
-				recalculaDemasCeldasDeColumnasDeFilas(fofo, null);
-			}
-		}
+		// TODO if encima recalcular el resto de las columnas
 
 	}
 
-	private void recalculaDemasCeldasDeColumnasDeFilas(FilaRet fila, ColRet kolumna) {
-		for (int i = 0; i < fila.elementos.size(); i++) {
-			ColRet koko = (ColRet) fila.elementos.get(i);
-			if(kolumna!=koko){
-				HelperRet.recalculaPosiciones(i, koko.elementos, koko.getHeightFinal());
-			}
-			
-		}
-		
-	}
+	
 
 	public void ratonColumna(ColRet col, int mouseX, int mouseY) {
 		for (int i = 0; i < col.elementos.size(); i++) {
-			ElementoReticulaAbstract celda = col.elementos.get(i);
+			CeldaRet celda = (CeldaRet) col.elementos.get(i);
 			boolean encima = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 			if (encima) {
-				HelperRet.selecciona(col.elementos, celda);
+
+//				if(celda.parent!=null)
+//				Helper.selecciona(celda.parent., celda.parent)
+
+				
+				HelperRet.selecciona(celda.kolumna.fila.elementos, celda.kolumna);
+				HelperRet.selecciona(reticulaRet.filas, celda.kolumna.fila);
+//				SeleccionParentCeldRectRecursivo cal=new SeleccionParentCeldRectRecursivo(celda);
+
 				log.debug("celda pos sel: " + i);
-				HelperRet.recalculaPosiciones(i, col.elementos, col.getHeightFinal());
-				// TODO pon es select(false) el resto de las celdas
+				recalculaRet();
+				
 				break;
 			}
 		}
+	}
+
+private void recalculaRet() {
+		
+		HelperRet.recalculaPosiciones(reticulaRet.getSeleccionada(), reticulaRet.filas, reticulaRet.alto);
+		for(FilaRet f:reticulaRet.filas){
+				HelperRet.recalculaPosiciones(f.getColumnaSeleccionada(), f.elementos, reticulaRet.getAncho());
+				for(int i=0; i<f.elementos.size(); i++){
+					ColRet kol=(ColRet) f.elementos.get(i);
+					for(int j=0;j<kol.elementos.size();j++){
+						CeldaRet celda=(CeldaRet) kol.elementos.get(j);
+						if (celda.parent == null)
+							HelperRet.recalculaPosiciones(kol.getSeleccionada(), kol.elementos, kol.getHeightFinal());
+						else
+							HelperRet.recalculaPosiciones(kol.getSeleccionada(), celda.parent.children, celda.parent.getHeight());
+					}
+				}
+		}
+		
 	}
 }

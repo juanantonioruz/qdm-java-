@@ -30,10 +30,10 @@ public  class CalculoMarcas {
 		// lista de posiciones jerarquizadas es decir identificadas en relacion a la unidad
 		// se suma 1 para tener en cuentra el indexado...
 		posicionSeleccionada++;
-		log.info("limite: "+limite+" numeroElementos:"+numeroElementos+" posicionSeleccionada: "+(posicionSeleccionada));
+		log.debug("limite: "+limite+" numeroElementos:"+numeroElementos+" posicionSeleccionada: "+(posicionSeleccionada));
 		
 		List<Integer> jerarquizaPosiciones = jerarquizaPosiciones(numeroElementos, posicionSeleccionada);
-		log.info(jerarquizaPosiciones);
+		log.debug(jerarquizaPosiciones);
 			
 		// add marca inicial
 		MarcaPosicion inicio = new MarcaPosicion(0);
@@ -41,7 +41,7 @@ public  class CalculoMarcas {
 
 		float inicioColumna_x = inicio.marca;
 		double numeroDivisionesReticula = extraNumeroUnidadesReticula(jerarquizaPosiciones);
-		log.info("numeroDivisionesReticula"+numeroDivisionesReticula);
+		log.debug("numeroDivisionesReticula"+numeroDivisionesReticula);
 
 		double medidaModulo = limite / numeroDivisionesReticula;
 

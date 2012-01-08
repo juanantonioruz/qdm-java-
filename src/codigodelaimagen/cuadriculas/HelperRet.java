@@ -15,7 +15,10 @@ import codigodelaimagen.cuadriculas.model.FilaRet;
 public class HelperRet {
 	public static Log log = LogFactory.getLog(HelperRet.class);
 
-	
+	public static void recalculaPosiciones(Object elemento, List elementos, float limite) {
+		recalculaPosiciones(elementos.indexOf(elemento), elementos, limite);
+	}
+
 	public static void recalculaPosiciones(int posicionSeleccionada, List elementos, float limite) {
 		log.debug("evalua "+posicionSeleccionada);
 		CalculoMarcas calculoMarcas = new CalculoMarcas(limite, elementos.size(), posicionSeleccionada,2);

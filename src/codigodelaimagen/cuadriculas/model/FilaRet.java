@@ -27,6 +27,7 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 	public float getWidth() {
 		return reticulaRet.getAncho();
 	}
+
 	public float getHeightFinal() {
 		return getMedidaVariableFinal();
 	}
@@ -43,6 +44,16 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 	@Override
 	public float getY() {
 		return getPosicionEnRelacionDeSumasPosicionesAnteriores();
+	}
+
+	public ColRet getColumnaSeleccionada() {
+		for (int i = 0; i < elementos.size(); i++) {
+			ColRet kol = (ColRet) elementos.get(i);
+			if (kol.isSel())
+				return kol;
+		}
+//		throw new RuntimeException("no hay ninguna col seleccionada! siempre debe haber una!");
+		return (ColRet) elementos.get(0);
 	}
 
 }
