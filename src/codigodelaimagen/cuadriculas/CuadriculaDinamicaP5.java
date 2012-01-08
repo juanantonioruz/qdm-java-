@@ -29,7 +29,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	private ColorList listaColoresEquipo;
 
 	private void inicializaContenedor() {
-		reticulaRet = new ReticulaRet(10, 0, width - 20, height, 13, this);
+		reticulaRet = new ReticulaRet(20, 0, width - 20, height, 13, this);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	@Override
 	public void mouseClicked() {
-		log.info("raton");
+		log.info("raton CLICK");
 		raton(mouseX, mouseY);
 	}
 
@@ -100,9 +100,15 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				float celdaY=celda.getY();
 				float celdaWeight=celda.getWidth();
 				float celdaHeight=celda.getHeight();
+				if(fila.isSel() && col.isSel() && celda.isSel()){
 				fill(celda.color);
 				rect(celdaX, celdaY, celdaWeight, celdaHeight);
-
+				}else{
+				fill(0);
+				rect(celdaX, celdaY, celdaWeight, celdaHeight);
+				fill(celda.color,60);
+				rect(celdaX, celdaY, celdaWeight, celdaHeight);
+				}
 //				fill(celda.color, 30);
 //				if (celda.isEncima())
 //					fill(celda.color);
@@ -136,12 +142,15 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	 * @param mouseY
 	 */
 	public void raton(int mouseX, int mouseY) {
+		FilaRet f = null;
+		boolean encimaFila = false;
 		for (int i = 0; i < reticulaRet.filas.size(); i++) {
-			FilaRet f = reticulaRet.filas.get(i);
+			 f = reticulaRet.filas.get(i);
 			float y1 = reticulaRet.getY1() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 			boolean coincideHor = mouseX > reticulaRet.getX1() && mouseX < (reticulaRet.getX1() + reticulaRet.ancho);
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
-			if (coincideHor && coindiceV) {
+			 encimaFila = coincideHor && coindiceV;
+			if (encimaFila) {
 				HelperRet.selecciona(reticulaRet.filas, f);
 				HelperRet.recalculaPosiciones(i, reticulaRet.filas, reticulaRet.alto);
 				ratonFila(f, mouseX, mouseY);
@@ -150,6 +159,9 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				break;
 				// TODO EXIT del bucle y poner en sel=false las demas filas
 			}
+		}
+		if(encimaFila){
+			recalculaDemasCeldasDeColumnasDeFilasDeReticula(reticulaRet, f);
 		}
 	}
 
@@ -210,9 +222,11 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	public void ratonFila(FilaRet fila, int mouseX, int mouseY) {
+		ColRet kolumna = null;
+		boolean encima = false;
 		for (int i = 0; i < fila.elementos.size(); i++) {
-			ElementoReticulaAbstract kolumna = fila.elementos.get(i);
-			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
+				kolumna = (ColRet) fila.elementos.get(i);
+			encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
 			if (encima) {
 
 				HelperRet.selecciona(fila.elementos, kolumna);
@@ -224,16 +238,40 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				break;
 			}
 		}
+		if(encima){
+			recalculaDemasCeldasDeColumnasDeFilas(fila,kolumna);
+		}
+		
 	}
+	private void recalculaDemasCeldasDeColumnasDeFilasDeReticula(ReticulaRet reticulaRet2, FilaRet fila) {
+		for (int i = 0; i < reticulaRet2.filas.size(); i++) {
+			FilaRet fofo = reticulaRet2.filas.get(i);
+			if(fofo!=fila){
+				recalculaDemasCeldasDeColumnasDeFilas(fofo, null);
+			}
+		}
+
+	}
+
+	private void recalculaDemasCeldasDeColumnasDeFilas(FilaRet fila, ColRet kolumna) {
+		for (int i = 0; i < fila.elementos.size(); i++) {
+			ColRet koko = (ColRet) fila.elementos.get(i);
+			if(kolumna!=koko){
+				HelperRet.recalculaPosiciones(i, koko.elementos, koko.getHeightFinal());
+			}
+			
+		}
+		
+	}
+
 	public void ratonColumna(ColRet col, int mouseX, int mouseY) {
 		for (int i = 0; i < col.elementos.size(); i++) {
 			ElementoReticulaAbstract celda = col.elementos.get(i);
 			boolean encima = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 			if (encima) {
 				HelperRet.selecciona(col.elementos, celda);
-				
 				log.debug("celda pos sel: " + i);
-				HelperRet.recalculaPosiciones(i, col.elementos, col.getHeight());
+				HelperRet.recalculaPosiciones(i, col.elementos, col.getHeightFinal());
 				// TODO pon es select(false) el resto de las celdas
 				break;
 			}

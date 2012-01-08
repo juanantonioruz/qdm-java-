@@ -27,6 +27,9 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 	public float getWidth() {
 		return reticulaRet.getAncho();
 	}
+	public float getHeightFinal() {
+		return getMedidaVariableFinal();
+	}
 
 	public float getHeight() {
 		return getMedidaVariable();

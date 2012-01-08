@@ -28,6 +28,9 @@ public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVaria
 		return fila.getHeight();
 	}
 
+	public float getHeightFinal(){
+		return fila.getHeightFinal();
+	}
 
 	@Override
 	public float getX() {

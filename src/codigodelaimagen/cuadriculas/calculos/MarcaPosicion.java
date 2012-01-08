@@ -8,4 +8,9 @@ public class MarcaPosicion {
 		this.marca = marca;
 	}
 
+	@Override
+	public String toString() {
+		return "MarcaPosicion [marca=" + marca + "]";
+	}
+
 }

@@ -1,5 +1,6 @@
 package codigodelaimagen.cuadriculas.interfaces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -30,6 +31,10 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 	int contador = 0;
 
 	int pasos = 10;
+	
+	public float getMedidaVariableFinal() {
+		return medidaVariable;
+	}
 
 	public float getMedidaVariable() {
 		return PApplet.map(contador, 0, pasos, medidaVariableAnterior, medidaVariable);
@@ -66,13 +71,9 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 	public TieneMedidaVariableAnterior getAnterior() {
 		return anterior;
 	}
-	public List<ElementoReticulaAbstract> elementos;
+	public List<ElementoReticulaAbstract> elementos=new ArrayList<ElementoReticulaAbstract>();
 
-	private int getPosicionSeleccionada() {
-		for (int i = 0; i < elementos.size(); i++)
-			if (elementos.get(i).isSel())
-				return i;
-		return 0;
-	}
+	
+
 
 }

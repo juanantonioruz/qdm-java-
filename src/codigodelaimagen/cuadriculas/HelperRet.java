@@ -19,6 +19,7 @@ public class HelperRet {
 	public static void recalculaPosiciones(int posicionSeleccionada, List elementos, float limite) {
 		log.debug("evalua "+posicionSeleccionada);
 		CalculoMarcas calculoMarcas = new CalculoMarcas(limite, elementos.size(), posicionSeleccionada,2);
+		log.debug("limite:"+limite+" numeroElemetos:"+elementos.size()+" marcas: "+calculoMarcas.marcas);
 		for (int i = 0; i < calculoMarcas.marcas.size()-1; i++) {
 				MarcaPosicion marcaActual = calculoMarcas.marcas.get(i);
 				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);

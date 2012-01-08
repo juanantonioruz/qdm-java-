@@ -18,11 +18,11 @@ public  class CalculoMarcas {
 	/**
 	 * 
 	 * @param limite
-	 * @param numeroCeldas indexadas en 1
+	 * @param numeroElementos indexadas en 1
 	 * @param posicionSeleccionada indexada en 0
 	 * @param baseMultiplicadora 
 	 */
-	public CalculoMarcas(float limite, int numeroCeldas, int posicionSeleccionada, float baseMultiplicadora) {
+	public CalculoMarcas(float limite, int numeroElementos, int posicionSeleccionada, float baseMultiplicadora) {
 		// marca 1 (inicio)
 
 		this.baseMultiplicadora = baseMultiplicadora;
@@ -30,11 +30,10 @@ public  class CalculoMarcas {
 		// lista de posiciones jerarquizadas es decir identificadas en relacion a la unidad
 		// se suma 1 para tener en cuentra el indexado...
 		posicionSeleccionada++;
-		log.debug("posicion calculo: "+(posicionSeleccionada));
-		log.debug("numeroCeldas: "+numeroCeldas);
+		log.info("limite: "+limite+" numeroElementos:"+numeroElementos+" posicionSeleccionada: "+(posicionSeleccionada));
 		
-		List<Integer> jerarquizaPosiciones = jerarquizaPosiciones(numeroCeldas, posicionSeleccionada);
-		log.debug(jerarquizaPosiciones);
+		List<Integer> jerarquizaPosiciones = jerarquizaPosiciones(numeroElementos, posicionSeleccionada);
+		log.info(jerarquizaPosiciones);
 			
 		// add marca inicial
 		MarcaPosicion inicio = new MarcaPosicion(0);
@@ -42,6 +41,7 @@ public  class CalculoMarcas {
 
 		float inicioColumna_x = inicio.marca;
 		double numeroDivisionesReticula = extraNumeroUnidadesReticula(jerarquizaPosiciones);
+		log.info("numeroDivisionesReticula"+numeroDivisionesReticula);
 
 		double medidaModulo = limite / numeroDivisionesReticula;
 
@@ -91,7 +91,7 @@ public  class CalculoMarcas {
 
 	private int extraNumeroUnidadesReticula(List<Integer> posicionesJerarquizadas) {
 		// res=1 es el primer modulo (el modulo mas pequeno mide la unidad)
-		int resultado = 1;
+		int resultado = 0;
 		// por cada posicion existente (ademas de la primera ya contemplada en
 		// la linea anterior)
 		for (Integer i:posicionesJerarquizadas) {

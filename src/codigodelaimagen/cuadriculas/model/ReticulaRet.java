@@ -33,7 +33,8 @@ public class ReticulaRet  {
 		this.y1 = y1;
 		this.ancho = ancho;
 		this.alto = alto;
-		this.numeroFilas = (int)p5.random(1,20);
+		//TODO: change el random
+		this.numeroFilas = (int)p5.random(1,10);
 		this.p5 = p5;
 
 		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
@@ -57,7 +58,7 @@ public class ReticulaRet  {
 		
 		// inicia celdas de filas
 		for(FilaRet f:filas){
-			f.elementos = generaColumnas(f,(int)HelperRandom.random(2,5));
+			f.elementos = generaColumnas(f,(int)HelperRandom.random(1,15));
 			f.elementos.get(0).setSel(true);
 
 			HelperRet.recalculaPosiciones(0, f.elementos, f.getWidth());
@@ -68,7 +69,11 @@ public class ReticulaRet  {
 		for(FilaRet f:filas){
 			for(int j=0; j<f.elementos.size(); j++){
 				ColRet c=(ColRet) f.elementos.get(j);
-				c.elementos=generaCeldas(c, 5);
+				if(j==0)
+				c.elementos=generaCeldas(c, 1);
+				else
+					c.elementos=generaCeldas(c, (int)p5.random(1,10));
+					
 				c.elementos.get(0).setSel(true);
 				HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
 				log.info("numero de celdas:"+c.elementos.size());
@@ -122,8 +127,6 @@ public class ReticulaRet  {
 			filas.add(new FilaRet(filaAnterior,  this));
 
 		}
-		for (FilaRet f : filas)
-			filas.get(0).setSel(true);
 			
 		return filas;
 	}
