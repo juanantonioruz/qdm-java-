@@ -27,6 +27,8 @@ public class ReticulaRet {
 	private final PApplet p5;
 	private final int numeroFilas;
 
+	public List<ElementoReticulaAbstract> children=new ArrayList();
+	
 	public ReticulaRet(float x1, float y1, float ancho, float alto, int numeroFilas, PApplet p5) {
 		super();
 		this.x1 = x1;
@@ -40,7 +42,6 @@ public class ReticulaRet {
 
 		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
 		filas = generaFilas();
-		filas.get(0).setSel(true);
 		// desactivado hasta que interese
 		if (false) {
 			for (FilaRet f : filas) {
@@ -67,6 +68,8 @@ public class ReticulaRet {
 				ColRet c = (ColRet) f.elementos.get(j);
 				if (j == 0) {
 					c.elementos = generaCeldas(c, null, 1);
+					//asociacion celdas de columna 0 con reticulaRet
+					children.addAll(c.elementos);
 				} else {
 					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
 					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
@@ -80,8 +83,10 @@ public class ReticulaRet {
 
 		// activando el primer comentario!
 		filas.get(0).setSel(true);
-		filas.get(0).elementos.get(0).setSel(true);
-		filas.get(0).elementos.get(0).elementos.get(0).setSel(true);
+		List<ElementoReticulaAbstract> columnas = filas.get(0).elementos;
+		columnas.get(0).setSel(true);
+		List<ElementoReticulaAbstract> celdas = columnas.get(0).elementos;
+		celdas.get(0).setSel(true);
 		// fin activar primer comentario
 
 		HelperRet.recalculaPosiciones(0, filas, alto);

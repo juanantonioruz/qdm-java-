@@ -172,12 +172,15 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 							if (encimaCelda) {
 
-//								if(celda.parent!=null)
-//								Helper.selecciona(celda.parent., celda.parent)
-
+//							
 								
 								HelperRet.selecciona(reticulaRet.filas, celda.kolumna.fila);
 								HelperRet.selecciona(celda.kolumna.fila.elementos, celda.kolumna);
+								if(celda.parent==null){
+									celda.setSel(true);
+//									HelperRet.selecciona(celda.parent., celda.parent)
+								}else
+								HelperRet.selecciona(celda.parent.children, celda);
 //								SeleccionParentCeldRectRecursivo cal=new SeleccionParentCeldRectRecursivo(celda);
 
 								log.info("celda"+celda+" pos sel: " + h);
@@ -260,12 +263,30 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 
 	
-
+CeldaRet celdaSeleccionada;
 
 private void recalculaRet(CeldaRet celda) {
 		
 		HelperRet.recalculaPosiciones(reticulaRet.getSeleccionada(), reticulaRet.filas, reticulaRet.alto);
 		HelperRet.recalculaPosiciones(celda.kolumna, celda.kolumna.fila.elementos, reticulaRet.getAncho());
+		celdaSeleccionada=celda;
+		if(celda.parent==null){
+
+
+//			celda.setSel(true);
+//			HelperRet.selecciona(celda.parent., celda.parent)
+//			HelperRet.recalculaPosiciones(celda, celda.kolumna.fila.elementos, celda.parent.getHeightFinal());
+	//TODO esto hace falta que el contenedor sea una celda y que sus elementos sean las filas
+			// mas o menos esto reticulaRet.children son celdas
+			recalculaCeldaColumna0(celda);
+			for(CeldaRet child: celda.children)
+			recursivoDesc(child);
+		}else{
+			recursivoAsc(celda);
+			recursivoDesc(celda);
+
+
+		}
 //		for(FilaRet f:reticulaRet.filas){
 //				HelperRet.recalculaPosiciones(f.getColumnaSeleccionada(), f.elementos, reticulaRet.getAncho());
 //				for(int i=0; i<f.elementos.size(); i++){
@@ -280,5 +301,30 @@ private void recalculaRet(CeldaRet celda) {
 //				}
 //		}
 		
+	}
+
+private void recalculaCeldaColumna0(CeldaRet celda) {
+	HelperRet.recalculaPosiciones(celda, reticulaRet.children, reticulaRet.alto);
+}
+
+	private void recursivoAsc(CeldaRet celda) {
+		System.out.println("recursivo");
+		if(celda.parent!=null){
+			HelperRet.recalculaPosiciones(celda, celda.parent.children, celda.parent.getHeightFinal());
+			recursivoAsc(celda.parent);
+		}else{
+			recalculaCeldaColumna0(celda);
+
+		}
+	
+}
+
+	private void recursivoDesc(CeldaRet celda) {
+		if(celda==celdaSeleccionada)
+			HelperRet.recalculaPosiciones(celda, celda.parent.children, celda.parent.getHeightFinal());
+		else
+			HelperRet.recalculaPosiciones(0, celda.parent.children, celda.parent.getHeightFinal());
+		for(CeldaRet child:celda.children)
+			recursivoDesc(child);
 	}
 }
