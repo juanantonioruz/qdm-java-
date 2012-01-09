@@ -15,6 +15,7 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	public  int color;
 	public  CeldaRet parent;
 	public List<CeldaRet> children=new ArrayList<CeldaRet>();
+
 	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna) {
 		this.anterior = anterior;
 		this.parent = parent;

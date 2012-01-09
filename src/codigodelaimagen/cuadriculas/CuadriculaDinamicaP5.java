@@ -35,8 +35,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	@Override
 	public void mouseMoved() {
-		if (mouseX != pmouseX && mouseY != pmouseY)
-			ratonEncima(mouseX, mouseY);
+//		if (mouseX != pmouseX && mouseY != pmouseY)
+//			ratonEncima(mouseX, mouseY);
 	}
 
 	@Override
@@ -160,7 +160,38 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
-				ratonFila(f, mouseX, mouseY);
+				log.info("en fila"+i);
+				for (int j = 0; j < f.elementos.size(); j++) {
+					ColRet kolumna = (ColRet) f.elementos.get(j);
+					boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
+					if (encima) {
+						log.info("KOLumna pos sel: " + j);
+						
+						for (int h = 0; h < kolumna.elementos.size(); h++) {
+							CeldaRet celda = (CeldaRet) kolumna.elementos.get(h);
+							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
+							if (encimaCelda) {
+
+//								if(celda.parent!=null)
+//								Helper.selecciona(celda.parent., celda.parent)
+
+								
+								HelperRet.selecciona(reticulaRet.filas, celda.kolumna.fila);
+								HelperRet.selecciona(celda.kolumna.fila.elementos, celda.kolumna);
+//								SeleccionParentCeldRectRecursivo cal=new SeleccionParentCeldRectRecursivo(celda);
+
+								log.info("celda"+celda+" pos sel: " + h);
+								recalculaRet(celda);
+								
+								break;
+							}
+						}
+						
+						
+					}
+				}
+				// TODO if encima recalcular el resto de las columnas
+
 				break;
 			}
 		}
@@ -227,59 +258,27 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		return encima;
 	}
 
-	public void ratonFila(FilaRet fila, int mouseX, int mouseY) {
-		for (int i = 0; i < fila.elementos.size(); i++) {
-			ColRet kolumna = (ColRet) fila.elementos.get(i);
-			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
-			if (encima) {
-				log.debug("KOLumna pos sel: " + i);
-				ratonColumna((ColRet) kolumna, mouseX, mouseY);
-			}
-		}
-		// TODO if encima recalcular el resto de las columnas
-
-	}
 
 	
 
-	public void ratonColumna(ColRet col, int mouseX, int mouseY) {
-		for (int i = 0; i < col.elementos.size(); i++) {
-			CeldaRet celda = (CeldaRet) col.elementos.get(i);
-			boolean encima = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
-			if (encima) {
 
-//				if(celda.parent!=null)
-//				Helper.selecciona(celda.parent., celda.parent)
-
-				
-				HelperRet.selecciona(celda.kolumna.fila.elementos, celda.kolumna);
-				HelperRet.selecciona(reticulaRet.filas, celda.kolumna.fila);
-//				SeleccionParentCeldRectRecursivo cal=new SeleccionParentCeldRectRecursivo(celda);
-
-				log.debug("celda pos sel: " + i);
-				recalculaRet();
-				
-				break;
-			}
-		}
-	}
-
-private void recalculaRet() {
+private void recalculaRet(CeldaRet celda) {
 		
 		HelperRet.recalculaPosiciones(reticulaRet.getSeleccionada(), reticulaRet.filas, reticulaRet.alto);
-		for(FilaRet f:reticulaRet.filas){
-				HelperRet.recalculaPosiciones(f.getColumnaSeleccionada(), f.elementos, reticulaRet.getAncho());
-				for(int i=0; i<f.elementos.size(); i++){
-					ColRet kol=(ColRet) f.elementos.get(i);
-					for(int j=0;j<kol.elementos.size();j++){
-						CeldaRet celda=(CeldaRet) kol.elementos.get(j);
-						if (celda.parent == null)
-							HelperRet.recalculaPosiciones(kol.getSeleccionada(), kol.elementos, kol.getHeightFinal());
-						else
-							HelperRet.recalculaPosiciones(kol.getSeleccionada(), celda.parent.children, celda.parent.getHeight());
-					}
-				}
-		}
+		HelperRet.recalculaPosiciones(celda.kolumna, celda.kolumna.fila.elementos, reticulaRet.getAncho());
+//		for(FilaRet f:reticulaRet.filas){
+//				HelperRet.recalculaPosiciones(f.getColumnaSeleccionada(), f.elementos, reticulaRet.getAncho());
+//				for(int i=0; i<f.elementos.size(); i++){
+//					ColRet kol=(ColRet) f.elementos.get(i);
+//					for(int j=0;j<kol.elementos.size();j++){
+//						CeldaRet celda=(CeldaRet) kol.elementos.get(j);
+//						if (celda.parent == null)
+//							HelperRet.recalculaPosiciones(kol.getSeleccionada(), kol.elementos, kol.getHeightFinal());
+//						else
+//							HelperRet.recalculaPosiciones(kol.getSeleccionada(), celda.parent.children, celda.parent.getHeight());
+//					}
+//				}
+//		}
 		
 	}
 }

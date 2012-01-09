@@ -4,18 +4,18 @@ import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
 public class CalculoRecursivo {
 	float res;
-	TieneMedidaVariableAnterior parent;
+	TieneMedidaVariableAnterior anterior;
 
 	public float calcula(TieneMedidaVariableAnterior celdaRet) {
-		parent = celdaRet.getAnterior();
+		anterior = celdaRet.getAnterior();
 		sumaParent();
 		return res;
 	}
 
 	private void sumaParent() {
-		if (parent != null) {
-			res += parent.getMedidaVariable();
-			parent = parent.getAnterior();
+		if (anterior != null) {
+			res += anterior.getMedidaVariable();
+			anterior = anterior.getAnterior();
 			sumaParent();
 		}
 

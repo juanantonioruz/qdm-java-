@@ -34,7 +34,8 @@ public class ReticulaRet {
 		this.ancho = ancho;
 		this.alto = alto;
 		// TODO: change el random
-		this.numeroFilas = (int) p5.random(1, 10);
+		// this.numeroFilas = (int) p5.random(1, 10);
+		this.numeroFilas = 3;
 		this.p5 = p5;
 
 		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
@@ -54,48 +55,57 @@ public class ReticulaRet {
 
 			}
 		}
-		HelperRet.recalculaPosiciones(posicionSeleccionada, filas, alto);
 
-		// inicia celdas de filas
+		// inicia columnas de filas
 		for (FilaRet f : filas) {
-			f.elementos = generaColumnas(f, (int) HelperRandom.random(1, 15));
-
-			HelperRet.recalculaPosiciones(0, f.elementos, f.getWidth());
-
+			f.elementos = generaColumnas(f, 3);
 			log.debug("numero de columnas:" + f.elementos.size());
 		}
 
 		for (FilaRet f : filas) {
 			for (int j = 0; j < f.elementos.size(); j++) {
 				ColRet c = (ColRet) f.elementos.get(j);
-				if (j == 0){
+				if (j == 0) {
 					c.elementos = generaCeldas(c, null, 1);
-				// aqui recalcula altos de celda en funcion de columna
-					HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
-				}else {
+				} else {
 					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
 					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) cAnt.elementos.get(celI);
-
-						c.elementos = generaCeldas(c, celdaInt, (int) p5.random(1, 5));
-						HelperRet.recalculaPosiciones(0, celdaInt.children, celdaInt.getHeight());
+						c.elementos = generaCeldas(c, celdaInt, 3);
 					}
 				}
 				log.debug("numero de celdas:" + c.elementos.size());
 			}
 		}
-		
+
 		// activando el primer comentario!
 		filas.get(0).setSel(true);
 		filas.get(0).elementos.get(0).setSel(true);
 		filas.get(0).elementos.get(0).elementos.get(0).setSel(true);
 		// fin activar primer comentario
 
+		HelperRet.recalculaPosiciones(0, filas, alto);
+		for (FilaRet f : filas) {
+			// calcula columnas de cada fila
+			HelperRet.recalculaPosiciones(0, f.elementos, f.getWidth());
+			for (int j = 0; j < f.elementos.size(); j++) {
+				ColRet c = (ColRet) f.elementos.get(j);
+				if (j == 0) {
+					HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
+				} else {
+					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
+					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
+						CeldaRet celdaInt = (CeldaRet) cAnt.elementos.get(celI);
+						HelperRet.recalculaPosiciones(0, celdaInt.children, celdaInt.getHeight());
+					}
+				}
+			}
+		}
 	}
 
-	private List generaCeldas(ColRet kolumna, CeldaRet parent, int random) {
+	private List generaCeldas(ColRet kolumna, CeldaRet parent, int numeroCeldas) {
 		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
-		for (int i = 0; i < random; i++) {
+		for (int i = 0; i < numeroCeldas; i++) {
 
 			CeldaRet celdaAnterior = null;
 			if (i > 0)
@@ -153,10 +163,11 @@ public class ReticulaRet {
 	public float getY1() {
 		return y1;
 	}
-	
-	public FilaRet getSeleccionada(){
-		for(FilaRet fila:filas){
-			if(fila.isSel())return fila;
+
+	public FilaRet getSeleccionada() {
+		for (FilaRet fila : filas) {
+			if (fila.isSel())
+				return fila;
 		}
 		throw new RuntimeException("no hay ninguna fila seleccionada! siempre debe haber una!");
 	}
