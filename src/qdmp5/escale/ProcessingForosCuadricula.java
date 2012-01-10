@@ -33,7 +33,7 @@ public class ProcessingForosCuadricula extends PApplet {
 		smooth();
 		font = loadFont("Courier10PitchBT-Roman-25.vlw");
 
-		comentarios = new ServicioLoadEquipos(this).loadXML( equiposDB);
+		comentarios = new ServicioLoadEquipos(this).loadXML(  "foros.xml");
 		int numeroComentarios = comentarios.size();
 		anchoComentario = width / numeroComentarios;
 		for(ComentarioEscale c:comentarios)

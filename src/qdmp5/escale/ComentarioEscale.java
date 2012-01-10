@@ -16,7 +16,7 @@ public class ComentarioEscale extends ModeloEscaleBase  implements Comparable<Co
 	public String titulo;
 	public UsuarioEscale usuario;
 	int parent;
-	int id;
+	public int id;
 	Date fecha;
 	public ComentarioEscale(PApplet p5, int _id, String _titulo, String _texto, UsuarioEscale usuario, int _parent,
 			Date _fecha) {

@@ -16,7 +16,6 @@ public class ProcesssingTreeDiagram extends PApplet {
 	// experimentando branchs
 	Log log = LogFactory.getLog(getClass());
 
-	List<EquipoEscale> equiposDB = new ArrayList<EquipoEscale>();
 	PFont fontA;
 	GrabacionEnVideo grabacionEnVideo;
 	private boolean grabando = false;
@@ -25,7 +24,6 @@ public class ProcesssingTreeDiagram extends PApplet {
 	ReticulaForo navegador;
 
 	boolean debug;
-	List<ComentarioEscale> comentarios;
 	List<ComentarioEscale> mensajesRelacionados;
 
 	public void setup() {
@@ -33,9 +31,9 @@ public class ProcesssingTreeDiagram extends PApplet {
 		size(800, 500);
 		smooth();
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
-
-		comentarios = new ServicioLoadEquipos(this).loadXML(equiposDB);
-
+		ServicioMensajes servicioMensajes=new ServicioMensajes(this, "foros.xml");
+		mensajesRelacionados=servicioMensajes.organizaMensajes;
+		
 		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
 
 		smooth();
@@ -45,18 +43,15 @@ public class ProcesssingTreeDiagram extends PApplet {
 
 		fill(0);
 		textFont(fontA, 20);
-		log.info("numero mensajes:" + comentarios.size());
-		List<UsuarioEscale> usuariosParticipantes = dameUsuariosParticipantes();
-		log.info("usuarios:" + usuariosParticipantes.size());
 
-		ServicioOrganizacionMensajes servicioOrganizacionMensajes = new ServicioOrganizacionMensajes(this);
-		mensajesRelacionados = servicioOrganizacionMensajes.relacionaParentChildrens(comentarios);
 
 		reticulaForo =iniciaEstructuraReticular(20, 20, width/2 , height*2 , 2);
 		navegador =iniciaEstructuraReticular(600, 10, 250, 250, 1);
 		
 
 	}
+
+	
 
 	private ReticulaForo iniciaEstructuraReticular(int i, int j, float f, float g, int k) {
 		ReticulaForo reticulaForo = new ReticulaForo(this, i, j, f, g, k);
@@ -81,16 +76,7 @@ public class ProcesssingTreeDiagram extends PApplet {
 
 	}
 
-	private List<UsuarioEscale> dameUsuariosParticipantes() {
-		List<UsuarioEscale> usuarios = new ArrayList<UsuarioEscale>();
-		for (ComentarioEscale ce : comentarios) {
-			UsuarioEscale usuarioEscale = ce.usuario;
-			// TODO reimplementar en javascript el metodo equals...
-			if (!usuarios.contains(usuarioEscale))
-				usuarios.add(usuarioEscale);
-		}
-		return usuarios;
-	}
+	
 
 	public void mouseMoved() {
 		if (debug)

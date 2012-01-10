@@ -30,7 +30,7 @@ public class ProcesssingForosBandas extends PApplet {
 		smooth();
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
 
-		comentarios = new ServicioLoadEquipos(this).loadXML(equiposDB);
+		comentarios = new ServicioLoadEquipos(this).loadXML("foros.xml");
 		int numeroComentarios = comentarios.size();
 		anchoComentario = width / numeroComentarios;
 		int numeroEquiposDB = equiposDB.size();

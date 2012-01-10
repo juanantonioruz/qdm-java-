@@ -7,7 +7,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
+import qdmp5.escale.CalculoProfundidadLinea;
+import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.ServicioMensajes;
 import codigodelaimagen.cuadriculas.HelperRet;
+import codigodelaimagen.cuadriculas.calculos.CalculoProfundidadColumna;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 
@@ -29,12 +33,13 @@ public class ReticulaRet implements TreeDisplayable{
 
 	
 	private final PApplet p5;
-	private final int numeroFilas;
 
 	private List<CeldaRet> children=new ArrayList();
 
+	private List<ComentarioEscale> mensajes;
 
-	public ReticulaRet(float x1, float y1, float ancho, float alto, int numeroFilas, PApplet p5) {
+
+	public ReticulaRet(float x1, float y1, float ancho, float alto,  PApplet p5) {
 		super();
 		this.x1 = x1;
 		this.y1 = y1;
@@ -42,7 +47,10 @@ public class ReticulaRet implements TreeDisplayable{
 		this.alto = alto;
 		// TODO: change el random
 		// this.numeroFilas = (int) p5.random(1, 10);
-		this.numeroFilas = 15;
+		ServicioMensajes servicioMensajes=new ServicioMensajes(p5, "foros.xml");
+		mensajes = servicioMensajes.organizaMensajes;
+		log.info("mensajessize:"+mensajes.size());
+
 		this.p5 = p5;
 
 		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
@@ -61,10 +69,11 @@ public class ReticulaRet implements TreeDisplayable{
 //
 //			}
 		}
-
+		CalculoProfundidadColumna cc=new CalculoProfundidadColumna(mensajes);
+		log.info("profundidad: "+cc.columnas);
 		// inicia columnas de filas
 		for (FilaRet f : filas) {
-			f.elementos = generaColumnas(f, 3);
+			f.elementos = generaColumnas(f, cc.columnas);
 			log.debug("numero de columnas:" + f.elementos.size());
 		}
 
@@ -150,7 +159,7 @@ public class ReticulaRet implements TreeDisplayable{
 
 	private List<FilaRet> generaFilas() {
 		List<FilaRet> filas = new ArrayList<FilaRet>();
-		for (int i = 0; i < numeroFilas; i++) {
+		for (int i = 0; i < mensajes.size(); i++) {
 
 			FilaRet filaAnterior = null;
 			if (i > 0)

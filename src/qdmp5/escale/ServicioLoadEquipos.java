@@ -12,11 +12,15 @@ import toxi.color.ColorList;
 import toxi.color.TColor;
 
 public class ServicioLoadEquipos extends ClaseP5 {
+	
+	List<EquipoEscale> equipos= new ArrayList<EquipoEscale>();
+
 	public ServicioLoadEquipos(PApplet p5) {
 		super(p5);
 	}
 
-	public List<ComentarioEscale> loadXML(List<EquipoEscale> equipos) {
+	
+	public List<ComentarioEscale> loadXML( String xmlFile) {
 		equipos.add(new EquipoEscale(p5, 1, "bamako", 224, 122, "Niamakoro y Sicoro"));
 		equipos.add(new EquipoEscale(p5, 2, "barcelona", 236, 55, "Casc Antic"));
 		equipos.add(new EquipoEscale(p5, 3, "bogota", 133, 145, "Chapinero"));
@@ -32,7 +36,7 @@ public class ServicioLoadEquipos extends ClaseP5 {
 		for (int i = 0; i < equipos.size(); i++)
 			equipos.get(i).setColor((TColor) listaColoresEquipo.get(i));
 		ForosXMLLoadScale forosXMLLoad = new ForosXMLLoadScale(p5, equipos);
-		List<ComentarioEscale> comentarios = forosXMLLoad.procesaXML("foros.xml");
+		List<ComentarioEscale> comentarios = forosXMLLoad.procesaXML(xmlFile);
 		Collections.reverse(comentarios);
 		return comentarios;
 	}

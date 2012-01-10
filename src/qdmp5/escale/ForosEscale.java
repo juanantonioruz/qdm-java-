@@ -26,7 +26,6 @@ public class ForosEscale extends PApplet {
 	List<ComentarioEscale> comentarios;
 	List<ComentarioEscalaMapa> comentariosRepresentados = new ArrayList<ComentarioEscalaMapa>();
 	List<EquipoEscale> equipos = new ArrayList<EquipoEscale>();
-	List<EquipoEscale> equiposDB = new ArrayList<EquipoEscale>();
 	PFont font;
 	TransicionEscala transicionEscala;
 
@@ -37,7 +36,8 @@ public class ForosEscale extends PApplet {
 		smooth();
 		font = loadFont("Courier10PitchBT-Roman-25.vlw");
 
-		comentarios = new ServicioLoadEquipos(this).loadXML(equiposDB);
+		servicioLoadEquipos = new ServicioLoadEquipos(this);
+		comentarios = servicioLoadEquipos.loadXML( "foros.xml");
 
 
 		transicionEscala = new TransicionEscala(this, font, comentarios, comentariosRepresentados, equipos);
@@ -77,6 +77,7 @@ public class ForosEscale extends PApplet {
 	Log log = LogFactory.getLog(getClass());
 	GrabacionEnVideo grabacionEnVideo;
 	private boolean grabando = false;
+	private ServicioLoadEquipos servicioLoadEquipos;
 
 	public void keyPressed() {
 		if (key == ' ') {

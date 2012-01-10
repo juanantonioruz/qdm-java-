@@ -25,7 +25,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	private ColorList listaColoresEquipo;
 
 	private void inicializaContenedor() {
-		reticulaRet = new ReticulaRet(20, 0, width - 20, height, 13, this);
+		reticulaRet = new ReticulaRet(20, 0, width - 20, height,  this);
 	}
 
 	@Override
