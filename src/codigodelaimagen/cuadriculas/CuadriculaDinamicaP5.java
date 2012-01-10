@@ -1,19 +1,14 @@
 package codigodelaimagen.cuadriculas;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import qdmp5.ServicioToxiColor;
 import toxi.color.ColorList;
-import toxi.color.TColor;
-
 import codigodelaimagen.base.CDIBase;
-import codigodelaimagen.cuadriculas.calculos.SeleccionParentCeldRectRecursivo;
+import codigodelaimagen.cuadriculas.calculos.CalculoChildrenSel;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 import codigodelaimagen.cuadriculas.model.ColRet;
-import codigodelaimagen.cuadriculas.model.ReticulaRet;
 import codigodelaimagen.cuadriculas.model.FilaRet;
+import codigodelaimagen.cuadriculas.model.ReticulaRet;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
 
@@ -74,10 +69,10 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
-		float filaX = reticulaRet.getX1();
-		float filaY = reticulaRet.getY1() + fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		float filaX = reticulaRet.getX();
+		float filaY = reticulaRet.getY() + fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		float filaHeight = fila.getMedidaVariable();
-		float filaWeight = reticulaRet.getAncho();
+		float filaWeight = reticulaRet.getWidth();
 		fill(HelperColors.getColor(), 10);
 		noFill();
 		rect(filaX, filaY, filaWeight, filaHeight);
@@ -101,7 +96,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 				float celdaY = celda.getY();
 				float celdaWeight = celda.getWidth();
 				float celdaHeight = celda.getHeight();
-				if (fila.isSel() && col.isSel() && celda.isSel()) {
+				if (celda==reticulaRet.celdaSeleccionada) {
 					stroke(100);
 					strokeWeight(2);
 					fill(celda.color);
@@ -115,22 +110,6 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 					fill(celda.color, 60);
 					rect(celdaX, celdaY, celdaWeight, celdaHeight);
 				}
-				// fill(celda.color, 30);
-				// if (celda.isEncima())
-				// fill(celda.color);
-				//
-				// stroke(0);
-				// float mix = reticulaRet.getX1() +
-				// celda.kolumna.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-				// float miy =
-				// reticulaRet.getY1()+celda.kolumna.fila.getPosicionEnRelacionDeSumasPosicionesAnteriores()+celda.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-				// rect(mix, miy, celda.kolumna.getMedidaVariable(),
-				// celda.getMedidaVariable());
-				// contador++;
-				// fill(100);
-				// text(contador, mix, miy + 30);
-				// fill(0);
-				// text(contador, mix - 2, miy + 30 - 2);
 			}
 		}
 	}
@@ -155,8 +134,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		boolean encimaFila = false;
 		for (int i = 0; i < reticulaRet.filas.size(); i++) {
 			f = reticulaRet.filas.get(i);
-			float y1 = reticulaRet.getY1() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-			boolean coincideHor = mouseX > reticulaRet.getX1() && mouseX < (reticulaRet.getX1() + reticulaRet.ancho);
+			float y1 = reticulaRet.getY() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+			boolean coincideHor = mouseX > reticulaRet.getX() && mouseX < (reticulaRet.getX() + reticulaRet.getWidth());
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
@@ -173,18 +152,18 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 							if (encimaCelda) {
 
 //							
-								
-								HelperRet.selecciona(reticulaRet.filas, celda.kolumna.fila);
-								HelperRet.selecciona(celda.kolumna.fila.elementos, celda.kolumna);
-								if(celda.parent==null){
-									celda.setSel(true);
-//									HelperRet.selecciona(celda.parent., celda.parent)
-								}else
-								HelperRet.selecciona(celda.parent.children, celda);
+								reticulaRet.celdaSeleccionada=celda;
+//								HelperRet.selecciona(reticulaRet.filas, celda.kolumna.fila);
+//								HelperRet.selecciona(celda.kolumna.fila.elementos, celda.kolumna);
+//								if(celda.parent==null){
+//									celda.setSel(true);
+////									HelperRet.selecciona(celda.parent., celda.parent)
+//								}else
+//								HelperRet.selecciona(celda.parent.getChildren(), celda);
 //								SeleccionParentCeldRectRecursivo cal=new SeleccionParentCeldRectRecursivo(celda);
 
 								log.info("celda"+celda+" pos sel: " + h);
-								recalculaRet(celda);
+								recalculaRet();
 								
 								break;
 							}
@@ -213,13 +192,13 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	public void ratonEncima(int mouseX, int mouseY) {
 		for (int i = 0; i < reticulaRet.filas.size(); i++) {
 			FilaRet f = reticulaRet.filas.get(i);
-			float y1 = reticulaRet.getY1() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
-			boolean coincideHor = mouseX > reticulaRet.getX1() && mouseX < (reticulaRet.getX1() + reticulaRet.ancho);
+			float y1 = reticulaRet.getY() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+			boolean coincideHor = mouseX > reticulaRet.getX() && mouseX < (reticulaRet.getX() + reticulaRet.getWidth());
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor && coindiceV) {
 				log.debug("coindice fila: " + i);
 				ratonOverFila(f, mouseX, mouseY);
-				HelperRet.seleccionaEncima(reticulaRet.filas, f);
+//				HelperRet.seleccionaEncima(reticulaRet.filas, f);
 				break;
 			}
 		}
@@ -230,10 +209,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			ElementoReticulaAbstract celda = fila.elementos.get(i);
 			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) celda);
 			if (encima) {
-				celda.setEncima(true);
-				log.debug("celda.encima" + celda.isEncima());
-				HelperRet.seleccionaEncima(fila.elementos, celda);
-				log.debug(celda + "" + celda.isEncima());
+				reticulaRet.celdaEncima=(CeldaRet) celda;
+				log.debug("celda.encima true" + reticulaRet.celdaEncima);
 				break;
 			}
 		}
@@ -241,8 +218,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	private boolean isOverColumna(int mouseX, int mouseY, ColRet kolumna) {
-		float x1 = reticulaRet.getX1() + kolumna.getX();
-		float y1 = reticulaRet.getY1() + kolumna.getY();
+		float x1 = reticulaRet.getX() + kolumna.getX();
+		float y1 = reticulaRet.getY() + kolumna.getY();
 
 		boolean coincideHor = mouseX > x1 && mouseX < (x1 + kolumna.getWidth());
 		boolean coindiceV = mouseY > y1 && mouseY < y1 + kolumna.getHeight();
@@ -252,8 +229,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	private boolean isOverCelda(int mouseX, int mouseY, CeldaRet selda) {
 
-		float x1 = reticulaRet.getX1() + selda.getX();
-		float y1 = reticulaRet.getY1() + selda.getY();
+		float x1 = reticulaRet.getX() + selda.getX();
+		float y1 = reticulaRet.getY() + selda.getY();
 
 		boolean coincideHor = mouseX > x1 && mouseX < (x1 + selda.kolumna.getWidth());
 		boolean coindiceV = mouseY > y1 && mouseY < y1 + selda.getHeight();
@@ -263,30 +240,43 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 
 	
-CeldaRet celdaSeleccionada;
 
-private void recalculaRet(CeldaRet celda) {
+private void recalculaRet() {
 		
-		HelperRet.recalculaPosiciones(reticulaRet.getSeleccionada(), reticulaRet.filas, reticulaRet.alto);
-		HelperRet.recalculaPosiciones(celda.kolumna, celda.kolumna.fila.elementos, reticulaRet.getAncho());
-		celdaSeleccionada=celda;
-		if(celda.parent==null){
+		HelperRet.recalculaPosiciones(reticulaRet.celdaSeleccionada.kolumna.fila, reticulaRet.filas, reticulaRet.getHeight());
+		HelperRet.recalculaPosiciones(reticulaRet.celdaSeleccionada.kolumna, reticulaRet.celdaSeleccionada.kolumna.fila.elementos, reticulaRet.getWidth());
+		
+		
+//		la reticula debe ser una implementacion como la celdaret, es decir deberia implementar una interface comun
+//		del tipo children.... y que tambien tiene weight and height
+//		
+//		por otro lado la celdaret podria mantener una referencia al comentario hijo seleccionado
+//		para de esa forma saber entre los hijos si ya hay alguno en linea seleccionada, de lo contrario
+//		o coge el primero(ninguno cumple la condicion) o coge el ultimo(todos cumplen la condicion)
+		
+		for(CeldaRet celdaPrimeraDeFila: reticulaRet.getChildren())
+			if(esLineaSeleccionada(celdaPrimeraDeFila))
+				HelperRet.recalculaPosiciones(celdaPrimeraDeFila, reticulaRet.getChildren(), reticulaRet.getHeight());
 
 
-//			celda.setSel(true);
-//			HelperRet.selecciona(celda.parent., celda.parent)
-//			HelperRet.recalculaPosiciones(celda, celda.kolumna.fila.elementos, celda.parent.getHeightFinal());
-	//TODO esto hace falta que el contenedor sea una celda y que sus elementos sean las filas
-			// mas o menos esto reticulaRet.children son celdas
-			recalculaCeldaColumna0(celda);
-			for(CeldaRet child: celda.children)
-			recursivoDesc(child);
-		}else{
-			recursivoAsc(celda);
-			recursivoDesc(celda);
+		for(CeldaRet child: reticulaRet.getChildren())
+			for(CeldaRet subChild:child.getChildren())
+				recursivoDesc(subChild);
 
-
-		}
+//		if(celda.parent==null){
+////			celda.setSel(true);
+////			HelperRet.selecciona(celda.parent., celda.parent)
+////			HelperRet.recalculaPosiciones(celda, celda.kolumna.fila.elementos, celda.parent.getHeightFinal());
+//	//TODO esto hace falta que el contenedor sea una celda y que sus elementos sean las filas
+//			// mas o menos esto reticulaRet.children son celdas
+//			recalculaCeldaColumna0(celda);
+//			for(CeldaRet child: celda.getChildren())
+//			recursivoDesc(child);
+//		}else{
+//			for(CeldaRet child: reticulaRet.getChildren())
+//			recursivoDesc(child);
+//
+//		}
 //		for(FilaRet f:reticulaRet.filas){
 //				HelperRet.recalculaPosiciones(f.getColumnaSeleccionada(), f.elementos, reticulaRet.getAncho());
 //				for(int i=0; i<f.elementos.size(); i++){
@@ -304,14 +294,14 @@ private void recalculaRet(CeldaRet celda) {
 	}
 
 private void recalculaCeldaColumna0(CeldaRet celda) {
-	HelperRet.recalculaPosiciones(celda, reticulaRet.children, reticulaRet.alto);
+	HelperRet.recalculaPosiciones(celda, reticulaRet.getChildren(), reticulaRet.getHeight());
 }
 
 	private void recursivoAsc(CeldaRet celda) {
 		System.out.println("recursivo");
 		if(celda.parent!=null){
-			HelperRet.recalculaPosiciones(celda, celda.parent.children, celda.parent.getHeightFinal());
-			recursivoAsc(celda.parent);
+			HelperRet.recalculaPosiciones(celda, celda.parent.getChildren(), celda.getParent().getHeightFinal());
+			recursivoAsc((CeldaRet) celda.getParent());
 		}else{
 			recalculaCeldaColumna0(celda);
 
@@ -320,11 +310,22 @@ private void recalculaCeldaColumna0(CeldaRet celda) {
 }
 
 	private void recursivoDesc(CeldaRet celda) {
-		if(celda==celdaSeleccionada)
-			HelperRet.recalculaPosiciones(celda, celda.parent.children, celda.parent.getHeightFinal());
-		else
-			HelperRet.recalculaPosiciones(0, celda.parent.children, celda.parent.getHeightFinal());
-		for(CeldaRet child:celda.children)
+		//TODO:  aqui primero hay que encontrar la celda seleccionada y hacer el calculo respecto a esta
+		//TODO: de lo contrario pasar el calculo con la primera
+		//TODO: pero no hacer el bucle!
+			HelperRet.recalculaPosiciones(buscaCeldaSeleccionadaDeChildren(celda), celda.parent.getChildren(), celda.getParent().getHeightFinal());
+		for(CeldaRet child:celda.getChildren())
 			recursivoDesc(child);
+	}
+
+	private int buscaCeldaSeleccionadaDeChildren(CeldaRet celda) {
+		for(CeldaRet c:celda.getParent().getChildren())
+		if(esLineaSeleccionada(c)) return celda.getParent().getChildren().indexOf(c);
+		return 0;
+	}
+
+	private boolean esLineaSeleccionada(CeldaRet celda) {
+		CalculoChildrenSel calculoChildrenSel=new CalculoChildrenSel(celda, reticulaRet.celdaSeleccionada);
+		return calculoChildrenSel.esLinea;
 	}
 }

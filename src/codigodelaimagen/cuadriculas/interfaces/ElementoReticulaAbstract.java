@@ -9,12 +9,10 @@ import org.apache.commons.logging.LogFactory;
 import processing.core.PApplet;
 import codigodelaimagen.cuadriculas.calculos.CalculoRecursivo;
 
-public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable, Displayable{
+public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Displayable{
 	public Log log = LogFactory.getLog(getClass());
 
 	
-	private boolean sel;
-	private boolean encima;
 	float medidaVariableAnterior;
 	protected float medidaVariable;
 
@@ -41,26 +39,14 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 		// return medidaVariable;
 	}
 
-	public boolean isSel() {
-		return sel;
-	}
 
-	public void setSel(boolean sel) {
-		this.sel = sel;
-	}
 
 	public void actualiza() {
 		if (contador < pasos)
 			contador++;
 	}
 
-	public boolean isEncima() {
-		return encima;
-	}
-
-	public void setEncima(boolean encima) {
-		this.encima = encima;
-	}
+	
 
 	protected TieneMedidaVariableAnterior anterior;
 	public float getPosicionEnRelacionDeSumasPosicionesAnteriores() {

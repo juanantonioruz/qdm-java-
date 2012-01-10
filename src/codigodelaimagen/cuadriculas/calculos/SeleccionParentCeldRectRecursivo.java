@@ -1,12 +1,11 @@
 package codigodelaimagen.cuadriculas.calculos;
 
-import codigodelaimagen.cuadriculas.HelperRet;
-import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
+import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 
 public class SeleccionParentCeldRectRecursivo {
 
-	public SeleccionParentCeldRectRecursivo(CeldaRet celdaRet) {
+	private SeleccionParentCeldRectRecursivo(CeldaRet celdaRet) {
 		super();
 		selecciona(celdaRet);
 		// TODO Auto-generated constructor stub
@@ -15,10 +14,12 @@ public class SeleccionParentCeldRectRecursivo {
 
 
 
-	private void selecciona(CeldaRet celda) {
-		if (celda.parent != null) {
-			HelperRet.selecciona(celda.parent.elementos, celda);
-			selecciona(celda.parent);
+	private void selecciona(TreeDisplayable celda) {
+		TreeDisplayable parent = celda.getParent();
+		if (parent != null) {
+//			Seleccionable celdaI=(Seleccionable) parent;
+//			HelperRet.selecciona(parent.getChildren(), celdaI);
+//			selecciona(parent);
 		}else{	
 //			HelperRet.selecciona(celda.kolumna.elementos, celda);
 			

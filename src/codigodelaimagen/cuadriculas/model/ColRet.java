@@ -1,15 +1,9 @@
 package codigodelaimagen.cuadriculas.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import codigodelaimagen.cuadriculas.HelperRandom;
-import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
-import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
-public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
+public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior {
 	public FilaRet fila;
 
 	public ColRet(ColRet anterior, FilaRet fila) {
@@ -43,14 +37,6 @@ public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVaria
 	}
 
 
-	public CeldaRet getSeleccionada() {
-		for (int i = 0; i < elementos.size(); i++) {
-			CeldaRet sel = (CeldaRet) elementos.get(i);
-			if (sel.isSel())
-				return sel;
-		}
-//		throw new RuntimeException("no hay ninguna col seleccionada! siempre debe haber una!");
-		return (CeldaRet) elementos.get(0);	}
 
 	
 	

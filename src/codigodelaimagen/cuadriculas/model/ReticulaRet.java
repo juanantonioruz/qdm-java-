@@ -7,28 +7,33 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
-import toxi.color.ColorList;
-import toxi.color.TColor;
-import codigodelaimagen.cuadriculas.HelperRandom;
 import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
+import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 
-public class ReticulaRet {
+public class ReticulaRet implements TreeDisplayable{
 	public Log log = LogFactory.getLog(getClass());
 
 	private final float x1;
 	private final float y1;
-	public final float ancho;
-	public final float alto;
+	private final float ancho;
+	private final float alto;
 
+	
+	public CeldaRet celdaSeleccionada;
+	public CeldaRet celdaEncima;
+
+	
 	public List<FilaRet> filas;
 	private int posicionSeleccionada = 0;
 
+	
 	private final PApplet p5;
 	private final int numeroFilas;
 
-	public List<ElementoReticulaAbstract> children=new ArrayList();
-	
+	private List<CeldaRet> children=new ArrayList();
+
+
 	public ReticulaRet(float x1, float y1, float ancho, float alto, int numeroFilas, PApplet p5) {
 		super();
 		this.x1 = x1;
@@ -44,17 +49,17 @@ public class ReticulaRet {
 		filas = generaFilas();
 		// desactivado hasta que interese
 		if (false) {
-			for (FilaRet f : filas) {
-				if (f.isSel()) {
-					int posicion = getPosicionSeleccionada(f);
-					float base = 2;
-					if (posicion > 0)
-						base = p5.map(posicion, 0, f.elementos.size(), 2, 5);
-					System.out.println(base + " base");
-					break;
-				}
-
-			}
+//			for (FilaRet f : filas) {
+//				if (f.isSel()) {
+//					int posicion = getPosicionSeleccionada(f);
+//					float base = 2;
+//					if (posicion > 0)
+//						base = p5.map(posicion, 0, f.elementos.size(), 2, 5);
+//					System.out.println(base + " base");
+//					break;
+//				}
+//
+//			}
 		}
 
 		// inicia columnas de filas
@@ -64,29 +69,30 @@ public class ReticulaRet {
 		}
 
 		for (FilaRet f : filas) {
-			for (int j = 0; j < f.elementos.size(); j++) {
-				ColRet c = (ColRet) f.elementos.get(j);
+			List<ElementoReticulaAbstract> columnas = f.elementos;
+			for (int j = 0; j < columnas.size(); j++) {
+				ColRet columnaActual = (ColRet) columnas.get(j);
 				if (j == 0) {
-					c.elementos = generaCeldas(c, null, 1);
+					columnaActual.elementos = generaCeldas(columnaActual, null, 1);
 					//asociacion celdas de columna 0 con reticulaRet
-					children.addAll(c.elementos);
+					List ret=columnaActual.elementos;
+					children.addAll(ret);
 				} else {
-					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
-					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
-						CeldaRet celdaInt = (CeldaRet) cAnt.elementos.get(celI);
-						c.elementos = generaCeldas(c, celdaInt, 3);
+					ColRet columnaAnterior = (ColRet) columnas.get(j - 1);
+					List<ElementoReticulaAbstract> celdasColumnaAnterior = columnaAnterior.elementos;
+					for (int celI = 0; celI < celdasColumnaAnterior.size(); celI++) {
+						CeldaRet celdaInt = (CeldaRet) celdasColumnaAnterior.get(celI);
+						columnaActual.elementos.addAll(generaCeldas(columnaActual, celdaInt, 3));
 					}
 				}
-				log.debug("numero de celdas:" + c.elementos.size());
+				log.debug("numero de celdas:" + columnaActual.elementos.size());
 			}
 		}
 
 		// activando el primer comentario!
-		filas.get(0).setSel(true);
 		List<ElementoReticulaAbstract> columnas = filas.get(0).elementos;
-		columnas.get(0).setSel(true);
 		List<ElementoReticulaAbstract> celdas = columnas.get(0).elementos;
-		celdas.get(0).setSel(true);
+		celdaSeleccionada=(CeldaRet) celdas.get(0);
 		// fin activar primer comentario
 
 		HelperRet.recalculaPosiciones(0, filas, alto);
@@ -101,7 +107,7 @@ public class ReticulaRet {
 					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
 					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) cAnt.elementos.get(celI);
-						HelperRet.recalculaPosiciones(0, celdaInt.children, celdaInt.getHeight());
+						HelperRet.recalculaPosiciones(0, celdaInt.getChildren(), celdaInt.getHeight());
 					}
 				}
 			}
@@ -157,24 +163,44 @@ public class ReticulaRet {
 		return filas;
 	}
 
-	public float getX1() {
+
+	public FilaRet getFilaSeleccionada() {
+		return celdaSeleccionada.kolumna.fila;
+	}
+
+	@Override
+	public float getX() {
 		return x1;
 	}
 
-	public float getAncho() {
-		return ancho;
-	}
-
-	public float getY1() {
+	@Override
+	public float getY() {
 		return y1;
 	}
 
-	public FilaRet getSeleccionada() {
-		for (FilaRet fila : filas) {
-			if (fila.isSel())
-				return fila;
-		}
-		throw new RuntimeException("no hay ninguna fila seleccionada! siempre debe haber una!");
+	@Override
+	public float getWidth() {
+		return ancho;
+	}
+
+	@Override
+	public float getHeight() {
+		return alto;
+	}
+
+	@Override
+	public List<CeldaRet> getChildren() {
+		return children;
+	}
+
+	@Override
+	public TreeDisplayable getParent() {
+		return null;
+	}
+
+	@Override
+	public float getHeightFinal() {
+		return getHeight();
 	}
 
 }

@@ -4,23 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import codigodelaimagen.cuadriculas.HelperColors;
-import codigodelaimagen.cuadriculas.HelperRandom;
-import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
-import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
+import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 
-public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
+public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior,  TreeDisplayable {
 	public ColRet kolumna;
 	public  int color;
-	public  CeldaRet parent;
-	public List<CeldaRet> children=new ArrayList<CeldaRet>();
+	
+
+
+	public  TreeDisplayable parent;
+	public  CeldaRet childrenSel;
+	public List<CeldaRet> childdren=new ArrayList<CeldaRet>();
 
 	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna) {
 		this.anterior = anterior;
 		this.parent = parent;
 		if(parent!=null)
-		parent.children.add(this);
+		parent.childdren.add(this);
 		this.kolumna = kolumna;
 		this.color = HelperColors.getColor();
 
@@ -49,6 +51,17 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 		return parent.getY()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		
 	}
+
+	public List<CeldaRet> getChildren() {
+		return childdren;
+	}
+
+	@Override
+	public TreeDisplayable getParent() {
+		// TODO Auto-generated method stub
+		return (TreeDisplayable) parent;
+	}
+	
 	
 	
 

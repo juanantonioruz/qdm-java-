@@ -1,20 +1,9 @@
 package codigodelaimagen.cuadriculas.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import processing.core.PApplet;
-import codigodelaimagen.cuadriculas.HelperColors;
-import codigodelaimagen.cuadriculas.HelperRandom;
-import codigodelaimagen.cuadriculas.HelperRet;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
-import codigodelaimagen.cuadriculas.interfaces.Seleccionable;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
-public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior, Seleccionable {
+public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior {
 
 	private final ReticulaRet reticulaRet;
 
@@ -25,7 +14,7 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 	}
 
 	public float getWidth() {
-		return reticulaRet.getAncho();
+		return reticulaRet.getWidth();
 	}
 
 	public float getHeightFinal() {
@@ -38,7 +27,7 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 
 	@Override
 	public float getX() {
-		return reticulaRet.getX1();
+		return reticulaRet.getX();
 	}
 
 	@Override
@@ -46,14 +35,6 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 		return getPosicionEnRelacionDeSumasPosicionesAnteriores();
 	}
 
-	public ColRet getColumnaSeleccionada() {
-		for (int i = 0; i < elementos.size(); i++) {
-			ColRet kol = (ColRet) elementos.get(i);
-			if (kol.isSel())
-				return kol;
-		}
-//		throw new RuntimeException("no hay ninguna col seleccionada! siempre debe haber una!");
-		return (ColRet) elementos.get(0);
-	}
+
 
 }
