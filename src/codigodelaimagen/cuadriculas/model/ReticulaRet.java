@@ -42,7 +42,7 @@ public class ReticulaRet implements TreeDisplayable{
 		this.alto = alto;
 		// TODO: change el random
 		// this.numeroFilas = (int) p5.random(1, 10);
-		this.numeroFilas = 3;
+		this.numeroFilas = 15;
 		this.p5 = p5;
 
 		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
@@ -82,7 +82,7 @@ public class ReticulaRet implements TreeDisplayable{
 					List<ElementoReticulaAbstract> celdasColumnaAnterior = columnaAnterior.elementos;
 					for (int celI = 0; celI < celdasColumnaAnterior.size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) celdasColumnaAnterior.get(celI);
-						columnaActual.elementos.addAll(generaCeldas(columnaActual, celdaInt, 3));
+						columnaActual.elementos.addAll(generaCeldas(columnaActual, celdaInt, 10));
 					}
 				}
 				log.debug("numero de celdas:" + columnaActual.elementos.size());
