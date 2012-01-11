@@ -36,7 +36,6 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 
 	public float getMedidaVariable() {
 		return PApplet.map(contador, 0, pasos, medidaVariableAnterior, medidaVariable);
-		// return medidaVariable;
 	}
 
 
