@@ -49,4 +49,9 @@ public class EquipoEscale extends ModeloEscaleBase{
 	float mapeaValor(float ta) {
 	return p5.map(ta, 0, 1, 0, 100);
 	}
+
+	@Override
+	public String toString() {
+		return "EquipoEscale [nombre=" + nombre + "]";
+	}
 }

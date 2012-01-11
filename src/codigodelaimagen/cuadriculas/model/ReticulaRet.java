@@ -56,7 +56,6 @@ public class ReticulaRet implements TreeDisplayable{
 
 		filas = new ArrayList<FilaRet>();
 		for (int i = 0; i < mensajes.size(); i++) {
-			ComentarioEscale comentarioEscaleParent = mensajes.get(i);
 
 			
 			FilaRet filaAnterior = null;
@@ -77,14 +76,28 @@ public class ReticulaRet implements TreeDisplayable{
 			}
 			
 			filaActual.elementos=columnas;
-			generaCeldas(cc, comentarioEscaleParent, filaActual);
+//			generaCeldas(cc, comentarioEscaleParent, filaActual);
+			
+			
+			
 			log.debug("numero de columnas:" + filaActual.elementos.size());
 
 		}	
-
-
+			
+//		LAS FILAS Y LAS COLUMNAS YA ESTAN VINCULADAS
+//		AHORA HAY QUE CARGAR LAS CELDAS Y VINCULARLAS entre ellas (parent/anterior), y colcarlas en COLUMNAS de filas
 		
+		for(int c=0; c<mensajes.size(); c++){
+			ComentarioEscale comentario = mensajes.get(c);
 
+			int col=0;
+			FilaRet fila=filas.get(c);
+		
+			cargaColumna(comentario, col, fila);
+			
+			
+			
+		}
 
 		
 		
@@ -113,6 +126,39 @@ public class ReticulaRet implements TreeDisplayable{
 				}
 			}
 		}
+	}
+
+
+
+
+	private void cargaColumna(ComentarioEscale comentario, int col, FilaRet fila) {
+		ColRet columna=(ColRet) fila.elementos.get(col);
+		
+		CeldaRet celdaAnterior=null;
+		if(columna.elementos.size()>0) celdaAnterior=(CeldaRet) columna.elementos.get(columna.elementos.size()-1);
+		CeldaRet celdaParent=null;
+		if(comentario.comentarioParent!=null){
+			celdaParent=buscaCelda(comentario.comentarioParent,col, fila);
+		}else{
+			//columna 0 celdaParent=null;			
+		}
+		CeldaRet celdaNueva = new CeldaRet(celdaAnterior, celdaParent, columna, comentario);
+		columna.elementos.add(celdaNueva);
+		if(col==0) children.add(celdaNueva);
+
+		for(ComentarioEscale child:comentario.children){
+			cargaColumna(child, col+1, fila);
+		}
+	}
+
+
+
+
+	private CeldaRet buscaCelda(ComentarioEscale comentarioParent, int col, FilaRet fila) {
+		ColRet kol = (ColRet) fila.elementos.get(col-1);
+		for(CeldaRet c:kol.getCeldas())
+			if(c.comentario==comentarioParent) return c;
+		throw new RuntimeException("deberia existir un celda parent para"+comentarioParent);
 	}
 
 

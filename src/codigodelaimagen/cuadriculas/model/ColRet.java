@@ -1,5 +1,7 @@
 package codigodelaimagen.cuadriculas.model;
 
+import java.util.List;
+
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
@@ -37,7 +39,10 @@ public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVaria
 	}
 
 
-
+	public List<CeldaRet> getCeldas(){
+		List celdas=elementos;
+		return celdas;
+	}
 	
 	
 

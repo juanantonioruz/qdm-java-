@@ -67,6 +67,10 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 		// TODO Auto-generated method stub
 		return (TreeDisplayable) parent;
 	}
+	@Override
+	public String toString() {
+		return "CeldaRet [comentario=" + comentario + "]";
+	}
 	
 	
 	

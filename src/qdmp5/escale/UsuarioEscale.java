@@ -85,6 +85,11 @@ public class UsuarioEscale extends ModeloEscaleBase {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "UsuarioEscale [nombre=" + nombre + ", equipo=" + equipo + "]";
+	}
 	
 	
 

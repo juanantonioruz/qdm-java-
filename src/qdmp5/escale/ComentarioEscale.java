@@ -58,6 +58,11 @@ public class ComentarioEscale extends ModeloEscaleBase  implements Comparable<Co
 		if(this.id>o.id) return 1;
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+		return "ComentarioEscale [titulo=" + titulo + ", usuario=" + usuario + "]";
+	}
 	
 
 	

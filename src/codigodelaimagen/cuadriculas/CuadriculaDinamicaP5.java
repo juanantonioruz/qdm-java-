@@ -1,5 +1,6 @@
 package codigodelaimagen.cuadriculas;
 
+import qdmp5.GrabacionEnVideo;
 import qdmp5.ServicioToxiColor;
 import toxi.color.ColorList;
 import codigodelaimagen.base.CDIBase;
@@ -11,6 +12,8 @@ import codigodelaimagen.cuadriculas.model.FilaRet;
 import codigodelaimagen.cuadriculas.model.ReticulaRet;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
+	GrabacionEnVideo grabacionEnVideo;
+	private boolean grabando = false;
 
 	public void setup() {
 		super.setup();
@@ -19,6 +22,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		HelperColors.p5 = this;
 		HelperRandom.p5 = this;
 		inicializaContenedor();
+		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
+
 	}
 
 	ReticulaRet reticulaRet;
@@ -63,6 +68,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		contador = 0;
 		for (FilaRet fila : reticulaRet.filas)
 			pintaFila(fila);
+		grabacionEnVideo.addFotograma();
+
 	}
 
 	int contador;
@@ -328,4 +335,11 @@ private void recalculaCeldaColumna0(CeldaRet celda) {
 		CalculoChildrenSel calculoChildrenSel=new CalculoChildrenSel(celda, reticulaRet.celdaSeleccionada);
 		return calculoChildrenSel.esLinea;
 	}
+	
+	public void keyPressed() {
+		if (key == ' ') {
+			grabacionEnVideo.finalizaYCierraApp();
+		}
+	}
+
 }
