@@ -3,6 +3,8 @@ package codigodelaimagen.cuadriculas.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import qdmp5.escale.ComentarioEscale;
+
 import codigodelaimagen.cuadriculas.HelperColors;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
@@ -17,10 +19,14 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	public  TreeDisplayable parent;
 	public  CeldaRet childrenSel;
 	public List<CeldaRet> childdren=new ArrayList<CeldaRet>();
-
-	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna) {
+	public final ComentarioEscale comentario;
+	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna){
+		this(anterior, parent,kolumna,null);
+	}
+	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna, ComentarioEscale comentario) {
 		this.anterior = anterior;
 		this.parent = parent;
+		this.comentario = comentario;
 		if(parent!=null)
 		parent.childdren.add(this);
 		this.kolumna = kolumna;

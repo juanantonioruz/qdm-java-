@@ -45,58 +45,50 @@ public class ReticulaRet implements TreeDisplayable{
 		this.y1 = y1;
 		this.ancho = ancho;
 		this.alto = alto;
-		// TODO: change el random
-		// this.numeroFilas = (int) p5.random(1, 10);
 		ServicioMensajes servicioMensajes=new ServicioMensajes(p5, "foros.xml");
 		mensajes = servicioMensajes.organizaMensajes;
 		log.info("mensajessize:"+mensajes.size());
 
 		this.p5 = p5;
 
-		// TODO: log.info("posicionSeleccionada: " + posicionSeleccionada);
-		filas = generaFilas();
-		// desactivado hasta que interese
-		if (false) {
-//			for (FilaRet f : filas) {
-//				if (f.isSel()) {
-//					int posicion = getPosicionSeleccionada(f);
-//					float base = 2;
-//					if (posicion > 0)
-//						base = p5.map(posicion, 0, f.elementos.size(), 2, 5);
-//					System.out.println(base + " base");
-//					break;
-//				}
-//
-//			}
-		}
 		CalculoProfundidadColumna cc=new CalculoProfundidadColumna(mensajes);
 		log.info("profundidad: "+cc.columnas);
-		// inicia columnas de filas
-		for (FilaRet f : filas) {
-			f.elementos = generaColumnas(f, cc.columnas);
-			log.debug("numero de columnas:" + f.elementos.size());
-		}
 
-		for (FilaRet f : filas) {
-			List<ElementoReticulaAbstract> columnas = f.elementos;
-			for (int j = 0; j < columnas.size(); j++) {
-				ColRet columnaActual = (ColRet) columnas.get(j);
-				if (j == 0) {
-					columnaActual.elementos = generaCeldas(columnaActual, null, 1);
-					//asociacion celdas de columna 0 con reticulaRet
-					List ret=columnaActual.elementos;
-					children.addAll(ret);
-				} else {
-					ColRet columnaAnterior = (ColRet) columnas.get(j - 1);
-					List<ElementoReticulaAbstract> celdasColumnaAnterior = columnaAnterior.elementos;
-					for (int celI = 0; celI < celdasColumnaAnterior.size(); celI++) {
-						CeldaRet celdaInt = (CeldaRet) celdasColumnaAnterior.get(celI);
-						columnaActual.elementos.addAll(generaCeldas(columnaActual, celdaInt, 10));
-					}
-				}
-				log.debug("numero de celdas:" + columnaActual.elementos.size());
+		filas = new ArrayList<FilaRet>();
+		for (int i = 0; i < mensajes.size(); i++) {
+			ComentarioEscale comentarioEscaleParent = mensajes.get(i);
+
+			
+			FilaRet filaAnterior = null;
+			if (i > 0)
+				filaAnterior = filas.get(i - 1);
+
+			FilaRet filaActual = new FilaRet(filaAnterior, this);
+			filas.add(filaActual);
+			List columnas = new ArrayList<ColRet>();
+			for (int j = 0; j < cc.columnas; j++) {
+
+				ColRet columnaAnterior = null;
+				if (j > 0)
+					columnaAnterior = (ColRet) columnas.get(j - 1);
+
+				ColRet columnaActual = new ColRet(columnaAnterior, filaActual);
+				columnas.add(columnaActual);
 			}
-		}
+			
+			filaActual.elementos=columnas;
+			generaCeldas(cc, comentarioEscaleParent, filaActual);
+			log.debug("numero de columnas:" + filaActual.elementos.size());
+
+		}	
+
+
+		
+
+
+		
+		
+
 
 		// activando el primer comentario!
 		List<ElementoReticulaAbstract> columnas = filas.get(0).elementos;
@@ -123,54 +115,52 @@ public class ReticulaRet implements TreeDisplayable{
 		}
 	}
 
-	private List generaCeldas(ColRet kolumna, CeldaRet parent, int numeroCeldas) {
-		List<CeldaRet> celdas = new ArrayList<CeldaRet>();
-		for (int i = 0; i < numeroCeldas; i++) {
 
-			CeldaRet celdaAnterior = null;
-			if (i > 0)
-				celdaAnterior = celdas.get(i - 1);
 
-			celdas.add(new CeldaRet(celdaAnterior, parent, kolumna));
 
-		}
-		return celdas;
-
-	}
-
-	private List generaColumnas(FilaRet f, int numeroColumnas) {
-		List<ColRet> columnas = new ArrayList<ColRet>();
-		for (int i = 0; i < numeroColumnas; i++) {
+	private void generaCeldas(CalculoProfundidadColumna cc, ComentarioEscale comentarioEscaleParent, FilaRet filaActual) {
+		for (int j = 0; j < cc.columnas; j++) {
 
 			ColRet columnaAnterior = null;
-			if (i > 0)
-				columnaAnterior = columnas.get(i - 1);
+			if (j > 0)
+				columnaAnterior = (ColRet) filaActual.elementos.get(j - 1);
+			
+			ColRet columnaActual=(ColRet) filaActual.elementos.get(j);
+			
+			
+			if (j == 0) {
+				columnaActual.elementos.add(new CeldaRet(null, null, columnaActual,comentarioEscaleParent));
+				List ret=columnaActual.elementos;
+				children.addAll(ret);
+			} else {
+				List<ElementoReticulaAbstract> celdasColumnaAnterior = columnaAnterior.elementos;
+				for (int celI = 0; celI < celdasColumnaAnterior.size(); celI++) {
+					CeldaRet celdaInt = (CeldaRet) celdasColumnaAnterior.get(celI);
+					List<CeldaRet> celdas = new ArrayList<CeldaRet>();
+					for (int h = 0; h < 3; h++) {
 
-			ColRet nuevaColumna = new ColRet(columnaAnterior, f);
-			columnas.add(nuevaColumna);
+						CeldaRet celdaAnterior = null;
+						if (h > 0)
+							celdaAnterior = celdas.get(h - 1);
 
+						celdas.add(new CeldaRet(celdaAnterior, celdaInt, columnaActual));
+
+					}
+
+					columnaActual.elementos.addAll(celdas);
+				}
+			}
+			log.debug("numero de celdas:" + columnaActual.elementos.size());
 		}
-		return columnas;
 	}
+
+
+
 
 	private int getPosicionSeleccionada(FilaRet f) {
 		return 0;
 	}
 
-	private List<FilaRet> generaFilas() {
-		List<FilaRet> filas = new ArrayList<FilaRet>();
-		for (int i = 0; i < mensajes.size(); i++) {
-
-			FilaRet filaAnterior = null;
-			if (i > 0)
-				filaAnterior = filas.get(i - 1);
-
-			filas.add(new FilaRet(filaAnterior, this));
-
-		}
-
-		return filas;
-	}
 
 
 	public FilaRet getFilaSeleccionada() {
