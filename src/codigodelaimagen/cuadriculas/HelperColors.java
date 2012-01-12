@@ -5,8 +5,8 @@ import toxi.color.ColorList;
 import toxi.color.TColor;
 
 public class HelperColors {
-	static ColorList listaColoresEquipo;
-	static PApplet p5;
+	public static ColorList listaColoresEquipo;
+	public static PApplet p5;
 
 
 	public static int getColor() {

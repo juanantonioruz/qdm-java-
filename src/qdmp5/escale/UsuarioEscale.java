@@ -9,7 +9,7 @@ import toxi.physics2d.VerletParticle2D;
 
 public class UsuarioEscale extends ModeloEscaleBase {
 	int id;
-	String nombre;
+	public String nombre;
 	String mail;
 	public EquipoEscale equipo;
 

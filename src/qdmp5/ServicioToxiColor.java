@@ -9,7 +9,6 @@ import toxi.color.theory.CompoundTheoryStrategy;
 public class ServicioToxiColor extends ClaseP5{
 	public ServicioToxiColor(PApplet p5) {
 		super(p5);
-		// TODO Auto-generated constructor stub
 	}
 
 	public  ColorList iniciaColoresEquipos() {

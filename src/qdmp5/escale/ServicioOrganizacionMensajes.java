@@ -22,39 +22,40 @@ public class ServicioOrganizacionMensajes {
 	
 	List<ComentarioEscale> relacionaParentChildrens(List<ComentarioEscale> comentarios) {
 		List<ComentarioEscale> padres = new ArrayList<ComentarioEscale>();
-		for (ComentarioEscale ce : comentarios)
-			if (ce.parent == 0)
-				padres.add(ce);
 		
-		log.info("padres:" + padres.size());
-		List<ComentarioEscale> clona = new ArrayList<ComentarioEscale>();
-		clona.addAll(comentarios);
+		for(ComentarioEscale c:comentarios){
+			boolean encontrado=false;
+			if(c.parent==0){
+				// no tiene parent
+				encontrado=true;
+				padres.add(c);
+				log.debug("padre encontrado: "+padres.size());
 
-		clona.removeAll(padres);
-		
-		Collections.sort(clona);
-		
-		while (clona.size() > 0) {
-			boolean encontrado = false;
-			ComentarioEscale ext = null;
-				ext = clona.get((int)p5.random(clona.size()-1));
-				for (ComentarioEscale cp : padres) {
-					encontrado = buscaParentParaAddChildren(cp, ext);
-					if (encontrado)
+			}else if(!encontrado){
+				//buscarParent
+				for(ComentarioEscale p:comentarios){
+					if(p.id==c.parent){
+						log.debug("relacionando:" + c+" padres size: "+padres.size());
+
+						c.comentarioParent = p;
+						p.children.add(c);
+						encontrado=true;
 						break;
+					}
 				}
-			if (encontrado) {
-				log.info("eliminando comentario: "+ext);
-				clona.remove(ext);
 			}
+			if(encontrado){
+				log.info("celda relacionada:" + c+" padres size: "+padres.size());
+				continue;
 
+			}
 		}
 
 		return padres;
 	}
 
 	private boolean buscaParentParaAddChildren(ComentarioEscale papa, ComentarioEscale buscaPapa) {
-		log.debug("buscando papa: "+papa.id+" para posible hijo:" + buscaPapa.id);
+		log.info("buscando papa: "+papa.id+" para posible hijo:" + buscaPapa.id);
 		if (papa.id == buscaPapa.parent) {
 			log.info("encontrado "+buscaPapa.parent+" id_papa para:" + buscaPapa.id);
 			buscaPapa.comentarioParent = papa;
