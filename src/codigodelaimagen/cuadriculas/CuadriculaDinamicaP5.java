@@ -251,6 +251,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	public void keyPressed() {
+		System.out.println(key+"..."+keyCode);
 		if (key == ' ') {
 			grabacionEnVideo.finalizaYCierraApp();
 		}

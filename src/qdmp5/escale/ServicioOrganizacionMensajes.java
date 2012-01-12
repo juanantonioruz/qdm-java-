@@ -37,17 +37,14 @@ public class ServicioOrganizacionMensajes {
 		while (clona.size() > 0) {
 			boolean encontrado = false;
 			ComentarioEscale ext = null;
-			for (ComentarioEscale mp : clona) {
-				ext = mp;
+				ext = clona.get((int)p5.random(clona.size()-1));
 				for (ComentarioEscale cp : padres) {
-					encontrado = buscaParentParaAddChildren(cp, mp);
+					encontrado = buscaParentParaAddChildren(cp, ext);
 					if (encontrado)
 						break;
 				}
-				if (encontrado)
-					break;
-			}
 			if (encontrado) {
+				log.info("eliminando comentario: "+ext);
 				clona.remove(ext);
 			}
 
@@ -57,9 +54,9 @@ public class ServicioOrganizacionMensajes {
 	}
 
 	private boolean buscaParentParaAddChildren(ComentarioEscale papa, ComentarioEscale buscaPapa) {
-		log.debug("buscando papa:" + buscaPapa.id);
+		log.debug("buscando papa: "+papa.id+" para posible hijo:" + buscaPapa.id);
 		if (papa.id == buscaPapa.parent) {
-			log.debug("encontrado papa para:" + buscaPapa.id);
+			log.info("encontrado "+buscaPapa.parent+" id_papa para:" + buscaPapa.id);
 			buscaPapa.comentarioParent = papa;
 			papa.children.add(buscaPapa);
 			return true;

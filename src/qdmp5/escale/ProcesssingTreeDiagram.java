@@ -31,7 +31,7 @@ public class ProcesssingTreeDiagram extends PApplet {
 		size(800, 500);
 		smooth();
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
-		ServicioMensajes servicioMensajes=new ServicioMensajes(this, "foros.xml");
+		ServicioMensajes servicioMensajes=new ServicioMensajes(this, "foros_minim.xml");
 		mensajesRelacionados=servicioMensajes.organizaMensajes;
 		
 		grabacionEnVideo = new GrabacionEnVideo(this, grabando);

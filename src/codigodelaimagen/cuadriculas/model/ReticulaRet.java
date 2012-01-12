@@ -45,7 +45,7 @@ public class ReticulaRet implements TreeDisplayable{
 		this.y1 = y1;
 		this.ancho = ancho;
 		this.alto = alto;
-		ServicioMensajes servicioMensajes=new ServicioMensajes(p5, "foros.xml");
+		ServicioMensajes servicioMensajes=new ServicioMensajes(p5, "foros_minim.xml");
 		mensajes = servicioMensajes.organizaMensajes;
 		log.info("mensajessize:"+mensajes.size());
 
