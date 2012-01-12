@@ -64,7 +64,6 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 
 	@Override
 	public TreeDisplayable getParent() {
-		// TODO Auto-generated method stub
 		return (TreeDisplayable) parent;
 	}
 	@Override

@@ -33,7 +33,9 @@ public abstract class ElementoReticulaAbstract implements TieneMedidaVariableAnt
 	}
 
 	public float getMedidaVariable() {
+		//TODO esto es diferente segun si se hace mas pequenyo o mas grande
 		return PApplet.map(contador, 0, pasos, medidaVariableAnterior, medidaVariable);
+			
 	}
 
 	public void actualiza() {

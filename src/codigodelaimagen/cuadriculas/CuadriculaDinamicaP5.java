@@ -71,7 +71,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		fila.actualiza();
 		float filaX = reticulaRet.getX();
 		float filaY = reticulaRet.getY() + fila.getY();
-		float filaHeight = fila.getMedidaVariable();
+		float filaHeight = fila.getHeight();
 		float filaWeight = reticulaRet.getWidth();
 		fill(HelperColors.getColor(), 10);
 		noFill();
@@ -80,7 +80,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			col.actualiza();
 			float colX = col.getX();
 			float colY = filaY;
-			float colWeight = col.getMedidaVariable();
+			float colWeight = col.getWidth();
 			float colHeight = col.getHeight();
 			// fill(HelperColors.getColor(),80);
 			fill(100);
@@ -222,18 +222,19 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		for (CeldaRet celdaPrimeraDeFila : reticulaRet.getChildren())
 			if (esLineaSeleccionada(celdaPrimeraDeFila))
 				HelperRet.recalculaPosiciones(celdaPrimeraDeFila, reticulaRet.getChildren(), reticulaRet.getHeight());
-
 		for (CeldaRet child : reticulaRet.getChildren())
 			for (CeldaRet subChild : child.getChildren())
 				recursivoDesc(subChild);
 
 	}
 
-
-
+	CeldaRet parentRec;
 	private void recursivoDesc(CeldaRet celda) {
-		HelperRet.recalculaPosiciones(buscaCeldaSeleccionadaDeChildren(celda), celda.parent.getChildren(), celda
+		int buscaCeldaSeleccionadaDeChildren = buscaCeldaSeleccionadaDeChildren(celda);
+		if(celda.getParent()!=parentRec)
+		HelperRet.recalculaPosiciones(buscaCeldaSeleccionadaDeChildren, celda.getParent().getChildren(), celda
 				.getParent().getHeightFinal());
+		parentRec=(CeldaRet) celda.getParent();
 		for (CeldaRet child : celda.getChildren())
 			recursivoDesc(child);
 	}
@@ -246,6 +247,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	private boolean esLineaSeleccionada(CeldaRet celda) {
+		log.info(celda.comentario);
 		CalculoChildrenSel calculoChildrenSel = new CalculoChildrenSel(celda, reticulaRet.celdaSeleccionada);
 		return calculoChildrenSel.esLinea;
 	}
