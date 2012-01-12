@@ -70,16 +70,15 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
 		float filaX = reticulaRet.getX();
-		float filaY = reticulaRet.getY() + fila.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		float filaY = reticulaRet.getY() + fila.getY();
 		float filaHeight = fila.getMedidaVariable();
 		float filaWeight = reticulaRet.getWidth();
 		fill(HelperColors.getColor(), 10);
 		noFill();
 		rect(filaX, filaY, filaWeight, filaHeight);
-		for (int posicion = 0; posicion < fila.elementos.size(); posicion++) {
-			ColRet col = (ColRet) fila.elementos.get(posicion);
+		for (ColRet col:fila.getColumnas()) {
 			col.actualiza();
-			float colX = filaX + col.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+			float colX = col.getX();
 			float colY = filaY;
 			float colWeight = col.getMedidaVariable();
 			float colHeight = col.getHeight();
@@ -88,8 +87,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			stroke(0);
 			rect(colX, colY, colWeight, colHeight);
 
-			for (int posCelda = 0; posCelda < col.elementos.size(); posCelda++) {
-				CeldaRet celda = (CeldaRet) col.elementos.get(posCelda);
+			for (CeldaRet celda: col.getCeldas()) {
 				celda.actualiza();
 
 				float celdaX = celda.getX();
@@ -130,28 +128,24 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	 * @param mouseY
 	 */
 	public void raton(int mouseX, int mouseY) {
-		FilaRet f = null;
 		boolean encimaFila = false;
-		for (int i = 0; i < reticulaRet.filas.size(); i++) {
-			f = reticulaRet.filas.get(i);
-			float y1 = reticulaRet.getY() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		for (FilaRet f: reticulaRet.filas) {
+			float y1 = f.getY();
 			boolean coincideHor = mouseX > reticulaRet.getX() && mouseX < (reticulaRet.getX() + reticulaRet.getWidth());
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
-				log.info("en fila" + i);
-				for (int j = 0; j < f.elementos.size(); j++) {
-					ColRet kolumna = (ColRet) f.elementos.get(j);
+				log.info("en fila" + f);
+				for (ColRet kolumna: f.getColumnas()) {
 					boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
 					if (encima) {
-						log.info("KOLumna pos sel: " + j);
+						log.info("KOLumna pos sel: " + kolumna);
 
-						for (int h = 0; h < kolumna.elementos.size(); h++) {
-							CeldaRet celda = (CeldaRet) kolumna.elementos.get(h);
+						for (CeldaRet celda: kolumna.getCeldas()) {
 							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 							if (encimaCelda) {
 								reticulaRet.celdaSeleccionada = celda;
-								log.info("celda" + celda + " pos sel: " + h);
+								log.info("celda" + celda );
 								recalculaRet();
 
 								break;
@@ -174,24 +168,22 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	public void ratonEncima(int mouseX, int mouseY) {
 		for (int i = 0; i < reticulaRet.filas.size(); i++) {
 			FilaRet f = reticulaRet.filas.get(i);
-			float y1 = reticulaRet.getY() + f.getPosicionEnRelacionDeSumasPosicionesAnteriores();
+			float y1 =  f.getY();
 			boolean coincideHor = mouseX > reticulaRet.getX() && mouseX < (reticulaRet.getX() + reticulaRet.getWidth());
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor && coindiceV) {
 				log.debug("coindice fila: " + i);
 				ratonOverFila(f, mouseX, mouseY);
-				// HelperRet.seleccionaEncima(reticulaRet.filas, f);
 				break;
 			}
 		}
 	}
 
 	public void ratonOverFila(FilaRet fila, int mouseX, int mouseY) {
-		for (int i = 0; i < fila.elementos.size(); i++) {
-			ElementoReticulaAbstract celda = fila.elementos.get(i);
-			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) celda);
+		for (ColRet kol: fila.getColumnas()) {
+			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kol);
 			if (encima) {
-				reticulaRet.celdaEncima = (CeldaRet) celda;
+// TODO... esto no tiene mucho sentido cambiar por la celda sel				reticulaRet.celdaEncima = (CeldaRet) celda;
 				log.debug("celda.encima true" + reticulaRet.celdaEncima);
 				break;
 			}
@@ -225,7 +217,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		HelperRet.recalculaPosiciones(reticulaRet.celdaSeleccionada.kolumna.fila, reticulaRet.filas,
 				reticulaRet.getHeight());
 		HelperRet.recalculaPosiciones(reticulaRet.celdaSeleccionada.kolumna,
-				reticulaRet.celdaSeleccionada.kolumna.fila.elementos, reticulaRet.getWidth());
+				reticulaRet.celdaSeleccionada.kolumna.fila.getColumnas(), reticulaRet.getWidth());
 
 		for (CeldaRet celdaPrimeraDeFila : reticulaRet.getChildren())
 			if (esLineaSeleccionada(celdaPrimeraDeFila))

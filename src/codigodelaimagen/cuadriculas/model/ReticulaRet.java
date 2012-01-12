@@ -34,7 +34,7 @@ public class ReticulaRet implements TreeDisplayable{
 	
 	private final PApplet p5;
 
-	private List<CeldaRet> children=new ArrayList();
+	private List<CeldaRet> children=new ArrayList<CeldaRet>();
 
 	private List<ComentarioEscale> mensajes;
 
@@ -75,12 +75,12 @@ public class ReticulaRet implements TreeDisplayable{
 				columnas.add(columnaActual);
 			}
 			
-			filaActual.elementos=columnas;
+			filaActual.setColumnas(columnas);
 //			generaCeldas(cc, comentarioEscaleParent, filaActual);
 			
 			
 			
-			log.debug("numero de columnas:" + filaActual.elementos.size());
+			log.debug("numero de columnas:" + filaActual.getColumnas().size());
 
 		}	
 			
@@ -104,23 +104,23 @@ public class ReticulaRet implements TreeDisplayable{
 
 
 		// activando el primer comentario!
-		List<ElementoReticulaAbstract> columnas = filas.get(0).elementos;
-		List<ElementoReticulaAbstract> celdas = columnas.get(0).elementos;
+		List<ColRet> columnas = filas.get(0).getColumnas();
+		List<CeldaRet> celdas = columnas.get(0).getCeldas();
 		celdaSeleccionada=(CeldaRet) celdas.get(0);
 		// fin activar primer comentario
 
 		HelperRet.recalculaPosiciones(0, filas, alto);
 		for (FilaRet f : filas) {
 			// calcula columnas de cada fila
-			HelperRet.recalculaPosiciones(0, f.elementos, f.getWidth());
-			for (int j = 0; j < f.elementos.size(); j++) {
-				ColRet c = (ColRet) f.elementos.get(j);
+			HelperRet.recalculaPosiciones(0, f.getColumnas(), f.getWidth());
+			for (int j = 0; j < f.getColumnas().size(); j++) {
+				ColRet c = (ColRet) f.getColumnas().get(j);
 				if (j == 0) {
-					HelperRet.recalculaPosiciones(0, c.elementos, c.getHeight());
+					HelperRet.recalculaPosiciones(0, c.getCeldas(), c.getHeight());
 				} else {
-					ColRet cAnt = (ColRet) f.elementos.get(j - 1);
-					for (int celI = 0; celI < cAnt.elementos.size(); celI++) {
-						CeldaRet celdaInt = (CeldaRet) cAnt.elementos.get(celI);
+					ColRet cAnt = (ColRet) f.getColumnas().get(j - 1);
+					for (int celI = 0; celI < cAnt.getCeldas().size(); celI++) {
+						CeldaRet celdaInt = (CeldaRet) cAnt.getCeldas().get(celI);
 						HelperRet.recalculaPosiciones(0, celdaInt.getChildren(), celdaInt.getHeight());
 					}
 				}
@@ -132,10 +132,10 @@ public class ReticulaRet implements TreeDisplayable{
 
 
 	private void cargaColumna(ComentarioEscale comentario, int col, FilaRet fila) {
-		ColRet columna=(ColRet) fila.elementos.get(col);
+		ColRet columna=(ColRet) fila.getColumnas().get(col);
 		
 		CeldaRet celdaAnterior=null;
-		if(columna.elementos.size()>0) celdaAnterior=(CeldaRet) columna.elementos.get(columna.elementos.size()-1);
+		if(columna.getCeldas().size()>0) celdaAnterior=(CeldaRet) columna.getCeldas().get(columna.getCeldas().size()-1);
 		CeldaRet celdaParent=null;
 		if(comentario.comentarioParent!=null){
 			celdaParent=buscaCelda(comentario.comentarioParent,col, fila);
@@ -143,7 +143,7 @@ public class ReticulaRet implements TreeDisplayable{
 			//columna 0 celdaParent=null;			
 		}
 		CeldaRet celdaNueva = new CeldaRet(celdaAnterior, celdaParent, columna, comentario);
-		columna.elementos.add(celdaNueva);
+		columna.getCeldas().add(celdaNueva);
 		if(col==0) children.add(celdaNueva);
 
 		for(ComentarioEscale child:comentario.children){
@@ -155,7 +155,7 @@ public class ReticulaRet implements TreeDisplayable{
 
 
 	private CeldaRet buscaCelda(ComentarioEscale comentarioParent, int col, FilaRet fila) {
-		ColRet kol = (ColRet) fila.elementos.get(col-1);
+		ColRet kol = (ColRet) fila.getColumnas().get(col-1);
 		for(CeldaRet c:kol.getCeldas())
 			if(c.comentario==comentarioParent) return c;
 		throw new RuntimeException("deberia existir un celda parent para"+comentarioParent);
@@ -164,48 +164,6 @@ public class ReticulaRet implements TreeDisplayable{
 
 
 
-	private void generaCeldas(CalculoProfundidadColumna cc, ComentarioEscale comentarioEscaleParent, FilaRet filaActual) {
-		for (int j = 0; j < cc.columnas; j++) {
-
-			ColRet columnaAnterior = null;
-			if (j > 0)
-				columnaAnterior = (ColRet) filaActual.elementos.get(j - 1);
-			
-			ColRet columnaActual=(ColRet) filaActual.elementos.get(j);
-			
-			
-			if (j == 0) {
-				columnaActual.elementos.add(new CeldaRet(null, null, columnaActual,comentarioEscaleParent));
-				List ret=columnaActual.elementos;
-				children.addAll(ret);
-			} else {
-				List<ElementoReticulaAbstract> celdasColumnaAnterior = columnaAnterior.elementos;
-				for (int celI = 0; celI < celdasColumnaAnterior.size(); celI++) {
-					CeldaRet celdaInt = (CeldaRet) celdasColumnaAnterior.get(celI);
-					List<CeldaRet> celdas = new ArrayList<CeldaRet>();
-					for (int h = 0; h < 3; h++) {
-
-						CeldaRet celdaAnterior = null;
-						if (h > 0)
-							celdaAnterior = celdas.get(h - 1);
-
-						celdas.add(new CeldaRet(celdaAnterior, celdaInt, columnaActual));
-
-					}
-
-					columnaActual.elementos.addAll(celdas);
-				}
-			}
-			log.debug("numero de celdas:" + columnaActual.elementos.size());
-		}
-	}
-
-
-
-
-	private int getPosicionSeleccionada(FilaRet f) {
-		return 0;
-	}
 
 
 

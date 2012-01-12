@@ -6,7 +6,7 @@ public interface TieneMedidaVariableAnterior {
 
 	float getMedidaVariable();
 	
-	float getPosicionEnRelacionDeSumasPosicionesAnteriores();
+	float getMedidaVariableFinal();
 
 	void setMedidaVariable(float anchoInicial);
 

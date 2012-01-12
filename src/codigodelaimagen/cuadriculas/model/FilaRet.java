@@ -1,5 +1,7 @@
 package codigodelaimagen.cuadriculas.model;
 
+import java.util.List;
+
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
@@ -33,6 +35,15 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 	@Override
 	public float getY() {
 		return getPosicionEnRelacionDeSumasPosicionesAnteriores();
+	}
+
+	public void setColumnas(List columnas) {
+		elementos=columnas;
+	}
+
+	public List<ColRet> getColumnas() {
+		List o=elementos;
+		return o;
 	}
 
 

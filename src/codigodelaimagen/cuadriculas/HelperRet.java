@@ -15,6 +15,11 @@ public class HelperRet {
 	public static void recalculaPosiciones(Object elemento, List elementos, float limite) {
 		recalculaPosiciones(elementos.indexOf(elemento), elementos, limite);
 	}
+	// 1=1
+	// 2=1+2=3
+	// 3=1+2+4=7
+	// 4=1+2+4+8=15
+	// 5=1+2+4+8+16=31
 
 	public static void recalculaPosiciones(int posicionSeleccionada, List elementos, float limite) {
 		log.debug("evalua "+posicionSeleccionada);
