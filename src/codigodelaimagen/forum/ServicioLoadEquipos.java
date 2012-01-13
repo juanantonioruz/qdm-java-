@@ -1,22 +1,22 @@
-package qdmp5.escale;
+package codigodelaimagen.forum;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import processing.core.PApplet;
-
-import qdmp5.ClaseP5;
-import qdmp5.ServicioToxiColor;
+import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.EquipoEscale;
 import toxi.color.ColorList;
 import toxi.color.TColor;
 
-public class ServicioLoadEquipos extends ClaseP5 {
+public class ServicioLoadEquipos  {
 	
 	List<EquipoEscale> equipos= new ArrayList<EquipoEscale>();
+	private final PApplet p5;
 
 	public ServicioLoadEquipos(PApplet p5) {
-		super(p5);
+		this.p5 = p5;
 	}
 
 	

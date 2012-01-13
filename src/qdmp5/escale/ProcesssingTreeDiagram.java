@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import codigodelaimagen.forum.ServicioMensajes;
+
 import processing.core.PApplet;
 import processing.core.PFont;
 import qdmp5.GrabacionEnVideo;

@@ -1,4 +1,7 @@
-package qdmp5;
+package codigodelaimagen.forum;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import toxi.color.ColorList;
@@ -6,9 +9,13 @@ import toxi.color.TColor;
 import toxi.color.theory.ColorTheoryStrategy;
 import toxi.color.theory.CompoundTheoryStrategy;
 
-public class ServicioToxiColor extends ClaseP5{
+public class ServicioToxiColor {
+
+	protected PApplet p5;
+	protected Log log=LogFactory.getLog(getClass());
+
 	public ServicioToxiColor(PApplet p5) {
-		super(p5);
+		this.p5 = p5;
 	}
 
 	public  ColorList iniciaColoresEquipos() {

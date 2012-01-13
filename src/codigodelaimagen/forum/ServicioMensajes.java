@@ -1,4 +1,4 @@
-package qdmp5.escale;
+package codigodelaimagen.forum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
+import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.UsuarioEscale;
 
 public class ServicioMensajes {
 	Log log = LogFactory.getLog(getClass());
@@ -27,8 +29,7 @@ public class ServicioMensajes {
 		List<UsuarioEscale> usuariosParticipantes = dameUsuariosParticipantes(comentarios);
 		log.info("usuarios:" + usuariosParticipantes.size());
 		
-		ServicioOrganizacionMensajes servicioOrganizacionMensajes = new ServicioOrganizacionMensajes(p5);
-		return servicioOrganizacionMensajes.relacionaParentChildrens(comentarios);
+		return relacionaParentChildrens(comentarios);
 	}
 	
 	private List<UsuarioEscale> dameUsuariosParticipantes(List<ComentarioEscale> comentarios) {
@@ -40,5 +41,39 @@ public class ServicioMensajes {
 				usuarios.add(usuarioEscale);
 		}
 		return usuarios;
+	}
+	
+	List<ComentarioEscale> relacionaParentChildrens(List<ComentarioEscale> comentarios) {
+		List<ComentarioEscale> padres = new ArrayList<ComentarioEscale>();
+		
+		for(ComentarioEscale c:comentarios){
+			boolean encontrado=false;
+			if(c.parent==0){
+				// no tiene parent
+				encontrado=true;
+				padres.add(c);
+				log.debug("padre encontrado: "+padres.size());
+
+			}else if(!encontrado){
+				//buscarParent
+				for(ComentarioEscale p:comentarios){
+					if(p.id==c.parent){
+						log.debug("relacionando:" + c+" padres size: "+padres.size());
+
+						c.comentarioParent = p;
+						p.children.add(c);
+						encontrado=true;
+						break;
+					}
+				}
+			}
+			if(encontrado){
+				log.info("celda relacionada:" + c+" padres size: "+padres.size());
+				continue;
+
+			}
+		}
+
+		return padres;
 	}
 }

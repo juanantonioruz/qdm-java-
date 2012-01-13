@@ -1,4 +1,4 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.zcuadriculas_almacen;
 
 import processing.core.PApplet;
 import toxi.color.ColorList;

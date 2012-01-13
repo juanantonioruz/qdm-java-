@@ -1,21 +1,28 @@
-package qdmp5.escale;
+package codigodelaimagen.forum;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import processing.core.PApplet;
 import processing.xml.XMLElement;
-import qdmp5.ClaseP5;
+import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.EquipoEscale;
+import qdmp5.escale.UsuarioEscale;
 
-public class ForosXMLLoadScale extends ClaseP5{
+public class ForosXMLLoadScale {
 	
-	
+	protected Log log=LogFactory.getLog(getClass());
+
 	
 	private final List<EquipoEscale> equiposIn;
+	private final PApplet p5;
 	public ForosXMLLoadScale(PApplet p5, List<EquipoEscale> equipos) {
-		super(p5);
+		this.p5 = p5;
 		this.equiposIn = equipos;
 	}
 

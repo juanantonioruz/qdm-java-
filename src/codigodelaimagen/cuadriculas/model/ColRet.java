@@ -6,12 +6,17 @@ import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 
 public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior {
-	public FilaRet fila;
+	private FilaRet fila;
 
 	public ColRet(ColRet anterior, FilaRet fila) {
 		this.anterior = anterior;
 		this.fila = fila;
 
+	}
+
+
+	public FilaRet getFila() {
+		return fila;
 	}
 
 

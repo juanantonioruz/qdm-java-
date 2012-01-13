@@ -7,17 +7,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
-import qdmp5.ServicioToxiColor;
 import qdmp5.escale.CalculoProfundidadLinea;
 import qdmp5.escale.ComentarioEscale;
-import qdmp5.escale.ServicioMensajes;
 import toxi.color.ColorList;
-import codigodelaimagen.cuadriculas.HelperColors;
-import codigodelaimagen.cuadriculas.HelperRet;
+import codigodelaimagen.cuadriculas.calculos.CalculadorPosiciones;
 import codigodelaimagen.cuadriculas.calculos.CalculoChildrenSel;
 import codigodelaimagen.cuadriculas.calculos.CalculoProfundidadColumna;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
+import codigodelaimagen.forum.ServicioMensajes;
+import codigodelaimagen.forum.ServicioToxiColor;
+import codigodelaimagen.zcuadriculas_almacen.HelperColors;
 
 public class ReticulaRet implements TreeDisplayable {
 	public Log log = LogFactory.getLog(getClass());
@@ -32,6 +32,7 @@ public class ReticulaRet implements TreeDisplayable {
 
 	public List<FilaRet> filas;
 	private int posicionSeleccionada = 0;
+	CalculadorPosiciones calculadorPosiciones = new CalculadorPosiciones();
 
 	private final PApplet p5;
 
@@ -39,17 +40,15 @@ public class ReticulaRet implements TreeDisplayable {
 
 	private List<ComentarioEscale> mensajes;
 
-	public ReticulaRet(float x1, float y1, float ancho, float alto, PApplet p5) {
+	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
 		ColorList listaColoresEquipo = new ServicioToxiColor(p5).iniciaColoresEquiposBis();
-		HelperColors.listaColoresEquipo = listaColoresEquipo;
-		HelperColors.p5 = p5;
 
 		this.x1 = x1;
 		this.y1 = y1;
 		this.ancho = ancho;
 		this.alto = alto;
-		ServicioMensajes servicioMensajes = new ServicioMensajes(p5, "foros_minim.xml");
+		ServicioMensajes servicioMensajes = new ServicioMensajes(p5, xml);
 		mensajes = servicioMensajes.organizaMensajes;
 		log.info("mensajessize:" + mensajes.size());
 
@@ -104,20 +103,19 @@ public class ReticulaRet implements TreeDisplayable {
 		List<CeldaRet> celdas = columnas.get(0).getCeldas();
 		celdaSeleccionada = (CeldaRet) celdas.get(0);
 		// fin activar primer comentario
-
-		HelperRet.recalculaPosiciones(0, filas, alto);
+		calculadorPosiciones.recalculaPosiciones(0, filas, alto);
 		for (FilaRet f : filas) {
 			// calcula columnas de cada fila
-			HelperRet.recalculaPosiciones(0, f.getColumnas(), f.getWidth());
+			calculadorPosiciones.recalculaPosiciones(0, f.getColumnas(), f.getWidth());
 			for (int j = 0; j < f.getColumnas().size(); j++) {
 				ColRet c = (ColRet) f.getColumnas().get(j);
 				if (j == 0) {
-					HelperRet.recalculaPosiciones(0, c.getCeldas(), c.getHeight());
+					calculadorPosiciones.recalculaPosiciones(0, c.getCeldas(), c.getHeight());
 				} else {
 					ColRet cAnt = (ColRet) f.getColumnas().get(j - 1);
 					for (int celI = 0; celI < cAnt.getCeldas().size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) cAnt.getCeldas().get(celI);
-						HelperRet.recalculaPosiciones(0, celdaInt.getChildren(), celdaInt.getHeight());
+						calculadorPosiciones.recalculaPosiciones(0, celdaInt.getChildren(), celdaInt.getHeight());
 					}
 				}
 			}
@@ -189,25 +187,21 @@ public class ReticulaRet implements TreeDisplayable {
 		return getHeight();
 	}
 
-
 	public void display() {
 		for (FilaRet fila : filas)
 			pintaFila(fila);
-		
+
 	}
 
-	
-	
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
 		float filaX = getX();
 		float filaY = getY() + fila.getY();
 		float filaHeight = fila.getHeight();
 		float filaWeight = getWidth();
-		p5.fill(HelperColors.getColor(), 10);
 		p5.noFill();
 		p5.rect(filaX, filaY, filaWeight, filaHeight);
-		for (ColRet col:fila.getColumnas()) {
+		for (ColRet col : fila.getColumnas()) {
 			col.actualiza();
 			float colX = col.getX();
 			float colY = filaY;
@@ -218,7 +212,7 @@ public class ReticulaRet implements TreeDisplayable {
 			p5.stroke(0);
 			p5.rect(colX, colY, colWeight, colHeight);
 
-			for (CeldaRet celda: col.getCeldas()) {
+			for (CeldaRet celda : col.getCeldas()) {
 				celda.actualiza();
 
 				float celdaX = celda.getX();
@@ -240,8 +234,8 @@ public class ReticulaRet implements TreeDisplayable {
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
 				}
 				p5.fill(0);
-				p5.text(celda.comentario.usuario.nombre,celdaX, celdaY+celdaHeight/4);
-				p5.text(celda.comentario.titulo,celdaX, celdaY+celdaHeight/2);
+				p5.text(celda.comentario.usuario.nombre, celdaX, celdaY + celdaHeight / 4);
+				p5.text(celda.comentario.titulo, celdaX, celdaY + celdaHeight / 2);
 			}
 		}
 	}
@@ -254,23 +248,23 @@ public class ReticulaRet implements TreeDisplayable {
 	 */
 	public void raton(int mouseX, int mouseY) {
 		boolean encimaFila = false;
-		for (FilaRet f: filas) {
+		for (FilaRet f : filas) {
 			float y1 = f.getY();
 			boolean coincideHor = mouseX > getX() && mouseX < (getX() + getWidth());
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
 				log.info("en fila" + f);
-				for (ColRet kolumna: f.getColumnas()) {
+				for (ColRet kolumna : f.getColumnas()) {
 					boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
 					if (encima) {
 						log.info("KOLumna pos sel: " + kolumna);
 
-						for (CeldaRet celda: kolumna.getCeldas()) {
+						for (CeldaRet celda : kolumna.getCeldas()) {
 							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 							if (encimaCelda) {
 								celdaSeleccionada = celda;
-								log.info("celda" + celda );
+								log.info("celda" + celda);
 								recalculaRet();
 
 								break;
@@ -283,21 +277,22 @@ public class ReticulaRet implements TreeDisplayable {
 			}
 		}
 	}
+
 	private void recalculaRet() {
 
-		HelperRet.recalculaPosiciones(celdaSeleccionada.kolumna.fila, filas,
-				getHeight());
-		HelperRet.recalculaPosiciones(celdaSeleccionada.kolumna,
-				celdaSeleccionada.kolumna.fila.getColumnas(), getWidth());
+		calculadorPosiciones.recalculaPosiciones(celdaSeleccionada.getColumna().getFila(), filas, getHeight());
+		calculadorPosiciones.recalculaPosiciones(celdaSeleccionada.getColumna(), celdaSeleccionada.getColumna()
+				.getFila().getColumnas(), getWidth());
 
 		for (CeldaRet celdaPrimeraDeFila : getChildren())
-			if (esLineaSeleccionada(celdaPrimeraDeFila))
-				HelperRet.recalculaPosiciones(celdaPrimeraDeFila, getChildren(), getHeight());
+			if (calculadorPosiciones.esLineaSeleccionada(celdaPrimeraDeFila, celdaSeleccionada))
+				calculadorPosiciones.recalculaPosiciones(celdaPrimeraDeFila, getChildren(), getHeight());
 		for (CeldaRet child : getChildren())
 			for (CeldaRet subChild : child.getChildren())
-				recursivoDesc(subChild);
+				calculadorPosiciones.recursivoDesc(subChild, celdaSeleccionada);
 
 	}
+
 	private boolean isOverColumna(int mouseX, int mouseY, ColRet kolumna) {
 		float x1 = getX() + kolumna.getX();
 		float y1 = getY() + kolumna.getY();
@@ -313,35 +308,12 @@ public class ReticulaRet implements TreeDisplayable {
 		float x1 = getX() + selda.getX();
 		float y1 = getY() + selda.getY();
 
-		boolean coincideHor = mouseX > x1 && mouseX < (x1 + selda.kolumna.getWidth());
+		boolean coincideHor = mouseX > x1 && mouseX < (x1 + selda.getColumna().getWidth());
 		boolean coindiceV = mouseY > y1 && mouseY < y1 + selda.getHeight();
 		boolean encima = coincideHor && coindiceV;
 		return encima;
 	}
-	CeldaRet parentRec;
-	private void recursivoDesc(CeldaRet celda) {
-		int buscaCeldaSeleccionadaDeChildren = buscaCeldaSeleccionadaDeChildren(celda);
-		if(celda.getParent()!=parentRec)
-		HelperRet.recalculaPosiciones(buscaCeldaSeleccionadaDeChildren, celda.getParent().getChildren(), celda
-				.getParent().getHeightFinal());
-		parentRec=(CeldaRet) celda.getParent();
-		for (CeldaRet child : celda.getChildren())
-			recursivoDesc(child);
-	}
 
-	private int buscaCeldaSeleccionadaDeChildren(CeldaRet celda) {
-		for (CeldaRet c : celda.getParent().getChildren())
-			if (esLineaSeleccionada(c))
-				return celda.getParent().getChildren().indexOf(c);
-		return 0;
-	}
-
-	private boolean esLineaSeleccionada(CeldaRet celda) {
-		log.debug(celda.comentario);
-		CalculoChildrenSel calculoChildrenSel = new CalculoChildrenSel(celda, celdaSeleccionada);
-		return calculoChildrenSel.esLinea;
-	}
-	
 	/**
 	 * over!
 	 * 
@@ -351,7 +323,7 @@ public class ReticulaRet implements TreeDisplayable {
 	public void ratonEncima(int mouseX, int mouseY) {
 		for (int i = 0; i < filas.size(); i++) {
 			FilaRet f = filas.get(i);
-			float y1 =  f.getY();
+			float y1 = f.getY();
 			boolean coincideHor = mouseX > getX() && mouseX < (getX() + getWidth());
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			if (coincideHor && coindiceV) {
@@ -363,10 +335,11 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	public void ratonOverFila(FilaRet fila, int mouseX, int mouseY) {
-		for (ColRet kol: fila.getColumnas()) {
+		for (ColRet kol : fila.getColumnas()) {
 			boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kol);
 			if (encima) {
-// TODO... esto no tiene mucho sentido cambiar por la celda sel				reticulaRet.celdaEncima = (CeldaRet) celda;
+				// TODO... esto no tiene mucho sentido cambiar por la celda sel
+				// reticulaRet.celdaEncima = (CeldaRet) celda;
 				log.debug("celda.encima true" + celdaEncima);
 				break;
 			}
@@ -374,5 +347,65 @@ public class ReticulaRet implements TreeDisplayable {
 
 	}
 
+	public void selectRIGHT() {
+		if (celdaSeleccionada.getChildren().size() > 0) {
+			celdaSeleccionada = celdaSeleccionada.getChildren().get(0);
+			recalculaRet();
+		}
+	}
+
+	public void selectUP() {
+		FilaRet filaActual = celdaSeleccionada.getColumna().getFila();
+		TreeDisplayable parent = celdaSeleccionada.getParent();
+		if (parent != null) {
+			int pos = parent.getChildren().indexOf(celdaSeleccionada);
+			if (pos>0) {
+				log.info("select DOWN! -- fila: " + filaActual + " pos " + pos);
+				celdaSeleccionada = parent.getChildren().get(pos-1);
+				recalculaRet();
+
+			}
+		} else {
+			int pos = filas.indexOf(filaActual);
+			if (pos > 0) {
+				log.info("SIII select DOWN! -- fila: " + filaActual + " pos " + pos);
+				FilaRet filaSiguiente = filas.get(pos - 1);
+				celdaSeleccionada = filaSiguiente.getColumnas().get(0).getCeldas().get(0);
+				recalculaRet();
+			}
+		}
+
+	}
+
+	public void selectDOWN() {
+		FilaRet filaActual = celdaSeleccionada.getColumna().getFila();
+		TreeDisplayable parent = celdaSeleccionada.getParent();
+		if (parent != null) {
+			int pos = parent.getChildren().indexOf(celdaSeleccionada);
+			if (parent.getChildren().size() > (pos + 1)) {
+				log.info("select DOWN! -- fila: " + filaActual + " pos " + pos);
+				celdaSeleccionada = parent.getChildren().get(pos + 1);
+				recalculaRet();
+
+			}
+		} else {
+			int pos = filas.indexOf(filaActual);
+			if (filas.size() > (pos + 1)) {
+				log.info("SIII select DOWN! -- fila: " + filaActual + " pos " + pos);
+				FilaRet filaSiguiente = filas.get(pos + 1);
+				celdaSeleccionada = filaSiguiente.getColumnas().get(0).getCeldas().get(0);
+				recalculaRet();
+			}
+
+		}
+
+	}
+
+	public void selectLEFT() {
+		if (celdaSeleccionada.getParent() != null) {
+			celdaSeleccionada = (CeldaRet) celdaSeleccionada.getParent();
+			recalculaRet();
+		}
+	}
 
 }

@@ -1,10 +1,10 @@
-package codigodelaimagen.cuadriculas;
+package codigodelaimagen.zcuadriculas_almacen;
 
 import processing.core.PApplet;
 import toxi.color.ColorList;
 import toxi.color.TColor;
 
-public class HelperRandom {
+public class Hel6perRandom {
 	static PApplet p5;
 
 

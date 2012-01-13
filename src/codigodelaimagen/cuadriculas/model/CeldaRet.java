@@ -5,13 +5,12 @@ import java.util.List;
 
 import qdmp5.escale.ComentarioEscale;
 
-import codigodelaimagen.cuadriculas.HelperColors;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 
 public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior,  TreeDisplayable {
-	public ColRet kolumna;
+	public ColRet columna;
 	public  int color;
 	
 
@@ -29,8 +28,8 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 		this.comentario = comentario;
 		if(parent!=null)
 		parent.childdren.add(this);
-		this.kolumna = kolumna;
-		this.color = HelperColors.getColor();
+		this.columna = kolumna;
+		this.color = comentario.usuario.equipo.col;
 
 	}
 
@@ -42,18 +41,18 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	}
 
 	public float getWidth() {
-		return kolumna.getWidth();
+		return columna.getWidth();
 	}
 
 	@Override
 	public float getX() {
-		return kolumna.getX();
+		return columna.getX();
 	}
 
 	@Override
 	public float getY() {
 		if(parent==null)
-		return kolumna.getY()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		return columna.getY()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		return parent.getY()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
 		
 	}
@@ -69,6 +68,9 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	@Override
 	public String toString() {
 		return "CeldaRet [comentario=" + comentario + "]";
+	}
+	public ColRet getColumna() {
+		return columna;
 	}
 	
 	

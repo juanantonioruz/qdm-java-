@@ -1,14 +1,7 @@
 package codigodelaimagen.cuadriculas;
 
 import qdmp5.GrabacionEnVideo;
-import qdmp5.ServicioToxiColor;
-import toxi.color.ColorList;
 import codigodelaimagen.base.CDIBase;
-import codigodelaimagen.cuadriculas.calculos.CalculoChildrenSel;
-import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
-import codigodelaimagen.cuadriculas.model.CeldaRet;
-import codigodelaimagen.cuadriculas.model.ColRet;
-import codigodelaimagen.cuadriculas.model.FilaRet;
 import codigodelaimagen.cuadriculas.model.ReticulaRet;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
@@ -24,7 +17,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	private void inicializaContenedor() {
-		reticulaRet = new ReticulaRet(20, 0, width - 20, height, this);
+		reticulaRet = new ReticulaRet("foros.xml",20, 0, width - 20, height, this);
 	}
 
 	@Override
@@ -57,8 +50,6 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	}
 
-
-
 	protected void ponBackground(int colorito) {
 		super.ponBackground(color(100));
 	}
@@ -68,17 +59,22 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		super.ponsize(800, 600);
 	}
 
-	
-
-
-
-	
-
-	
 	public void keyPressed() {
-		System.out.println(key+"..."+keyCode);
-		if (key == ' ') {
+		if (keyCode == BACKSPACE) {
 			grabacionEnVideo.finalizaYCierraApp();
+		}else if(keyCode==UP){
+			log.debug("UP!");
+			reticulaRet.selectUP();
+		}else if(keyCode==DOWN){
+			reticulaRet.selectDOWN();
+			log.debug("DOWN");
+		}else if(keyCode==LEFT){
+			reticulaRet.selectLEFT();
+			log.debug("LEFT");
+		}else if(keyCode==RIGHT){
+			reticulaRet.selectRIGHT();
+			log.debug("RIGHT");
+			
 		}
 	}
 
