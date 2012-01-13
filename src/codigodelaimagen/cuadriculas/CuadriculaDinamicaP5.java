@@ -17,9 +17,14 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 
 	private void inicializaContenedor() {
-		reticulaRet = new ReticulaRet("foros.xml",20, 0, width - 20, height, this);
+		reticulaRet = new ReticulaRet("foros.xml",100, 100, width - 150, height-150, this);
 	}
-
+	
+	@Override
+	protected void ponsize(int i, int j) {
+		super.ponsize(800, 600);
+	}
+	
 	@Override
 	public void mouseMoved() {
 		// if (mouseX != pmouseX && mouseY != pmouseY)
@@ -54,10 +59,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		super.ponBackground(color(100));
 	}
 
-	@Override
-	protected void ponsize(int i, int j) {
-		super.ponsize(800, 600);
-	}
+	
 
 	public void keyPressed() {
 		if (keyCode == BACKSPACE) {

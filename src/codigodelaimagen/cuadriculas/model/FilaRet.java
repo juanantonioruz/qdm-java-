@@ -34,7 +34,7 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 
 	@Override
 	public float getY() {
-		return getPosicionEnRelacionDeSumasPosicionesAnteriores();
+		return reticulaRet.getY()+getPosicionEnRelacionDeSumasPosicionesAnteriores();
 	}
 
 	public void setColumnas(List columnas) {

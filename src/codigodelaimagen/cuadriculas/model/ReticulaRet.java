@@ -42,7 +42,6 @@ public class ReticulaRet implements TreeDisplayable {
 
 	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
-		ColorList listaColoresEquipo = new ServicioToxiColor(p5).iniciaColoresEquiposBis();
 
 		this.x1 = x1;
 		this.y1 = y1;
@@ -196,7 +195,7 @@ public class ReticulaRet implements TreeDisplayable {
 	private void pintaFila(FilaRet fila) {
 		fila.actualiza();
 		float filaX = getX();
-		float filaY = getY() + fila.getY();
+		float filaY =  fila.getY();
 		float filaHeight = fila.getHeight();
 		float filaWeight = getWidth();
 		p5.noFill();
@@ -254,16 +253,17 @@ public class ReticulaRet implements TreeDisplayable {
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
-				log.info("en fila" + f);
+				log.info("over FILA CLCIK en fila" + f);
 				for (ColRet kolumna : f.getColumnas()) {
 					boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
 					if (encima) {
-						log.info("KOLumna pos sel: " + kolumna);
+						log.info("OVER KOLumna click pos sel: " + kolumna);
 
 						for (CeldaRet celda : kolumna.getCeldas()) {
 							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 							if (encimaCelda) {
-								seleccionaPrimeraCeldaSiHayDistancia(celdaSeleccionada, celda);
+								log.info("OVER CELDA click pos sel: " + celda);
+									seleccionaPrimeraCeldaSiHayDistancia(celdaSeleccionada, celda);
 								log.info("celda" + celda);
 								recalculaRet();
 
@@ -310,8 +310,8 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	private boolean isOverColumna(int mouseX, int mouseY, ColRet kolumna) {
-		float x1 = getX() + kolumna.getX();
-		float y1 = getY() + kolumna.getY();
+		float x1 =  kolumna.getX();
+		float y1 =  kolumna.getY();
 
 		boolean coincideHor = mouseX > x1 && mouseX < (x1 + kolumna.getWidth());
 		boolean coindiceV = mouseY > y1 && mouseY < y1 + kolumna.getHeight();
@@ -321,8 +321,8 @@ public class ReticulaRet implements TreeDisplayable {
 
 	private boolean isOverCelda(int mouseX, int mouseY, CeldaRet selda) {
 
-		float x1 = getX() + selda.getX();
-		float y1 = getY() + selda.getY();
+		float x1 =  selda.getX();
+		float y1 =  selda.getY();
 
 		boolean coincideHor = mouseX > x1 && mouseX < (x1 + selda.getColumna().getWidth());
 		boolean coindiceV = mouseY > y1 && mouseY < y1 + selda.getHeight();
@@ -365,6 +365,7 @@ public class ReticulaRet implements TreeDisplayable {
 
 	public void selectRIGHT() {
 		if (celdaSeleccionada.getChildren().size() > 0) {
+			log.debug("seleccion de comentario a la derecha");
 			celdaSeleccionada = celdaSeleccionada.getChildren().get(0);
 			recalculaRet();
 		}
@@ -376,7 +377,7 @@ public class ReticulaRet implements TreeDisplayable {
 		if (parent != null) {
 			int pos = parent.getChildren().indexOf(celdaSeleccionada);
 			if (pos>0) {
-				log.info("select DOWN! -- fila: " + filaActual + " pos " + pos);
+				log.debug("seleccion de comentario arriba en coluna distinta de 0");
 				celdaSeleccionada = parent.getChildren().get(pos-1);
 				recalculaRet();
 
@@ -384,7 +385,7 @@ public class ReticulaRet implements TreeDisplayable {
 		} else {
 			int pos = filas.indexOf(filaActual);
 			if (pos > 0) {
-				log.info("SIII select DOWN! -- fila: " + filaActual + " pos " + pos);
+				log.debug("seleccion de comentario arriba en coluna 0");
 				FilaRet filaSiguiente = filas.get(pos - 1);
 				celdaSeleccionada = filaSiguiente.getColumnas().get(0).getCeldas().get(0);
 				recalculaRet();
@@ -399,7 +400,7 @@ public class ReticulaRet implements TreeDisplayable {
 		if (parent != null) {
 			int pos = parent.getChildren().indexOf(celdaSeleccionada);
 			if (parent.getChildren().size() > (pos + 1)) {
-				log.info("select DOWN! -- fila: " + filaActual + " pos " + pos);
+				log.debug("seleccion de comentario abajo en coluna distinta de 0");
 				celdaSeleccionada = parent.getChildren().get(pos + 1);
 				recalculaRet();
 
@@ -407,7 +408,7 @@ public class ReticulaRet implements TreeDisplayable {
 		} else {
 			int pos = filas.indexOf(filaActual);
 			if (filas.size() > (pos + 1)) {
-				log.info("SIII select DOWN! -- fila: " + filaActual + " pos " + pos);
+				log.debug("seleccion de comentario abajo en coluna 0");
 				FilaRet filaSiguiente = filas.get(pos + 1);
 				celdaSeleccionada = filaSiguiente.getColumnas().get(0).getCeldas().get(0);
 				recalculaRet();
@@ -419,6 +420,8 @@ public class ReticulaRet implements TreeDisplayable {
 
 	public void selectLEFT() {
 		if (celdaSeleccionada.getParent() != null) {
+			log.debug("seleccion de comentario a la izquierda");
+
 			celdaSeleccionada = (CeldaRet) celdaSeleccionada.getParent();
 			recalculaRet();
 		}
