@@ -263,7 +263,7 @@ public class ReticulaRet implements TreeDisplayable {
 						for (CeldaRet celda : kolumna.getCeldas()) {
 							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 							if (encimaCelda) {
-								celdaSeleccionada = celda;
+								seleccionaPrimeraCeldaSiHayDistancia(celdaSeleccionada, celda);
 								log.info("celda" + celda);
 								recalculaRet();
 
@@ -276,6 +276,22 @@ public class ReticulaRet implements TreeDisplayable {
 				break;
 			}
 		}
+	}
+
+	private void seleccionaPrimeraCeldaSiHayDistancia(CeldaRet anterior, CeldaRet actual) {
+
+		int posFilaAnterior = filas.indexOf(anterior.getColumna().getFila());
+		FilaRet filaActual = actual.getColumna().getFila();
+		int posFilaActual = filas.indexOf(filaActual);
+		
+		if(p5.abs(posFilaAnterior-posFilaActual)>1){
+			celdaSeleccionada=filaActual.getColumnas().get(0).getCeldas().get(0);
+		}else{
+			celdaSeleccionada = actual;
+		}
+
+		
+		
 	}
 
 	private void recalculaRet() {
