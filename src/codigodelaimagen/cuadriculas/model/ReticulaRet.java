@@ -368,6 +368,35 @@ public class ReticulaRet implements TreeDisplayable {
 			log.debug("seleccion de comentario a la derecha");
 			celdaSeleccionada = celdaSeleccionada.getChildren().get(0);
 			recalculaRet();
+		}else{
+			if(celdaSeleccionada.getParent()==null){
+				FilaRet filaSel=celdaSeleccionada.getColumna().getFila();
+				int posFila = filas.indexOf(filaSel);
+				if(posFila<filas.size()-1){
+					FilaRet filaAnterior=filas.get(posFila+1);
+					celdaSeleccionada=filaAnterior.getColumnas().get(0).getCeldas().get(0);
+					recalculaRet();
+				}
+			}else{
+				List<CeldaRet> brothers = celdaSeleccionada.getColumna().getCeldas();
+				int posCelda = brothers.indexOf(celdaSeleccionada);
+				if(posCelda<brothers.size()-1){
+					celdaSeleccionada=brothers.get(posCelda+1);
+					recalculaRet();
+					}
+			}
+		}
+		
+	}
+
+	private void seleccionaSiguienteHermano(CeldaRet celdaSeleccionada) {
+		List<CeldaRet> brothers = celdaSeleccionada.getColumna().getCeldas();
+		int posCelda = brothers.indexOf(celdaSeleccionada);
+		if(posCelda<brothers.size()-1){
+			celdaSeleccionada=brothers.get(posCelda+1);
+			recalculaRet();
+		}else{
+			seleccionaSiguienteHermano((CeldaRet) celdaSeleccionada.getParent());
 		}
 	}
 
@@ -424,6 +453,15 @@ public class ReticulaRet implements TreeDisplayable {
 
 			celdaSeleccionada = (CeldaRet) celdaSeleccionada.getParent();
 			recalculaRet();
+		}else{
+			FilaRet filaSel=celdaSeleccionada.getColumna().getFila();
+			int posFila = filas.indexOf(filaSel);
+			if(posFila!=0){
+				FilaRet filaAnterior=filas.get(posFila-1);
+				celdaSeleccionada=filaAnterior.getColumnas().get(0).getCeldas().get(0);
+				recalculaRet();
+			}
+				
 		}
 	}
 
