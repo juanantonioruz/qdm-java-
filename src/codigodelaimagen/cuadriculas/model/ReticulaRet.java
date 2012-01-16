@@ -383,21 +383,34 @@ public class ReticulaRet implements TreeDisplayable {
 				if(posCelda<brothers.size()-1){
 					celdaSeleccionada=brothers.get(posCelda+1);
 					recalculaRet();
+				}else{
+					System.out.println("fin de linae");
+					// buscar parent sigu... 
+					CeldaRet sigParent=buscaSigParent(celdaSeleccionada);
+					System.out.println(sigParent);
+					if(sigParent==null)
+					seleccionaPrimeraCeldaDeSiguienteFila(celdaSeleccionada.getColumna().getFila());
+					else{
+						celdaSeleccionada=sigParent;
+					recalculaRet();
 					}
+				}
+				
 			}
 		}
 		
 	}
 
-	private void seleccionaSiguienteHermano(CeldaRet celdaSeleccionada) {
-		List<CeldaRet> brothers = celdaSeleccionada.getColumna().getCeldas();
-		int posCelda = brothers.indexOf(celdaSeleccionada);
-		if(posCelda<brothers.size()-1){
-			celdaSeleccionada=brothers.get(posCelda+1);
-			recalculaRet();
-		}else{
-			seleccionaSiguienteHermano((CeldaRet) celdaSeleccionada.getParent());
+
+	private CeldaRet buscaSigParent(CeldaRet celdaSeleccionada2) {
+		CeldaRet parent = (CeldaRet) celdaSeleccionada2.getParent();
+		if(parent == null )return null;
+		List<CeldaRet> children = parent.getChildren();
+		int pos = children.indexOf(celdaSeleccionada2);
+		if(pos<children.size()-1){
+			return children.get(pos+1);
 		}
+		return buscaSigParent(parent);
 	}
 
 	public void selectUP() {
@@ -435,16 +448,20 @@ public class ReticulaRet implements TreeDisplayable {
 
 			}
 		} else {
-			int pos = filas.indexOf(filaActual);
-			if (filas.size() > (pos + 1)) {
-				log.debug("seleccion de comentario abajo en coluna 0");
-				FilaRet filaSiguiente = filas.get(pos + 1);
-				celdaSeleccionada = filaSiguiente.getColumnas().get(0).getCeldas().get(0);
-				recalculaRet();
-			}
+			seleccionaPrimeraCeldaDeSiguienteFila(filaActual);
 
 		}
 
+	}
+
+	private void seleccionaPrimeraCeldaDeSiguienteFila(FilaRet filaActual) {
+		int pos = filas.indexOf(filaActual);
+		if (filas.size() > (pos + 1)) {
+			log.debug("seleccion de comentario abajo en coluna 0");
+			FilaRet filaSiguiente = filas.get(pos + 1);
+			celdaSeleccionada = filaSiguiente.getColumnas().get(0).getCeldas().get(0);
+			recalculaRet();
+		}
 	}
 
 	public void selectLEFT() {
