@@ -5,14 +5,11 @@ import codigodelaimagen.base.CDIBase;
 import codigodelaimagen.cuadriculas.model.ReticulaRet;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
-	GrabacionEnVideo grabacionEnVideo;
-	private boolean grabando = false;
 	ReticulaRet reticulaRet;
 
 	public void setup() {
 		super.setup();
 		inicializaContenedor();
-		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
 
 	}
 
@@ -51,7 +48,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		background(100);
 		noStroke();
 		reticulaRet.display();
-		grabacionEnVideo.addFotograma();
+		super.addFotograma();
 
 	}
 
@@ -63,7 +60,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	public void keyPressed() {
 		if (keyCode == BACKSPACE) {
-			grabacionEnVideo.finalizaYCierraApp();
+			super.finalizaYCierraApp();
 		}else if(keyCode==UP){
 			log.debug("UP!");
 			reticulaRet.selectUP();

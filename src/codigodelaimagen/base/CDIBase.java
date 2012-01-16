@@ -7,13 +7,18 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import processing.core.PFont;
+import qdmp5.GrabacionEnVideo;
 
 public class CDIBase extends PApplet{
+	GrabacionEnVideo grabacionEnVideo;
+	private boolean grabando = false;
 
 	public Log log = LogFactory.getLog(getClass());
 	PFont fontA;
 
 	public void setup() {
+		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
+
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
 		textFont(fontA, 20);
 		ponsize(300,300);
@@ -60,6 +65,17 @@ public class CDIBase extends PApplet{
 
 	protected void ponsize(int i, int j) {
 		size(i,j);
+	}
+
+
+	public void addFotograma() {
+		grabacionEnVideo.addFotograma();		
+	}
+
+
+	public void finalizaYCierraApp() {
+		grabacionEnVideo.finalizaYCierraApp();
+		
 	}
 
 }
