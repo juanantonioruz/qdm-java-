@@ -11,13 +11,12 @@ import qdmp5.GrabacionEnVideo;
 
 public class CDIBase extends PApplet{
 	GrabacionEnVideo grabacionEnVideo;
-	private boolean grabando = false;
+	 protected boolean grabando = false;
 
 	public Log log = LogFactory.getLog(getClass());
 	PFont fontA;
 
 	public void setup() {
-		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
 
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
 		textFont(fontA, 20);
@@ -25,6 +24,7 @@ public class CDIBase extends PApplet{
 		ponModoDeColor(HSB, 100);
 		ponBackground(0);
 		smooth();
+		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
 	}
 
 	

@@ -483,5 +483,26 @@ public class ReticulaRet implements TreeDisplayable {
 				
 		}
 	}
+	CeldaRet buscada;
+	public void busca(CeldaRet celda,ComentarioEscale c){
+		if(celda.comentario==c){
+			buscada=celda;
+			return; 
+		}else
+			for(CeldaRet cc:celda.childdren)
+				 busca(cc, c);
+					
+	}
+	public void selecciona(ComentarioEscale comentarioTimeSel) {
+		buscada=null;
+		for(CeldaRet c:children){
+			busca(c, comentarioTimeSel);
+			if(buscada!=null){
+				celdaSeleccionada=buscada;
+				recalculaRet();
+			}
+		}
+		
+	}
 
 }

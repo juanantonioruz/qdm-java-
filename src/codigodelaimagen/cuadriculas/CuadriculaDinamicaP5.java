@@ -3,18 +3,29 @@ package codigodelaimagen.cuadriculas;
 import java.util.Collections;
 import java.util.List;
 
+import processing.core.PImage;
+
 import qdmp5.GrabacionEnVideo;
 import qdmp5.escale.ComentarioEscale;
 import qdmp5.escale.UsuarioEscale;
 import codigodelaimagen.base.CDIBase;
+import codigodelaimagen.cuadriculas.model.CeldaRet;
 import codigodelaimagen.cuadriculas.model.ReticulaRet;
+import codigodelaimagen.forum.ComparatorFecha;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
 	ReticulaRet reticulaRet;
+	PImage cursor;
 
 	public void setup() {
+		grabando=true;
 		super.setup();
 		inicializaContenedor();
+		if(grabando){
+		noCursor();
+		
+		cursor = loadImage("puntero.gif");
+		}
 
 	}
 	List<ComentarioEscale> comentariosTime;
@@ -22,7 +33,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	float widthComentarioTime;
 	float heightUsuarioBox;
 	private void inicializaContenedor() {
-		reticulaRet = new ReticulaRet("foros.xml",200, 80, width - 220, height-120, this);
+		reticulaRet = new ReticulaRet("foros.xml",200, 80, width - 220, height-90, this);
 		 comentariosTime = reticulaRet.comentariosOrdenadosFecha;
 		int numeroComentarios = comentariosTime.size();
 		 widthComentarioTime=reticulaRet.getWidth()/numeroComentarios;
@@ -45,7 +56,29 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 
 	@Override
 	public void mouseClicked() {
-		log.info("raton CLICK");
+		log.debug("raton CLICK");
+		if(mouseY<reticulaRet.getY() && mouseY>0){
+			if(mouseX>reticulaRet.getX() && mouseX<(reticulaRet.getX()+reticulaRet.getWidth())){
+				int pos=(int) ((mouseX-reticulaRet.getX())/widthComentarioTime);
+				System.out.println("pos: "+pos);
+				ComentarioEscale comentarioTimeSel = comentariosTime.get(pos);
+				log.debug(comentarioTimeSel.texto);
+				reticulaRet.selecciona(comentarioTimeSel);
+			}
+		}
+		
+		if(mouseX<reticulaRet.getX() && mouseX>0)
+			if(mouseY>reticulaRet.getY() && mouseY<(reticulaRet.getY()+reticulaRet.getHeight())){
+				int posUsuario=(int) ((mouseY-reticulaRet.getY())/heightUsuarioBox);
+				UsuarioEscale usuarioForo = usuariosForo.get(posUsuario);
+				System.out.println("click en usuarios"+posUsuario+" usu: "+usuarioForo);
+				List<ComentarioEscale> comentarios = usuarioForo.comentarios;
+				Collections.sort(comentarios, new ComparatorFecha());
+				reticulaRet.selecciona(comentarios.get(0));
+			}
+		
+		
+		
 		reticulaRet.raton(mouseX, mouseY);
 	}
 
@@ -67,15 +100,14 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			fill(comentario.usuario.equipo.col);
 			float posXComTime = i*widthComentarioTime+reticulaRet.getX();
 			int altoComTime = 35;
-			float widthBox;
+			int inicioY = 0;
 			if(comentario==reticulaRet.celdaSeleccionada.comentario){
-				altoComTime=50;
-				widthBox=widthComentarioTime;
-			}else{
-				posXComTime+=widthComentarioTime/2;
-				widthBox=5;
+				inicioY=35;
+			}else if(comentario.usuario==reticulaRet.celdaSeleccionada.comentario.usuario){
+				inicioY=35/3;
+				//posXComTime+=widthComentarioTime/2;
 			}
-			rect(posXComTime, 0, widthBox, altoComTime);
+			rect(posXComTime, inicioY, widthComentarioTime, altoComTime);
 		}
 		
 		for(int j=0; j<usuariosForo.size(); j++){
@@ -95,11 +127,16 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 			rect(0, posY, reticulaRet.getX()-50, heightUsuarioBox);
 			fill(usu.equipo.col);
 			rect(0, posY, heightUsuarioBox, heightUsuarioBox);
-			fill(colorTexto);
 			textSize(10);
+			fill(100);
+			text("["+usu.comentarios.size()+"]", 1, posY+heightUsuarioBox/2);
+			fill(colorTexto);
 			text(usu.nombre, heightUsuarioBox+5, posY+heightUsuarioBox/2);
 		}
 		reticulaRet.display();
+		if(grabando)
+		image(cursor, mouseX, mouseY);
+
 		super.addFotograma();
 
 	}
@@ -111,8 +148,9 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	
 
 	public void keyPressed() {
-		if (keyCode == BACKSPACE) {
-			super.finalizaYCierraApp();
+		if (key == ' ') {
+			System.out.println("cerrando!!");
+			finalizaYCierraApp();
 		}else if(keyCode==UP){
 			log.debug("UP!");
 			reticulaRet.selectUP();

@@ -28,7 +28,7 @@ public class UsuarioEscale extends ModeloEscaleBase {
 
 	}
 
-	List<ComentarioEscale> comentarios = new ArrayList();
+	public List<ComentarioEscale> comentarios = new ArrayList();
 	List<ComentarioEscale> comentariosRepresentados = new ArrayList();
 
 	void addComentarioRepresentado(ComentarioEscale c) {
