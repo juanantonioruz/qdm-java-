@@ -7,17 +7,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
-import qdmp5.escale.CalculoProfundidadLinea;
 import qdmp5.escale.ComentarioEscale;
-import toxi.color.ColorList;
+import qdmp5.escale.UsuarioEscale;
 import codigodelaimagen.cuadriculas.calculos.CalculadorPosiciones;
-import codigodelaimagen.cuadriculas.calculos.CalculoChildrenSel;
 import codigodelaimagen.cuadriculas.calculos.CalculoProfundidadColumna;
-import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 import codigodelaimagen.forum.ServicioMensajes;
-import codigodelaimagen.forum.ServicioToxiColor;
-import codigodelaimagen.zcuadriculas_almacen.HelperColors;
+import codigodelaimagen.textos.RectangleConTexto;
 
 public class ReticulaRet implements TreeDisplayable {
 	public Log log = LogFactory.getLog(getClass());
@@ -31,7 +27,6 @@ public class ReticulaRet implements TreeDisplayable {
 	public CeldaRet celdaEncima;
 
 	public List<FilaRet> filas;
-	private int posicionSeleccionada = 0;
 	CalculadorPosiciones calculadorPosiciones = new CalculadorPosiciones();
 
 	private final PApplet p5;
@@ -39,6 +34,9 @@ public class ReticulaRet implements TreeDisplayable {
 	private List<CeldaRet> children = new ArrayList<CeldaRet>();
 
 	private List<ComentarioEscale> mensajes;
+
+	public  List<ComentarioEscale> comentariosOrdenadosFecha;
+	public List<UsuarioEscale> usuarios;
 
 	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
@@ -48,9 +46,11 @@ public class ReticulaRet implements TreeDisplayable {
 		this.ancho = ancho;
 		this.alto = alto;
 		ServicioMensajes servicioMensajes = new ServicioMensajes(p5, xml);
+		usuarios=servicioMensajes.usuarios;
 		mensajes = servicioMensajes.organizaMensajes;
 		log.info("mensajessize:" + mensajes.size());
-
+		comentariosOrdenadosFecha = servicioMensajes.getComentariosOrdenadosFecha();
+		
 		this.p5 = p5;
 
 		CalculoProfundidadColumna cc = new CalculoProfundidadColumna(mensajes);
@@ -133,7 +133,7 @@ public class ReticulaRet implements TreeDisplayable {
 		} else {
 			// columna 0 celdaParent=null;
 		}
-		CeldaRet celdaNueva = new CeldaRet(celdaAnterior, celdaParent, columna, comentario);
+		CeldaRet celdaNueva = new CeldaRet(celdaAnterior, celdaParent, columna, comentario, new RectangleConTexto(this.p5, comentario.texto));
 		columna.getCeldas().add(celdaNueva);
 		if (col == 0)
 			children.add(celdaNueva);
@@ -187,6 +187,8 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	public void display() {
+		
+		
 		for (FilaRet fila : filas)
 			pintaFila(fila);
 
@@ -198,8 +200,8 @@ public class ReticulaRet implements TreeDisplayable {
 		float filaY =  fila.getY();
 		float filaHeight = fila.getHeight();
 		float filaWeight = getWidth();
-		p5.noFill();
-		p5.rect(filaX, filaY, filaWeight, filaHeight);
+		p5.noStroke();
+//		p5.rect(filaX, filaY, filaWeight, filaHeight);
 		for (ColRet col : fila.getColumnas()) {
 			col.actualiza();
 			float colX = col.getX();
@@ -208,7 +210,8 @@ public class ReticulaRet implements TreeDisplayable {
 			float colHeight = col.getHeight();
 			// fill(HelperColors.getColor(),80);
 			p5.fill(100);
-			p5.stroke(0);
+			p5.stroke(50);
+			p5.strokeWeight(0.5f);
 			p5.rect(colX, colY, colWeight, colHeight);
 
 			for (CeldaRet celda : col.getCeldas()) {
@@ -223,8 +226,6 @@ public class ReticulaRet implements TreeDisplayable {
 					p5.strokeWeight(2);
 					p5.fill(celda.color);
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
-					p5.fill(100);
-					p5.rect(celdaX, celdaY, 20, 20);
 				} else {
 					p5.noStroke();
 					p5.fill(0);
@@ -233,8 +234,11 @@ public class ReticulaRet implements TreeDisplayable {
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
 				}
 				p5.fill(0);
-				p5.text(celda.comentario.usuario.nombre, celdaX, celdaY + celdaHeight / 4);
-				p5.text(celda.comentario.titulo, celdaX, celdaY + celdaHeight / 2);
+				celda.rectangleConTexto.setMedidas(celda.getX(), celda.getY(),
+						celda.getWidth(), celda.getHeight());
+				celda.rectangleConTexto.display(false);
+//				p5.text(celda.comentario.usuario.nombre, celdaX, celdaY + celdaHeight / 4);
+//				p5.text(celda.comentario.titulo, celdaX, celdaY + celdaHeight / 2);
 			}
 		}
 	}
@@ -384,10 +388,8 @@ public class ReticulaRet implements TreeDisplayable {
 					celdaSeleccionada=brothers.get(posCelda+1);
 					recalculaRet();
 				}else{
-					System.out.println("fin de linae");
 					// buscar parent sigu... 
 					CeldaRet sigParent=buscaSigParent(celdaSeleccionada);
-					System.out.println(sigParent);
 					if(sigParent==null)
 					seleccionaPrimeraCeldaDeSiguienteFila(celdaSeleccionada.getColumna().getFila());
 					else{

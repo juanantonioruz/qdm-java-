@@ -1,6 +1,7 @@
 package codigodelaimagen.forum;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -16,7 +17,8 @@ public class ServicioMensajes {
 	PApplet p5;
 
 	public List<ComentarioEscale> organizaMensajes;
-
+	public List<ComentarioEscale> comentarios;
+	public List<UsuarioEscale> usuarios=new ArrayList<UsuarioEscale>();
 	public ServicioMensajes(PApplet p5, String xmlFile) {
 		super();
 		this.p5 = p5;
@@ -24,7 +26,12 @@ public class ServicioMensajes {
 	}
 	
 	private List<ComentarioEscale> organizaMensajes(PApplet p5, String xmlFile) {
-		List<ComentarioEscale> comentarios = new ServicioLoadEquipos(p5).loadXML( xmlFile);
+		 comentarios = new ServicioLoadEquipos(p5).loadXML( xmlFile);
+		 for(ComentarioEscale c:comentarios){
+			 if(!usuarios.contains(c.usuario)){
+				 usuarios.add(c.usuario);
+			 }
+		 }
 		log.info("numero mensajes:" + comentarios.size());
 		List<UsuarioEscale> usuariosParticipantes = dameUsuariosParticipantes(comentarios);
 		log.info("usuarios:" + usuariosParticipantes.size());
@@ -68,7 +75,7 @@ public class ServicioMensajes {
 				}
 			}
 			if(encontrado){
-				log.info("celda relacionada:" + c+" padres size: "+padres.size());
+				log.debug("celda relacionada:" + c+" padres size: "+padres.size());
 				continue;
 
 			}
@@ -76,4 +83,12 @@ public class ServicioMensajes {
 
 		return padres;
 	}
+	
+	public List<ComentarioEscale> getComentariosOrdenadosFecha(){
+		List<ComentarioEscale> clona=new ArrayList<ComentarioEscale>();
+		clona.addAll(comentarios);
+		Collections.sort(clona, new ComparatorFecha());
+		return clona;
+	}
+	
 }

@@ -8,21 +8,22 @@ import qdmp5.escale.ComentarioEscale;
 import codigodelaimagen.cuadriculas.interfaces.ElementoReticulaAbstract;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
+import codigodelaimagen.textos.RectangleConTexto;
 
 public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVariableAnterior,  TreeDisplayable {
 	public ColRet columna;
 	public  int color;
+	RectangleConTexto rectangleConTexto;
 	
-
 
 	public  TreeDisplayable parent;
 	public  CeldaRet childrenSel;
 	public List<CeldaRet> childdren=new ArrayList<CeldaRet>();
 	public final ComentarioEscale comentario;
 	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna){
-		this(anterior, parent,kolumna,null);
+		this(anterior, parent,kolumna,null,null);
 	}
-	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna, ComentarioEscale comentario) {
+	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna, ComentarioEscale comentario, RectangleConTexto rect) {
 		this.anterior = anterior;
 		this.parent = parent;
 		this.comentario = comentario;
@@ -30,9 +31,15 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 		parent.childdren.add(this);
 		this.columna = kolumna;
 		this.color = comentario.usuario.equipo.col;
+		 rectangleConTexto = rect;
 
 	}
 
+	@Override
+	public void setMedidaVariable(float ancho) {
+		super.setMedidaVariable(ancho);
+	
+	}
 	public float getHeight() {
 		return getMedidaVariable();
 	}
