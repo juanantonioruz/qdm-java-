@@ -89,11 +89,11 @@ public class ReticulaRet implements TreeDisplayable {
 		if(normaliza){
 		normalizaFilas();	
 		}else{
-		redimensionadorPosicionadorElementos.recalculaPosiciones(filaSeleccionada, filas, getHeight());
+		redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, filaSeleccionada, filas, getHeight());
 		}
 		// recalcula unicamente el ancho de las columnas de la fila
 		// seleccionada
-		redimensionadorPosicionadorElementos.recalculaPosiciones(columnaSeleccionada, filaSeleccionada.getColumnas(),
+		redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, columnaSeleccionada, filaSeleccionada.getColumnas(),
 				getWidth());
 
 		// TODO: solo recalculo de toda la reticula o reasignacion de toda la
@@ -122,7 +122,7 @@ public class ReticulaRet implements TreeDisplayable {
 		if (normaliza) {
 			normalizaFilas();
 		} else {
-			redimensionadorPosicionadorElementos.recalculaPosiciones(0, filas, alto);
+			redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, 0, filas, alto);
 		}
 		float anchoColumna=getWidth()/cc.columnas;
 		for (FilaRet f : filas) {
@@ -132,7 +132,7 @@ public class ReticulaRet implements TreeDisplayable {
 			// la columna seleccionada es la misma para todas las filas
 			// porque este metodo se ejecuta al iniciar la reticula y queremos
 			// la columna=0
-			redimensionadorPosicionadorElementos.recalculaPosiciones(0, f.getColumnas(), f.getWidth());
+			redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, 0, f.getColumnas(), f.getWidth());
 			// calcula dimension de celdas de columnas de cada fila
 			for (int j = 0; j < f.getColumnas().size(); j++) {
 				ColRet columna = (ColRet) f.getColumnas().get(j);
@@ -158,8 +158,10 @@ public class ReticulaRet implements TreeDisplayable {
 							for(CeldaRet cii:celdaInt.getChildren())
 								cii.setMedidaVariable(altoI);
 						}else{
-							redimensionadorPosicionadorElementos.recalculaPosiciones(0, celdaInt.getChildren(),
-									celdaInt.getHeight());
+							redimensionadorPosicionadorElementos.recursivoDesc(celdaInt, celdaSeleccionada);
+
+//		TODO:CHANGE!					redimensionadorPosicionadorElementos.recalculaPosicionesCeldas(celdaSeleccionada, 0, celdaInt.getChildren(),
+//									celdaInt.getHeight());
 						}
 					}
 				}
@@ -359,18 +361,18 @@ public class ReticulaRet implements TreeDisplayable {
 			boolean coindiceV = mouseY > y1 && mouseY < y1 + f.getMedidaVariable();
 			encimaFila = coincideHor && coindiceV;
 			if (encimaFila) {
-				log.info("over FILA CLCIK en fila" + f);
+				log.debug("over FILA CLCIK en fila" + f);
 				for (ColRet kolumna : f.getColumnas()) {
 					boolean encima = isOverColumna(mouseX, mouseY, (ColRet) kolumna);
 					if (encima) {
-						log.info("OVER KOLumna click pos sel: " + kolumna);
+						log.debug("OVER KOLumna click pos sel: " + kolumna);
 
 						for (CeldaRet celda : kolumna.getCeldas()) {
 							boolean encimaCelda = isOverCelda(mouseX, mouseY, (CeldaRet) celda);
 							if (encimaCelda) {
-								log.info("OVER CELDA click pos sel: " + celda);
+								log.debug("OVER CELDA click pos sel: " + celda);
 								seleccionaPrimeraCeldaSiHayDistancia(celdaSeleccionada, celda);
-								log.info("celda" + celda);
+								log.debug("celda" + celda);
 								recalculaRet();
 
 								break;

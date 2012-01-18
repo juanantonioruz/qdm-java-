@@ -24,6 +24,7 @@ public  class CalculoMarcas {
 	 */
 	public CalculoMarcas(float limite, int numeroElementos, int posicionSeleccionada, float baseMultiplicadora) {
 		// marca 1 (inicio)
+		log.debug("evalua " + posicionSeleccionada);
 
 		this.baseMultiplicadora = baseMultiplicadora;
 		// analizando posicionSeleccionada y numero de celdas se elabora una
@@ -53,6 +54,7 @@ public  class CalculoMarcas {
 			marcas.add(new MarcaPosicion(inicioColumna_x));
 
 		}
+		log.debug("limite:" + limite + " numeroElemetos:" + numeroElementos + " marcas: " + marcas);
 
 	}
 

@@ -49,6 +49,8 @@ public class ColRet extends ElementoReticulaAbstract implements TieneMedidaVaria
 		return celdas;
 	}
 	
-	
+	public int getPosicion(){
+		return fila.getColumnas().indexOf(this);
+	}
 
 }
