@@ -18,7 +18,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	PImage cursor;
 
 	public void setup() {
-		grabando=true;
+		grabando=false;
 		super.setup();
 		inicializaContenedor();
 		if(grabando){
@@ -34,7 +34,8 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	float heightUsuarioBox;
 	private void inicializaContenedor() {
 		reticulaRet = new ReticulaRet("foros.xml",200, 80, width - 220, height-90, this);
-		 comentariosTime = reticulaRet.comentariosOrdenadosFecha;
+		
+		comentariosTime = reticulaRet.comentariosOrdenadosFecha;
 		int numeroComentarios = comentariosTime.size();
 		 widthComentarioTime=reticulaRet.getWidth()/numeroComentarios;
 		 usuariosForo=reticulaRet.usuarios;

@@ -79,6 +79,9 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	public ColRet getColumna() {
 		return columna;
 	}
+	public FilaRet getFila() {
+		return getColumna().getFila();
+	}
 	
 	
 	

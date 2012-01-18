@@ -8,8 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import codigodelaimagen.cuadriculas.interfaces.TieneMedidaVariableAnterior;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 
-public class CalculadorPosiciones {
-	public static Log log = LogFactory.getLog(CalculadorPosiciones.class);
+public class RedimensionadorPosicionadorElementos {
+	public static Log log = LogFactory.getLog(RedimensionadorPosicionadorElementos.class);
 
 	public  void recalculaPosiciones(Object elemento, List elementos, float limite) {
 		recalculaPosiciones(elementos.indexOf(elemento), elementos, limite);
@@ -34,13 +34,10 @@ public class CalculadorPosiciones {
 		}
 	}
 	
-	CeldaRet parentRec;
 	public void recursivoDesc(CeldaRet celda, CeldaRet celdaSeleccionada) {
 		int buscaCeldaSeleccionadaDeChildren = buscaCeldaSeleccionadaDeChildren(celda, celdaSeleccionada);
-		if(celda.getParent()!=parentRec)
 		recalculaPosiciones(buscaCeldaSeleccionadaDeChildren, celda.getParent().getChildren(), celda
 				.getParent().getHeightFinal());
-		parentRec=(CeldaRet) celda.getParent();
 		for (CeldaRet child : celda.getChildren())
 			recursivoDesc(child, celdaSeleccionada);
 	}
