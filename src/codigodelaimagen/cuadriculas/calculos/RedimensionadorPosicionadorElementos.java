@@ -11,6 +11,8 @@ import codigodelaimagen.cuadriculas.model.CeldaRet;
 public class RedimensionadorPosicionadorElementos {
 	public static Log log = LogFactory.getLog(RedimensionadorPosicionadorElementos.class);
 
+	
+	
 	public  void recalculaPosiciones(Object elemento, List elementos, float limite) {
 		recalculaPosiciones(elementos.indexOf(elemento), elementos, limite);
 	}
@@ -29,8 +31,6 @@ public class RedimensionadorPosicionadorElementos {
 				MarcaPosicion marcaSig = calculoMarcas.marcas.get(i + 1);
 				float anchoInicial = marcaSig.marca - marcaActual.marca;
 				((TieneMedidaVariableAnterior)elementos.get(i)).setMedidaVariable(anchoInicial);
-
-
 		}
 	}
 	

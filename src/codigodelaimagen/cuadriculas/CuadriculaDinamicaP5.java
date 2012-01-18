@@ -164,6 +164,11 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		}else if(keyCode==RIGHT){
 			reticulaRet.selectRIGHT();
 			log.debug("RIGHT");
+		}else if(key=='r'){
+		
+			log.info("RESET!");
+			reticulaRet.reset();
+
 			
 		}
 	}

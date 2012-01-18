@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.Fila;
 import qdmp5.escale.UsuarioEscale;
 import codigodelaimagen.cuadriculas.calculos.RedimensionadorPosicionadorElementos;
 import codigodelaimagen.cuadriculas.calculos.CalculoProfundidadColumna;
@@ -37,7 +38,7 @@ public class ReticulaRet implements TreeDisplayable {
 
 	public List<ComentarioEscale> comentariosOrdenadosFecha;
 	public List<UsuarioEscale> usuarios;
-
+	CalculoProfundidadColumna cc;
 	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
 
@@ -48,7 +49,7 @@ public class ReticulaRet implements TreeDisplayable {
 		this.p5 = p5;
 		loadComentariosXML(xml, p5);
 
-		CalculoProfundidadColumna cc = new CalculoProfundidadColumna(mensajes);
+		 cc = new CalculoProfundidadColumna(mensajes);
 		log.info("profundidad: " + cc.columnas);
 
 		generaFilasYColumnasVinculadasSinCeldasComentarios(cc);
@@ -62,7 +63,7 @@ public class ReticulaRet implements TreeDisplayable {
 		seleccionaPrimeraCeldaComentario();
 
 		// calculo de posiciones
-		calculaPosicionesTamanyos();
+		calculaPosicionesTamanyosReticulaInicial(true);
 	}
 
 	private void loadComentariosXML(String xml, PApplet p5) {
@@ -73,6 +74,10 @@ public class ReticulaRet implements TreeDisplayable {
 		comentariosOrdenadosFecha = servicioMensajes.getComentariosOrdenadosFecha();
 	}
 
+	public void reset() {
+
+	}
+
 	private void recalculaRet() {
 		ColRet columnaSeleccionada = celdaSeleccionada.getColumna();
 		FilaRet filaSeleccionada = columnaSeleccionada.getFila();
@@ -80,7 +85,7 @@ public class ReticulaRet implements TreeDisplayable {
 		// recalcula la altura de las filas
 		redimensionadorPosicionadorElementos.recalculaPosiciones(filaSeleccionada, filas, getHeight());
 
-		// recalcula unicamente la altura de las columnas de la fila
+		// recalcula unicamente el ancho de las columnas de la fila
 		// seleccionada
 		redimensionadorPosicionadorElementos.recalculaPosiciones(columnaSeleccionada, filaSeleccionada.getColumnas(),
 				getWidth());
@@ -103,17 +108,25 @@ public class ReticulaRet implements TreeDisplayable {
 
 	}
 
-	private void calculaPosicionesTamanyos() {
+	private void calculaPosicionesTamanyosReticulaInicial(boolean reset) {
 		// calcula dimension de filas marcanfo la fila 0 INICIAL DE RETICULA
-		redimensionadorPosicionadorElementos.recalculaPosiciones(celdaSeleccionada.getFila(), filas, alto);
+		if (reset) {
+			float altura = alto / filas.size();
+			for (FilaRet f : filas) {
+				f.setMedidaVariable(altura);
+			}
+		} else {
+			redimensionadorPosicionadorElementos.recalculaPosiciones(0, filas, alto);
+		}
+		float anchoColumna=getWidth()/cc.columnas;
 		for (FilaRet f : filas) {
 			// esto se hace dentro del bucle porque las columnas pertenecen
 			// unicamente a una fila (cada iteracion del bucle)
-			
+
 			// la columna seleccionada es la misma para todas las filas
-			// porque este metodo se ejecuta al iniciar la reticula y queremos la columna=0
-			redimensionadorPosicionadorElementos.recalculaPosiciones(celdaSeleccionada.getColumna(), f.getColumnas(),
-					f.getWidth());
+			// porque este metodo se ejecuta al iniciar la reticula y queremos
+			// la columna=0
+			redimensionadorPosicionadorElementos.recalculaPosiciones(0, f.getColumnas(), f.getWidth());
 			// calcula dimension de celdas de columnas de cada fila
 			for (int j = 0; j < f.getColumnas().size(); j++) {
 				ColRet columna = (ColRet) f.getColumnas().get(j);
@@ -134,8 +147,14 @@ public class ReticulaRet implements TreeDisplayable {
 					ColRet cAnt = (ColRet) f.getColumnas().get(j - 1);
 					for (int celI = 0; celI < cAnt.getCeldas().size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) cAnt.getCeldas().get(celI);
-						redimensionadorPosicionadorElementos.recalculaPosiciones(0, celdaInt.getChildren(),
-								celdaInt.getHeight());
+						if(reset){
+							float altoI=celdaInt.getHeight()/celdaInt.getChildren().size();
+							for(CeldaRet cii:celdaInt.getChildren())
+								cii.setMedidaVariable(altoI);
+						}else{
+							redimensionadorPosicionadorElementos.recalculaPosiciones(0, celdaInt.getChildren(),
+									celdaInt.getHeight());
+						}
 					}
 				}
 			}
