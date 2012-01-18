@@ -34,6 +34,14 @@ public class RedimensionadorPosicionadorElementos {
 		}
 	}
 	
+	public void recursivoDescNormaliza(CeldaRet celda) {
+		float alto=celda.getParent().getHeightFinal()/celda.getParent().getChildren().size();
+		for(CeldaRet c:celda.getParent().getChildren()){
+			c.setMedidaVariable(alto);
+		}
+		for (CeldaRet child : celda.getChildren())
+			recursivoDescNormaliza(child);
+	}
 	public void recursivoDesc(CeldaRet celda, CeldaRet celdaSeleccionada) {
 		int buscaCeldaSeleccionadaDeChildren = buscaCeldaSeleccionadaDeChildren(celda, celdaSeleccionada);
 		recalculaPosiciones(buscaCeldaSeleccionadaDeChildren, celda.getParent().getChildren(), celda

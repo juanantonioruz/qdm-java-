@@ -75,16 +75,22 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	public void reset() {
-
+		recalculaRet(true);
 	}
 
 	private void recalculaRet() {
+		recalculaRet(false);
+	}
+		private void recalculaRet(boolean normaliza) {
 		ColRet columnaSeleccionada = celdaSeleccionada.getColumna();
 		FilaRet filaSeleccionada = columnaSeleccionada.getFila();
 
 		// recalcula la altura de las filas
+		if(normaliza){
+		normalizaFilas();	
+		}else{
 		redimensionadorPosicionadorElementos.recalculaPosiciones(filaSeleccionada, filas, getHeight());
-
+		}
 		// recalcula unicamente el ancho de las columnas de la fila
 		// seleccionada
 		redimensionadorPosicionadorElementos.recalculaPosiciones(columnaSeleccionada, filaSeleccionada.getColumnas(),
@@ -104,17 +110,17 @@ public class ReticulaRet implements TreeDisplayable {
 		// columna)
 		for (CeldaRet child : getCeldasPrimeraColumna())
 			for (CeldaRet subChild : child.getChildren())
+				if(normaliza)
+					redimensionadorPosicionadorElementos.recursivoDescNormaliza(subChild);
+				else
 				redimensionadorPosicionadorElementos.recursivoDesc(subChild, celdaSeleccionada);
 
 	}
 
-	private void calculaPosicionesTamanyosReticulaInicial(boolean reset) {
+	private void calculaPosicionesTamanyosReticulaInicial(boolean normaliza) {
 		// calcula dimension de filas marcanfo la fila 0 INICIAL DE RETICULA
-		if (reset) {
-			float altura = alto / filas.size();
-			for (FilaRet f : filas) {
-				f.setMedidaVariable(altura);
-			}
+		if (normaliza) {
+			normalizaFilas();
 		} else {
 			redimensionadorPosicionadorElementos.recalculaPosiciones(0, filas, alto);
 		}
@@ -147,7 +153,7 @@ public class ReticulaRet implements TreeDisplayable {
 					ColRet cAnt = (ColRet) f.getColumnas().get(j - 1);
 					for (int celI = 0; celI < cAnt.getCeldas().size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) cAnt.getCeldas().get(celI);
-						if(reset){
+						if(normaliza){
 							float altoI=celdaInt.getHeight()/celdaInt.getChildren().size();
 							for(CeldaRet cii:celdaInt.getChildren())
 								cii.setMedidaVariable(altoI);
@@ -158,6 +164,13 @@ public class ReticulaRet implements TreeDisplayable {
 					}
 				}
 			}
+		}
+	}
+
+	private void normalizaFilas() {
+		float altura = alto / filas.size();
+		for (FilaRet f : filas) {
+			f.setMedidaVariable(altura);
 		}
 	}
 
