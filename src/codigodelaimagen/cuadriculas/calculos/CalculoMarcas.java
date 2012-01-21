@@ -23,6 +23,9 @@ public  class CalculoMarcas {
 	 * @param baseMultiplicadora 
 	 */
 	public CalculoMarcas(float limite, int numeroElementos, int posicionSeleccionada, float baseMultiplicadora) {
+		this(limite, numeroElementos, posicionSeleccionada, baseMultiplicadora, false);
+	}
+	public CalculoMarcas(float limite, int numeroElementos, int posicionSeleccionada, float baseMultiplicadora, boolean reverse) {
 		// marca 1 (inicio)
 		log.debug("evalua " + posicionSeleccionada);
 

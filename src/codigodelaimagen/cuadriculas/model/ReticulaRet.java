@@ -39,6 +39,7 @@ public class ReticulaRet implements TreeDisplayable {
 	public List<ComentarioEscale> comentariosOrdenadosFecha;
 	public List<UsuarioEscale> usuarios;
 	CalculoProfundidadColumna cc;
+
 	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
 
@@ -49,7 +50,7 @@ public class ReticulaRet implements TreeDisplayable {
 		this.p5 = p5;
 		loadComentariosXML(xml, p5);
 
-		 cc = new CalculoProfundidadColumna(mensajes);
+		cc = new CalculoProfundidadColumna(mensajes);
 		log.info("profundidad: " + cc.columnas);
 
 		generaFilasYColumnasVinculadasSinCeldasComentarios(cc);
@@ -81,20 +82,22 @@ public class ReticulaRet implements TreeDisplayable {
 	private void recalculaRet() {
 		recalculaRet(false);
 	}
-		private void recalculaRet(boolean normaliza) {
+
+	private void recalculaRet(boolean normaliza) {
 		ColRet columnaSeleccionada = celdaSeleccionada.getColumna();
 		FilaRet filaSeleccionada = columnaSeleccionada.getFila();
 
 		// recalcula la altura de las filas
-		if(normaliza){
-		normalizaFilas();	
-		}else{
-		redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, filaSeleccionada, filas, getHeight());
+		if (normaliza) {
+			normalizaFilas();
+		} else {
+			redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, filaSeleccionada, filas,
+					getHeight());
 		}
 		// recalcula unicamente el ancho de las columnas de la fila
 		// seleccionada
-		redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, columnaSeleccionada, filaSeleccionada.getColumnas(),
-				getWidth());
+		redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, columnaSeleccionada,
+				filaSeleccionada.getColumnas(), getWidth());
 
 		// TODO: solo recalculo de toda la reticula o reasignacion de toda la
 		// reticula si hay cambio de fila
@@ -110,10 +113,10 @@ public class ReticulaRet implements TreeDisplayable {
 		// columna)
 		for (CeldaRet child : getCeldasPrimeraColumna())
 			for (CeldaRet subChild : child.getChildren())
-				if(normaliza)
+				if (normaliza)
 					redimensionadorPosicionadorElementos.recursivoDescNormaliza(subChild);
 				else
-				redimensionadorPosicionadorElementos.recursivoDesc(subChild, celdaSeleccionada);
+					redimensionadorPosicionadorElementos.recursivoDesc(subChild, celdaSeleccionada);
 
 	}
 
@@ -124,7 +127,7 @@ public class ReticulaRet implements TreeDisplayable {
 		} else {
 			redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, 0, filas, alto);
 		}
-		float anchoColumna=getWidth()/cc.columnas;
+		float anchoColumna = getWidth() / cc.columnas;
 		for (FilaRet f : filas) {
 			// esto se hace dentro del bucle porque las columnas pertenecen
 			// unicamente a una fila (cada iteracion del bucle)
@@ -132,7 +135,8 @@ public class ReticulaRet implements TreeDisplayable {
 			// la columna seleccionada es la misma para todas las filas
 			// porque este metodo se ejecuta al iniciar la reticula y queremos
 			// la columna=0
-			redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, 0, f.getColumnas(), f.getWidth());
+			redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, 0, f.getColumnas(),
+					f.getWidth());
 			// calcula dimension de celdas de columnas de cada fila
 			for (int j = 0; j < f.getColumnas().size(); j++) {
 				ColRet columna = (ColRet) f.getColumnas().get(j);
@@ -153,15 +157,17 @@ public class ReticulaRet implements TreeDisplayable {
 					ColRet cAnt = (ColRet) f.getColumnas().get(j - 1);
 					for (int celI = 0; celI < cAnt.getCeldas().size(); celI++) {
 						CeldaRet celdaInt = (CeldaRet) cAnt.getCeldas().get(celI);
-						if(normaliza){
-							float altoI=celdaInt.getHeight()/celdaInt.getChildren().size();
-							for(CeldaRet cii:celdaInt.getChildren())
+						if (normaliza) {
+							float altoI = celdaInt.getHeight() / celdaInt.getChildren().size();
+							for (CeldaRet cii : celdaInt.getChildren())
 								cii.setMedidaVariable(altoI);
-						}else{
+						} else {
 							redimensionadorPosicionadorElementos.recursivoDesc(celdaInt, celdaSeleccionada);
 
-//		TODO:CHANGE!					redimensionadorPosicionadorElementos.recalculaPosicionesCeldas(celdaSeleccionada, 0, celdaInt.getChildren(),
-//									celdaInt.getHeight());
+							// TODO:CHANGE!
+							// redimensionadorPosicionadorElementos.recalculaPosicionesCeldas(celdaSeleccionada,
+							// 0, celdaInt.getChildren(),
+							// celdaInt.getHeight());
 						}
 					}
 				}

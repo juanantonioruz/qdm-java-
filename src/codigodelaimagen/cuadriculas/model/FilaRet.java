@@ -46,6 +46,10 @@ public class FilaRet extends ElementoReticulaAbstract implements TieneMedidaVari
 		return o;
 	}
 
+	public int getPosicion() {
+		return reticulaRet.filas.indexOf(this);
+	}
+
 
 
 }
