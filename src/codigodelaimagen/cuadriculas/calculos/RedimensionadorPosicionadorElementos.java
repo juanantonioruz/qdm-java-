@@ -69,61 +69,48 @@ public class RedimensionadorPosicionadorElementos {
 
 	public void recalculaPosicionesFilas(CeldaRet celdaSeleccionada, int i, List<FilaRet> filas, float alto) {
 		List<MarcaPosicion> marcas = null;
+		int porcentaje = 60;
+		int sizeFilas = filas.size();
 		if (celdaSeleccionada.getColumna().getPosicion() > 0) {
-			float per_cent_90 = alto * 60 / 100;
-
-			FilaRet fila = celdaSeleccionada.getColumna().getFila();
-			
-			
-			int posicionFila = fila.getPosicion();
-			
-//			fila.setMedidaVariable(per_cent_90);
-			float per_cent_resto = alto - per_cent_90;
-			
-			int sizeFilas = filas.size();
-			
-			int restoPosiciones = sizeFilas - 1;
-			
-			float moduloResto = per_cent_resto / restoPosiciones;
-			
-			if (posicionFila > 0) {
-				int numeroElementosUp = posicionFila ;
-				float alturaUp = moduloResto * numeroElementosUp;
-				CalculoMarcas calculoMarcasUp = new CalculoMarcas(alturaUp, numeroElementosUp, numeroElementosUp-1, 2);
-				int numeroElementosDown = restoPosiciones - numeroElementosUp-1;
-				float ultimaMarcaUp = calculoMarcasUp.marcas.get(calculoMarcasUp.marcas.size()-1).marca;
-				marcas = new ArrayList<MarcaPosicion>();
-				marcas.addAll(calculoMarcasUp.marcas);
-				MarcaPosicion seleccion = new MarcaPosicion(ultimaMarcaUp+per_cent_90);
-//				marcas.add(seleccion); si se descomenta se come la primera linea siguiente
-
-				CalculoMarcas calculoMarcasDown = new CalculoMarcas(moduloResto * (numeroElementosDown), numeroElementosDown, 0, 2);
-//				for(MarcaPosicion mp:calculoMarcasDown.marcas)
-//					marcas.add(new MarcaPosicion(mp.marca + alturaUp + per_cent_90));
-//				
-//				marcas.addAll(calculoMarcasDown.marcas);
-				for (int j=1; j<calculoMarcasDown.marcas.size(); j++) {
-					MarcaPosicion mp=calculoMarcasDown.marcas.get(j);
-					float marcita = mp.marca;
-					
-					marcas.add(new MarcaPosicion(marcita + seleccion.marca));
-				}
-			} else {
-				// la fila seleccionada es la 0
-			}
-			// float altoBase=alto/filas.size();
-			// marcas=new ArrayList<MarcaPosicion>();
-			// float marca=0;
-			// for(int f=0; f<=filas.size();f++){
-			// marcas.add(new MarcaPosicion(marca));
-			// marca+=altoBase;
-			// }
+			int posicionFila = celdaSeleccionada.getColumna().getFila().getPosicion();
+			marcas = aumentaVisibilidad(posicionFila, sizeFilas, alto, porcentaje);
 		} else {
-			CalculoMarcas calculoMarcas = new CalculoMarcas(alto, filas.size(), i, 2);
+			CalculoMarcas calculoMarcas = new CalculoMarcas(alto, sizeFilas, i, 2);
 			marcas = calculoMarcas.marcas;
 		}
 		log.debug(marcas.size() + " --- " + marcas);
 		recalculaPosiciones(celdaSeleccionada, filas, marcas);
+	}
+
+	private List<MarcaPosicion> aumentaVisibilidad(int posicion, int numeroElementos, float limite, int porcentaje) {
+		List<MarcaPosicion> marcas = new ArrayList<MarcaPosicion>();
+		
+		float per_centaje = limite * porcentaje / 100;
+
+		float per_cent_resto = limite - per_centaje;
+
+		// int sizeFilas = filas.size();
+
+		int restoPosiciones = numeroElementos - 1;
+
+		float moduloResto = per_cent_resto / restoPosiciones;
+
+		int numeroElementosUp = posicion;
+		float alturaUp = moduloResto * numeroElementosUp;
+		CalculoMarcas calculoMarcasUp = new CalculoMarcas(alturaUp, numeroElementosUp, numeroElementosUp - 1, 2);
+		int numeroElementosDown = restoPosiciones - numeroElementosUp - 1;
+		float ultimaMarcaUp = calculoMarcasUp.marcas.get(calculoMarcasUp.marcas.size() - 1).marca;
+		marcas.addAll(calculoMarcasUp.marcas);
+		MarcaPosicion seleccion = new MarcaPosicion(ultimaMarcaUp + per_centaje);
+		marcas.add(seleccion);
+		// si se descomenta se come la primera linea siguiente
+
+		CalculoMarcas calculoMarcasDown = new CalculoMarcas(moduloResto * (numeroElementosDown), numeroElementosDown,
+				0, 2);
+		for (MarcaPosicion mp:calculoMarcasDown.marcas) {
+			marcas.add(new MarcaPosicion(mp.marca + seleccion.marca));
+		}
+		return marcas;
 	}
 
 	public void recalculaPosicionesFilas(CeldaRet celdaSeleccionada, FilaRet filaSeleccionada, List<FilaRet> filas,
