@@ -61,7 +61,9 @@ public class RectangleConTexto {
 		public void display(boolean contorno){
 			if(contorno)
 			p5.rect(posXRectangle, posYRectangle, anchoRectangle, altoRectangle);
-			float size = p5.map(altoRectangle, 0, 150, 7, 15);
+			float limite=altoRectangle;
+			if(anchoRectangle<altoRectangle) limite=anchoRectangle;
+			float size = p5.map(limite, 0, 150, 7, 15);
 			p5.textSize(size);
 			float transparenciaDown = p5.map(altoRectangle, 0, 150, 50, 100);
 			if(size>=8){

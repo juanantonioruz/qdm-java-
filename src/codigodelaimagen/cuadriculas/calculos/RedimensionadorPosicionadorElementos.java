@@ -55,14 +55,23 @@ public class RedimensionadorPosicionadorElementos {
 
 			marcas = calculoMarcas.marcas;
 		} else {
-			log.debug("aumentando visibilidad celda:"+celda.getPosicion()+" col: "+celda.getColumna().getPosicion()+" fil:"+celda.getColumna().getFila().getPosicion());
-			marcas = aumentaVisibilidad(celda.getPosicion(), celda.getParent().getChildren().size(), celda.getParent()
-					.getHeightFinal(), 90);
+			log.info("aumentando visibilidad celda:"+celda.getColumna().getFila().getPosicion()+"-"+celda.getColumna().getPosicion()+"-"+celda.getPosicion());
+			int porcentaje=90;
+			if(celda.getParent().getChildren().size()==1) porcentaje=100;
+			int pos=celda.getPosicion();
+			for(CeldaRet c:celda.getCeldaParent().getChildren())
+				if(esLineaSeleccionada(c,celdaSeleccionada))
+					pos=c.getPosicion();
+			marcas = aumentaVisibilidad(pos, celda.getParent().getChildren().size(), celda.getParent()
+					.getHeightFinal(), porcentaje);
 		}
+
 		recalculaPosiciones(celdaSeleccionada, celda.getParent().getChildren(), marcas);
+
 		for (CeldaRet child : celda.getChildren())
 			recursivoDesc(child, celdaSeleccionada);
 	}
+
 	private ResultadoBuscaSeldaSeleccionadaDeChildren buscaCeldaSeleccionadaDeChildren(CeldaRet celda,
 			CeldaRet celdaSeleccionada) {
 		for (CeldaRet c : celda.getParent().getChildren())

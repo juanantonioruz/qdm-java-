@@ -72,6 +72,9 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	public TreeDisplayable getParent() {
 		return (TreeDisplayable) parent;
 	}
+	public CeldaRet getCeldaParent() {
+		return  (CeldaRet) parent;
+	}
 	@Override
 	public String toString() {
 		return "CeldaRet [comentario=" + comentario + "]";
