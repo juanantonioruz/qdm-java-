@@ -600,9 +600,9 @@ public class ReticulaRet implements TreeDisplayable {
 			busca(c, comentarioTimeSel);
 			if (buscada != null) {
 				celdaSeleccionada = buscada;
-				recalculaRet();
 			}
 		}
+		recalculaRet();
 
 	}
 

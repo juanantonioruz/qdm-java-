@@ -33,7 +33,7 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	float widthComentarioTime;
 	float heightUsuarioBox;
 	private void inicializaContenedor() {
-		reticulaRet = new ReticulaRet("foros_minim.xml",200, 80, width - 220, height-90, this);
+		reticulaRet = new ReticulaRet("foros.xml",200, 80, width - 220, height-90, this);
 		
 		comentariosTime = reticulaRet.comentariosOrdenadosFecha;
 		int numeroComentarios = comentariosTime.size();
