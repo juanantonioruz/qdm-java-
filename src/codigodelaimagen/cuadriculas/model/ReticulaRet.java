@@ -93,6 +93,7 @@ public class ReticulaRet implements TreeDisplayable {
 		} else {
 			redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, filaSeleccionada, filas,
 					getHeight());
+			this.normalizada=false;
 		}
 		// recalcula unicamente el ancho de las columnas de la fila
 		// seleccionada
@@ -174,12 +175,13 @@ public class ReticulaRet implements TreeDisplayable {
 			}
 		}
 	}
-
+	boolean normalizada;
 	private void normalizaFilas() {
 		float altura = alto / filas.size();
 		for (FilaRet f : filas) {
 			f.setMedidaVariable(altura);
 		}
+		normalizada=true;
 	}
 
 	private void seleccionaPrimeraCeldaComentario() {
@@ -330,17 +332,20 @@ public class ReticulaRet implements TreeDisplayable {
 				float celdaY = celda.getY();
 				float celdaWeight = celda.getWidth();
 				float celdaHeight = celda.getHeight();
-				if (celda == celdaSeleccionada) {
-					p5.stroke(100);
-					p5.strokeWeight(2);
+				if (celda != celdaSeleccionada || (celda==celdaSeleccionada && normalizada)) {
 					p5.fill(celda.color);
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
 				} else {
 					p5.noStroke();
-					p5.fill(0);
+					p5.fill(100);
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
-					p5.fill(celda.color, 60);
-					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
+					p5.fill(celda.color);
+					p5.rect(celdaX, celdaY, celdaWeight/50, celdaHeight);
+					p5.rect(celdaX, celdaY, celdaWeight/3, celdaHeight/50);
+					
+					p5.rect(celdaX+celdaWeight- celdaWeight/50, celdaY, celdaWeight/50, celdaHeight);
+					p5.rect(celdaX+celdaWeight-celdaWeight/3, celdaY+celdaHeight- celdaHeight/50, celdaWeight/3, celdaHeight/50);
+
 				}
 				p5.fill(0);
 				celda.rectangleConTexto.setMedidas(celda.getX(), celda.getY(), celda.getWidth(), celda.getHeight());
@@ -562,7 +567,7 @@ public class ReticulaRet implements TreeDisplayable {
 	public void selectLEFT() {
 		if (celdaSeleccionada.getParent() != null) {
 			log.debug("seleccion de comentario a la izquierda");
-
+			
 			celdaSeleccionada = (CeldaRet) celdaSeleccionada.getParent();
 			recalculaRet();
 		} else {

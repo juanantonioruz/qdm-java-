@@ -50,10 +50,15 @@ public class RedimensionadorPosicionadorElementos {
 		int indice = resBusqCeldaChildrenSel.indice;
 		List<MarcaPosicion> marcas;
 		if (resBusqCeldaChildrenSel.resultado == false) {
-			CalculoMarcas calculoMarcas = new CalculoMarcas(celda.getParent().getHeightFinal(), celda.getParent()
-					.getChildren().size(), indice, 2);
+//			CalculoMarcas calculoMarcas = new CalculoMarcas(celda.getParent().getHeightFinal(), celda.getParent()
+//					.getChildren().size(), indice, 2);
+			int porcentaje=60;
+			if(celda.getParent().getChildren().size()==1) porcentaje=100;
 
-			marcas = calculoMarcas.marcas;
+			marcas = aumentaVisibilidad(indice, celda.getParent().getChildren().size(), celda.getParent()
+					.getHeightFinal(), porcentaje);
+
+//			marcas = calculoMarcas.marcas;
 		} else {
 			log.info("aumentando visibilidad celda:"+celda.getColumna().getFila().getPosicion()+"-"+celda.getColumna().getPosicion()+"-"+celda.getPosicion());
 			int porcentaje=90;
@@ -96,7 +101,7 @@ public class RedimensionadorPosicionadorElementos {
 		// recalculaPosiciones(celdaSeleccionada, columnas,
 		// calculoMarcas.marcas);
 		recalculaPosiciones(celdaSeleccionada, columnas,
-				aumentaVisibilidad(celdaSeleccionada.getColumna().getPosicion(), columnas.size(), ancho, 60));
+				aumentaVisibilidad(celdaSeleccionada.getColumna().getPosicion(), columnas.size(), ancho, 65));
 
 	}
 
@@ -119,11 +124,11 @@ public class RedimensionadorPosicionadorElementos {
 	private int damePorcentajeAlturaFilaSegunDistanciaColumnaSeleccionada(CeldaRet celdaSeleccionada) {
 		int distanciaDeColumna0 = celdaSeleccionada.getColumna().getPosicion();
 		if(distanciaDeColumna0==0)
-			return 50;
+			return 65;
 		else if(distanciaDeColumna0==1)
-			return 70;
+			return 80;
 		else
-		return 90;
+		return 98;
 	}
 
 	private List<MarcaPosicion> aumentaVisibilidad(int posicion, int numeroElementos, float limite, int porcentaje) {
