@@ -16,8 +16,8 @@ public class ServicioMensajes {
 
 	PApplet p5;
 
-	public List<ComentarioEscale> organizaMensajes;
 	public List<ComentarioEscale> comentarios;
+	public List<ComentarioEscale> organizaMensajes;
 	public List<UsuarioEscale> usuarios=new ArrayList<UsuarioEscale>();
 	public ServicioMensajes(PApplet p5, String xmlFile) {
 		super();

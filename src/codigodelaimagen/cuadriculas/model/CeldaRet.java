@@ -19,7 +19,7 @@ public class CeldaRet extends ElementoReticulaAbstract implements TieneMedidaVar
 	public  TreeDisplayable parent;
 	public  CeldaRet childrenSel;
 	public List<CeldaRet> childdren=new ArrayList<CeldaRet>();
-	public final ComentarioEscale comentario;
+	public  ComentarioEscale comentario;
 	public CeldaRet(CeldaRet anterior, CeldaRet parent, ColRet kolumna){
 		this(anterior, parent,kolumna,null,null);
 	}

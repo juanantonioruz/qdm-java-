@@ -1,6 +1,5 @@
 package codigodelaimagen.cuadriculas.calculos;
 
-import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 
 public class CalculoChildrenSel {
@@ -27,15 +26,6 @@ public class CalculoChildrenSel {
 		}
 	}
 	
-	@Deprecated
-	private void localizaParent(TreeDisplayable celdaCalculo) {
-		if(celdaCalculo==inicial){
-			esLinea=true;
-			return;
-		}else if(celdaCalculo.getParent()!=null){
-			localizaParent(celdaCalculo.getParent());
-		}
-	}
 
 	
 }

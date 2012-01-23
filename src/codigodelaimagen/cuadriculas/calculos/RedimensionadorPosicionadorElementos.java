@@ -97,11 +97,11 @@ public class RedimensionadorPosicionadorElementos {
 	}
 
 	public void recalculaPosicionesColumnas(CeldaRet celdaSeleccionada, int i, List<ColRet> columnas, float ancho) {
-		CalculoMarcas calculoMarcas = new CalculoMarcas(ancho, columnas.size(), i, 2);
+//		CalculoMarcas calculoMarcas = new CalculoMarcas(ancho, columnas.size(), i, 2);
 		// recalculaPosiciones(celdaSeleccionada, columnas,
 		// calculoMarcas.marcas);
-		recalculaPosiciones(celdaSeleccionada, columnas,
-				aumentaVisibilidad(celdaSeleccionada.getColumna().getPosicion(), columnas.size(), ancho, 65));
+		List<MarcaPosicion> aumentaVisibilidad = aumentaVisibilidad(celdaSeleccionada.getColumna().getPosicion(), columnas.size(), ancho, 65);
+		recalculaPosiciones(celdaSeleccionada, columnas,aumentaVisibilidad);
 
 	}
 
@@ -169,7 +169,7 @@ public class RedimensionadorPosicionadorElementos {
 
 	}
 
-	public void recalculaPosicionesColumnas(CeldaRet celdaSeleccionada, ColRet columnaSeleccionada,
+	public void recalculaPosicionesColumnasObj(CeldaRet celdaSeleccionada, ColRet columnaSeleccionada,
 			List<ColRet> columnas, float width) {
 		recalculaPosicionesColumnas(celdaSeleccionada, columnas.indexOf(columnaSeleccionada), columnas, width);
 	}

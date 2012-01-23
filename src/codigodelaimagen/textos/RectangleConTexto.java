@@ -3,7 +3,7 @@ package codigodelaimagen.textos;
 import processing.core.PApplet;
 
 public class RectangleConTexto {
-		private final String mensaje;
+		private  String mensaje;
 
 		private  float posXRectangle;
 

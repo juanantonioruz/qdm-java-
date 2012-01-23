@@ -19,10 +19,10 @@ import codigodelaimagen.textos.RectangleConTexto;
 public class ReticulaRet implements TreeDisplayable {
 	public Log log = LogFactory.getLog(getClass());
 
-	private final float x1;
-	private final float y1;
-	private final float ancho;
-	private final float alto;
+	float x1;
+	float y1;
+	float ancho;
+	float alto;
 
 	public CeldaRet celdaSeleccionada;
 	public CeldaRet celdaEncima;
@@ -34,9 +34,8 @@ public class ReticulaRet implements TreeDisplayable {
 
 	private List<CeldaRet> celdasPrimeraColumna = new ArrayList<CeldaRet>();
 
-	private List<ComentarioEscale> mensajes;
-
 	public List<ComentarioEscale> comentariosOrdenadosFecha;
+	public List<ComentarioEscale> mensajes;
 	public List<UsuarioEscale> usuarios;
 	CalculoProfundidadColumna cc;
 
@@ -93,11 +92,11 @@ public class ReticulaRet implements TreeDisplayable {
 		} else {
 			redimensionadorPosicionadorElementos.recalculaPosicionesFilas(celdaSeleccionada, filaSeleccionada, filas,
 					getHeight());
-			this.normalizada=false;
+			this.normalizada = false;
 		}
 		// recalcula unicamente el ancho de las columnas de la fila
 		// seleccionada
-		redimensionadorPosicionadorElementos.recalculaPosicionesColumnas(celdaSeleccionada, columnaSeleccionada,
+		redimensionadorPosicionadorElementos.recalculaPosicionesColumnasObj(celdaSeleccionada, columnaSeleccionada,
 				filaSeleccionada.getColumnas(), getWidth());
 
 		// TODO: solo recalculo de toda la reticula o reasignacion de toda la
@@ -175,13 +174,15 @@ public class ReticulaRet implements TreeDisplayable {
 			}
 		}
 	}
+
 	boolean normalizada;
+
 	private void normalizaFilas() {
 		float altura = alto / filas.size();
 		for (FilaRet f : filas) {
 			f.setMedidaVariable(altura);
 		}
-		normalizada=true;
+		normalizada = true;
 	}
 
 	private void seleccionaPrimeraCeldaComentario() {
@@ -332,7 +333,7 @@ public class ReticulaRet implements TreeDisplayable {
 				float celdaY = celda.getY();
 				float celdaWeight = celda.getWidth();
 				float celdaHeight = celda.getHeight();
-				if (celda != celdaSeleccionada || (celda==celdaSeleccionada && normalizada)) {
+				if (celda != celdaSeleccionada || (celda == celdaSeleccionada && normalizada)) {
 					p5.fill(celda.color);
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
 				} else {
@@ -340,11 +341,12 @@ public class ReticulaRet implements TreeDisplayable {
 					p5.fill(100);
 					p5.rect(celdaX, celdaY, celdaWeight, celdaHeight);
 					p5.fill(celda.color);
-					p5.rect(celdaX, celdaY, celdaWeight/50, celdaHeight);
-					p5.rect(celdaX, celdaY, celdaWeight/3, celdaHeight/50);
-					
-					p5.rect(celdaX+celdaWeight- celdaWeight/50, celdaY, celdaWeight/50, celdaHeight);
-					p5.rect(celdaX+celdaWeight-celdaWeight/3, celdaY+celdaHeight- celdaHeight/50, celdaWeight/3, celdaHeight/50);
+					p5.rect(celdaX, celdaY, celdaWeight / 50, celdaHeight);
+					p5.rect(celdaX, celdaY, celdaWeight / 3, celdaHeight / 50);
+
+					p5.rect(celdaX + celdaWeight - celdaWeight / 50, celdaY, celdaWeight / 50, celdaHeight);
+					p5.rect(celdaX + celdaWeight - celdaWeight / 3, celdaY + celdaHeight - celdaHeight / 50,
+							celdaWeight / 3, celdaHeight / 50);
 
 				}
 				p5.fill(0);
@@ -567,7 +569,7 @@ public class ReticulaRet implements TreeDisplayable {
 	public void selectLEFT() {
 		if (celdaSeleccionada.getParent() != null) {
 			log.debug("seleccion de comentario a la izquierda");
-			
+
 			celdaSeleccionada = (CeldaRet) celdaSeleccionada.getParent();
 			recalculaRet();
 		} else {
