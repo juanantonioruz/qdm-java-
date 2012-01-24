@@ -11,6 +11,8 @@ import qdmp5.escale.UsuarioEscale;
 import codigodelaimagen.base.CDIBase;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 import codigodelaimagen.cuadriculas.model.ReticulaRet;
+import codigodelaimagen.cuadriculas.ui.NavegadorTemporalComentarios;
+import codigodelaimagen.cuadriculas.ui.NavegadorUsuarios;
 import codigodelaimagen.forum.ComparatorFecha;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
@@ -28,20 +30,13 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		}
 
 	}
-	List<ComentarioEscale> comentariosTime;
-	List<UsuarioEscale> usuariosForo;
-	float widthComentarioTime;
-	float heightUsuarioBox;
+	NavegadorTemporalComentarios navegadorTemporalComentarios;
+	NavegadorUsuarios navegadorUsuarios;
 	private void inicializaContenedor() {
 		reticulaRet = new ReticulaRet("foros.xml",200, 80, width - 220, height-90, this);
 		
-		comentariosTime = reticulaRet.comentariosOrdenadosFecha;
-		int numeroComentarios = comentariosTime.size();
-		 widthComentarioTime=reticulaRet.getWidth()/numeroComentarios;
-		 usuariosForo=reticulaRet.usuarios;
-		 Collections.sort(usuariosForo, new ComparatorEquipoUsuario());
-		 int numeroUsuarios=usuariosForo.size();
-		 heightUsuarioBox=reticulaRet.getHeight()/numeroUsuarios;
+		navegadorTemporalComentarios=new NavegadorTemporalComentarios(this, reticulaRet.comentariosOrdenadosFecha, reticulaRet.getX(),  reticulaRet.getWidth());
+		navegadorUsuarios=new NavegadorUsuarios(this, reticulaRet.usuarios, reticulaRet.getHeight(), reticulaRet.getX(), reticulaRet.getY());
 	}
 	
 	@Override
@@ -58,28 +53,11 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	@Override
 	public void mouseClicked() {
 		log.debug("raton CLICK");
-		if(mouseY<reticulaRet.getY() && mouseY>0){
-			if(mouseX>reticulaRet.getX() && mouseX<(reticulaRet.getX()+reticulaRet.getWidth())){
-				int pos=(int) ((mouseX-reticulaRet.getX())/widthComentarioTime);
-				System.out.println("pos: "+pos);
-				ComentarioEscale comentarioTimeSel = comentariosTime.get(pos);
-				log.debug(comentarioTimeSel.texto);
-				reticulaRet.selecciona(comentarioTimeSel);
-			}
-		}
-		
-		if(mouseX<reticulaRet.getX() && mouseX>0)
-			if(mouseY>reticulaRet.getY() && mouseY<(reticulaRet.getY()+reticulaRet.getHeight())){
-				int posUsuario=(int) ((mouseY-reticulaRet.getY())/heightUsuarioBox);
-				UsuarioEscale usuarioForo = usuariosForo.get(posUsuario);
-				System.out.println("click en usuarios"+posUsuario+" usu: "+usuarioForo);
-				List<ComentarioEscale> comentarios = usuarioForo.comentarios;
-				Collections.sort(comentarios, new ComparatorFecha());
-				reticulaRet.selecciona(comentarios.get(0));
-			}
-		
-		
-		
+		ComentarioEscale com=navegadorTemporalComentarios.mouseClick(mouseX, mouseY);
+		if(com!=null) reticulaRet.selecciona(com);
+		ComentarioEscale u=navegadorUsuarios.mouseClick(mouseX, mouseY);
+		if(u!=null) reticulaRet.selecciona(u);
+
 		reticulaRet.raton(mouseX, mouseY);
 	}
 
@@ -96,44 +74,9 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	public void draw() {
 		background(100);
 		noStroke();
-		for(int i=0; i<comentariosTime.size(); i++){
-			ComentarioEscale comentario = comentariosTime.get(i);
-			fill(comentario.usuario.equipo.col);
-			float posXComTime = i*widthComentarioTime+reticulaRet.getX();
-			int altoComTime = 35;
-			int inicioY = 0;
-			if(comentario==reticulaRet.celdaSeleccionada.comentario){
-				inicioY=35;
-			}else if(comentario.usuario==reticulaRet.celdaSeleccionada.comentario.usuario){
-				inicioY=35/3;
-				//posXComTime+=widthComentarioTime/2;
-			}
-			rect(posXComTime, inicioY, widthComentarioTime, altoComTime);
-		}
+		navegadorTemporalComentarios.display(reticulaRet.celdaSeleccionada);
 		
-		for(int j=0; j<usuariosForo.size(); j++){
-			UsuarioEscale usu=usuariosForo.get(j);
-			float posY=j*heightUsuarioBox+reticulaRet.getY();
-			int colorFondo;
-			int colorTexto;
-			if(usu==reticulaRet.celdaSeleccionada.comentario.usuario){
-				colorFondo=usu.equipo.col;
-				colorTexto=100;
-			}else{
-				colorFondo=100;
-				colorTexto=usu.equipo.col;
-				
-			}
-			fill(colorFondo);
-			rect(0, posY, reticulaRet.getX()-50, heightUsuarioBox);
-			fill(usu.equipo.col);
-			rect(0, posY, heightUsuarioBox, heightUsuarioBox);
-			textSize(10);
-			fill(100);
-			text("["+usu.comentarios.size()+"]", 1, posY+heightUsuarioBox/2);
-			fill(colorTexto);
-			text(usu.nombre, heightUsuarioBox+5, posY+heightUsuarioBox/2);
-		}
+		navegadorUsuarios.display(reticulaRet.celdaSeleccionada);
 		reticulaRet.display();
 		if(grabando)
 		image(cursor, mouseX, mouseY);
