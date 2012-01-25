@@ -16,22 +16,27 @@ public class ServicioMensajes {
 
 	PApplet p5;
 
-	public List<ComentarioEscale> comentarios;
-	public List<ComentarioEscale> organizaMensajes;
+	public List<ComentarioEscale> comentarios=new ArrayList<ComentarioEscale>();
+	public List<ComentarioEscale> organizaMensajes=new ArrayList<ComentarioEscale>();
 	public List<UsuarioEscale> usuarios=new ArrayList<UsuarioEscale>();
-	public ServicioMensajes(PApplet p5, String xmlFile) {
+	public ServicioMensajes(PApplet p5) {
 		super();
 		this.p5 = p5;
-		organizaMensajes = organizaMensajes(p5, xmlFile);
 	}
 	
-	private List<ComentarioEscale> organizaMensajes(PApplet p5, String xmlFile) {
-		 comentarios = new ServicioLoadEquipos(p5).loadXML( xmlFile);
+	public List<ComentarioEscale> loadMensajes(List<ComentarioEscale> comentarios) {
+		this.comentarios=comentarios;
 		 for(ComentarioEscale c:comentarios){
 			 if(!usuarios.contains(c.usuario)){
 				 usuarios.add(c.usuario);
 			 }
 		 }
+		List<ComentarioEscale> organizaMensajes2 = organizaMensajes();
+		organizaMensajes.addAll(organizaMensajes2);
+		return organizaMensajes2;
+	}
+
+	private List<ComentarioEscale> organizaMensajes() {
 		log.info("numero mensajes:" + comentarios.size());
 		List<UsuarioEscale> usuariosParticipantes = dameUsuariosParticipantes(comentarios);
 		log.info("usuarios:" + usuariosParticipantes.size());

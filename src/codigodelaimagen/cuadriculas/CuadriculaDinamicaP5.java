@@ -9,6 +9,7 @@ import qdmp5.GrabacionEnVideo;
 import qdmp5.escale.ComentarioEscale;
 import qdmp5.escale.UsuarioEscale;
 import codigodelaimagen.base.CDIBase;
+import codigodelaimagen.cuadriculas.ajax.Refresco;
 import codigodelaimagen.cuadriculas.model.CeldaRet;
 import codigodelaimagen.cuadriculas.model.ReticulaRet;
 import codigodelaimagen.cuadriculas.ui.NavegadorTemporalComentarios;
@@ -71,8 +72,19 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	// 3=1+2+4=7
 	// 4=1+2+4+8=15
 	// 5=1+2+4+8+16=31
+	Refresco r=new Refresco(this);
 	public void draw() {
 		background(100);
+		if(frameCount%100==0){
+			CeldaRet c=reticulaRet.celdaSeleccionada;
+			reticulaRet.incluyeXML("foros_new.xml",c.comentario);
+			navegadorTemporalComentarios.init(reticulaRet.comentariosOrdenadosFecha);
+			navegadorUsuarios.init(reticulaRet.usuarios);
+
+			log.info("alla va!");
+			r.reset();
+		}
+		r.display();
 		noStroke();
 		navegadorTemporalComentarios.display(reticulaRet.celdaSeleccionada);
 		

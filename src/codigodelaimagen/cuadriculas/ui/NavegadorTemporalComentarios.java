@@ -25,14 +25,20 @@ public class NavegadorTemporalComentarios {
 	public NavegadorTemporalComentarios(PApplet p5, 
 			List<ComentarioEscale> comentariosOrdenadosFecha, float _x,  float _width ) {
 		this.p5 = p5;
-		comentariosTime = comentariosOrdenadosFecha;
 		this._x = _x;
 		this._width = _width;
-		int numeroComentarios = comentariosTime.size();
-		
-		 widthComentarioTime=_width/numeroComentarios;
+		init(comentariosOrdenadosFecha);
 
 	}
+
+
+	public void init(List<ComentarioEscale> comentariosOrdenadosFecha) {
+		comentariosTime = comentariosOrdenadosFecha;
+		int numeroComentarios = comentariosTime.size();
+		
+		 widthComentarioTime=this._width/numeroComentarios;
+	}
+
 
 	public void display(CeldaRet celdaSeleccionada) {
 		for(int i=0; i<comentariosTime.size(); i++){

@@ -26,7 +26,7 @@ public class ForosXMLLoadScale {
 		this.equiposIn = equipos;
 	}
 
-	List<ComentarioEscale> procesaXML(String archivo) {
+	public List<ComentarioEscale> procesaXML(String archivo) {
 		List<ComentarioEscale> comentariosList = new ArrayList<ComentarioEscale>();
 		XMLElement xml = new XMLElement(p5, archivo);
 		int numSites = xml.getChildCount();

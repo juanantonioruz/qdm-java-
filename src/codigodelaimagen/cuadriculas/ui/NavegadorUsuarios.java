@@ -26,9 +26,13 @@ public class NavegadorUsuarios {
 		this._height = _height;
 		this._x = _x;
 		this._y = _y;
+		init(usuarios);
+	}
+
+	public void init(List<UsuarioEscale> usuarios) {
 		Collections.sort(usuariosForo, new ComparatorEquipoUsuario());
-		int numeroUsuarios = usuariosForo.size();
-		heightUsuarioBox = _height / numeroUsuarios;
+		int numeroUsuarios = usuarios.size();
+		heightUsuarioBox = this._height / numeroUsuarios;
 	}
 
 	public void display(CeldaRet celdaSeleccionada) {

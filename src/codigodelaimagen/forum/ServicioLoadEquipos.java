@@ -14,13 +14,10 @@ public class ServicioLoadEquipos  {
 	
 	List<EquipoEscale> equipos= new ArrayList<EquipoEscale>();
 	private final PApplet p5;
+	private ForosXMLLoadScale forosXMLLoad;
 
 	public ServicioLoadEquipos(PApplet p5) {
 		this.p5 = p5;
-	}
-
-	
-	public List<ComentarioEscale> loadXML( String xmlFile) {
 		equipos.add(new EquipoEscale(p5, 1, "bamako", 224, 122, "Niamakoro y Sicoro"));
 		equipos.add(new EquipoEscale(p5, 2, "barcelona", 236, 55, "Casc Antic"));
 		equipos.add(new EquipoEscale(p5, 3, "bogota", 133, 145, "Chapinero"));
@@ -32,10 +29,14 @@ public class ServicioLoadEquipos  {
 		equipos.add(new EquipoEscale(p5, 9, "rio", 175, 221, "La Maré y Rio das Pedras"));
 		equipos.add(new EquipoEscale(p5, 10, "sale", 224, 72, "Karyan El Oued"));
 		ColorList listaColoresEquipo = new ServicioToxiColor(p5).iniciaColoresEquiposBis();
-
+		
 		for (int i = 0; i < equipos.size(); i++)
 			equipos.get(i).setColor((TColor) listaColoresEquipo.get(i));
-		ForosXMLLoadScale forosXMLLoad = new ForosXMLLoadScale(p5, equipos);
+		forosXMLLoad = new ForosXMLLoadScale(p5, equipos);
+	}
+
+	
+	public List<ComentarioEscale> loadXML( String xmlFile) {
 		List<ComentarioEscale> comentarios = forosXMLLoad.procesaXML(xmlFile);
 		Collections.reverse(comentarios);
 		return comentarios;

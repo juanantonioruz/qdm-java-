@@ -8,11 +8,11 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import qdmp5.escale.ComentarioEscale;
-import qdmp5.escale.Fila;
 import qdmp5.escale.UsuarioEscale;
-import codigodelaimagen.cuadriculas.calculos.RedimensionadorPosicionadorElementos;
 import codigodelaimagen.cuadriculas.calculos.CalculoProfundidadColumna;
+import codigodelaimagen.cuadriculas.calculos.RedimensionadorPosicionadorElementos;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
+import codigodelaimagen.forum.ServicioLoadEquipos;
 import codigodelaimagen.forum.ServicioMensajes;
 import codigodelaimagen.textos.RectangleConTexto;
 
@@ -39,6 +39,18 @@ public class ReticulaRet implements TreeDisplayable {
 	public List<UsuarioEscale> usuarios;
 	CalculoProfundidadColumna cc;
 
+	public void incluyeXML(String xml, ComentarioEscale c){
+		List<ComentarioEscale> nuevos = servicioLoadEquipos.loadXML(xml);
+		mensajes=new ArrayList<ComentarioEscale>();
+		comentariosExistentesDB.addAll(nuevos);
+		resetReticulaConComentariosDB(true);
+		selecciona(c);
+		recalculaRet();
+	}
+	
+	
+
+
 	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
 
@@ -47,16 +59,21 @@ public class ReticulaRet implements TreeDisplayable {
 		this.ancho = ancho;
 		this.alto = alto;
 		this.p5 = p5;
-		loadComentariosXML(xml, p5);
+
+		 servicioLoadEquipos = new ServicioLoadEquipos(p5);
+		comentariosExistentesDB = servicioLoadEquipos.loadXML(xml);
+
+		resetReticulaConComentariosDB(false);
+	}
+
+	private void resetReticulaConComentariosDB(boolean menos) {
+		loadComentariosXML();
 
 		cc = new CalculoProfundidadColumna(mensajes);
 		log.info("profundidad: " + cc.columnas);
 
 		generaFilasYColumnasVinculadasSinCeldasComentarios(cc);
 
-		// LAS FILAS Y LAS COLUMNAS YA ESTAN VINCULADAS
-		// AHORA HAY QUE CARGAR LAS CELDAS Y VINCULARLAS entre ellas
-		// (parent/anterior), y colcarlas en COLUMNAS de filas
 
 		cargaCeldasComentarios();
 
@@ -66,8 +83,10 @@ public class ReticulaRet implements TreeDisplayable {
 		calculaPosicionesTamanyosReticulaInicial(true);
 	}
 
-	private void loadComentariosXML(String xml, PApplet p5) {
-		ServicioMensajes servicioMensajes = new ServicioMensajes(p5, xml);
+	private void loadComentariosXML() {
+		 ServicioMensajes servicioMensajes= new ServicioMensajes(p5);
+
+		servicioMensajes.loadMensajes(comentariosExistentesDB);
 		usuarios = servicioMensajes.usuarios;
 		mensajes = servicioMensajes.organizaMensajes;
 		log.info("mensajessize:" + mensajes.size());
@@ -194,6 +213,9 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	private void cargaCeldasComentarios() {
+		// LAS FILAS Y LAS COLUMNAS YA ESTAN VINCULADAS
+		// AHORA HAY QUE CARGAR LAS CELDAS Y VINCULARLAS entre ellas
+		// (parent/anterior), y colcarlas en COLUMNAS de filas
 		for (int c = 0; c < mensajes.size(); c++) {
 			ComentarioEscale comentario = mensajes.get(c);
 
@@ -585,6 +607,11 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	CeldaRet buscada;
+
+	private List<ComentarioEscale> comentariosExistentesDB;
+
+	private ServicioLoadEquipos servicioLoadEquipos;
+
 
 	public void busca(CeldaRet celda, ComentarioEscale c) {
 		if (celda.comentario == c) {

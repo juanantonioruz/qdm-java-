@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import codigodelaimagen.forum.ServicioLoadEquipos;
 import codigodelaimagen.forum.ServicioMensajes;
 
 import processing.core.PApplet;
@@ -33,7 +34,10 @@ public class ProcesssingTreeDiagram extends PApplet {
 		size(800, 500);
 		smooth();
 		fontA = loadFont("Courier10PitchBT-Roman-25.vlw");
-		ServicioMensajes servicioMensajes=new ServicioMensajes(this, "foros_minim.xml");
+		ServicioMensajes servicioMensajes=new ServicioMensajes(this);
+		 List<ComentarioEscale> loadXML = new ServicioLoadEquipos(this).loadXML("foros_minim.xml");
+
+		servicioMensajes.loadMensajes(loadXML);
 		mensajesRelacionados=servicioMensajes.organizaMensajes;
 		
 		grabacionEnVideo = new GrabacionEnVideo(this, grabando);
@@ -49,6 +53,7 @@ public class ProcesssingTreeDiagram extends PApplet {
 
 		reticulaForo =iniciaEstructuraReticular(20, 20, width/2 , height*2 , 2);
 		navegador =iniciaEstructuraReticular(600, 10, 250, 250, 1);
+
 		
 
 	}

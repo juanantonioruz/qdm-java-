@@ -11,6 +11,7 @@ public class CalculoProfundidadColumna {
 
 	public Log log = LogFactory.getLog(getClass());
 
+	int profLinea;
 	
 	public int columnas;
 
@@ -26,7 +27,6 @@ public class CalculoProfundidadColumna {
 		this.columnas=prof;
 	}
 
-	int profLinea;
 	private int calculaProfundidadLinea(ComentarioEscale c) {
 		if (c.children.size() > 0) {
 			log.debug("calculaProf" + c.id);
