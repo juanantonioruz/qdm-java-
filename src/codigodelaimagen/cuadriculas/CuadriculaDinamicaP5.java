@@ -1,5 +1,6 @@
 package codigodelaimagen.cuadriculas;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import codigodelaimagen.cuadriculas.model.ReticulaRet;
 import codigodelaimagen.cuadriculas.ui.NavegadorTemporalComentarios;
 import codigodelaimagen.cuadriculas.ui.NavegadorUsuarios;
 import codigodelaimagen.forum.ComparatorFecha;
+import codigodelaimagen.forum.ForosXMLLoadScale;
+import codigodelaimagen.textos.Refresco;
 
 public class CuadriculaDinamicaP5 extends CDIBase {
 	ReticulaRet reticulaRet;
@@ -32,11 +35,22 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 	}
 	NavegadorTemporalComentarios navegadorTemporalComentarios;
 	NavegadorUsuarios navegadorUsuarios;
+	boolean desarrollo=true;
 	private void inicializaContenedor() {
 		reticulaRet = new ReticulaRet("foros.xml",200, 80, width - 220, height-90, this);
-		
+
+		// esto es para saber el ultimo id --- solo para fines de desarrollo!
+		if(desarrollo){
+		List<ComentarioEscale> orderId=new ArrayList<ComentarioEscale>();
+		orderId.addAll(reticulaRet.comentariosOrdenadosFecha);
+		Collections.sort(orderId, new ComparatorComentarioID());
+		log.info("lastId"+orderId.get(orderId.size()-1).id);
+		}
+
 		navegadorTemporalComentarios=new NavegadorTemporalComentarios(this, reticulaRet.comentariosOrdenadosFecha, reticulaRet.getX(),  reticulaRet.getWidth());
 		navegadorUsuarios=new NavegadorUsuarios(this, reticulaRet.usuarios, reticulaRet.getHeight(), reticulaRet.getX(), reticulaRet.getY());
+		
+		
 	}
 	
 	@Override
@@ -66,14 +80,18 @@ public class CuadriculaDinamicaP5 extends CDIBase {
 		// contenedor.raton(mouseX, mouseY);
 	}
 
-	// 1=1
-	// 2=1+2=3
-	// 3=1+2+4=7
-	// 4=1+2+4+8=15
-	// 5=1+2+4+8+16=31
+
+	Refresco r=new Refresco(this);
 	public void draw() {
 		background(100);
 		noStroke();
+		if(frameCount%100==0){
+			r.reset();
+			log.info("refreshing commments");
+			reticulaRet.incluye("foros_new.xml");
+		
+		}
+		r.display();
 		navegadorTemporalComentarios.display(reticulaRet.celdaSeleccionada);
 		
 		navegadorUsuarios.display(reticulaRet.celdaSeleccionada);

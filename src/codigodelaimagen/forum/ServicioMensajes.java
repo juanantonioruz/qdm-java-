@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.EquipoEscale;
 import qdmp5.escale.UsuarioEscale;
 
 public class ServicioMensajes {
@@ -18,16 +19,28 @@ public class ServicioMensajes {
 
 	public List<ComentarioEscale> comentarios;
 	public List<ComentarioEscale> organizaMensajes;
+	public List<EquipoEscale> equipos;
 	public List<UsuarioEscale> usuarios=new ArrayList<UsuarioEscale>();
+
+	private final String xmlFile;
 	public ServicioMensajes(PApplet p5, String xmlFile) {
 		super();
 		this.p5 = p5;
-		organizaMensajes = organizaMensajes(p5, xmlFile);
+		this.xmlFile = xmlFile;
+		
 	}
 	
-	private List<ComentarioEscale> organizaMensajes(PApplet p5, String xmlFile) {
-		 comentarios = new ServicioLoadEquipos(p5).loadXML( xmlFile);
-		 for(ComentarioEscale c:comentarios){
+	public List<ComentarioEscale> organizaMensajes() {
+		 ServicioLoadEquipos servicioLoadEquipos = new ServicioLoadEquipos(p5);
+		comentarios = servicioLoadEquipos.loadXML( xmlFile);
+		equipos=servicioLoadEquipos.equipos;
+		 List<ComentarioEscale> organizaComentariosExistentes = organizaComentariosExistentes();
+		 organizaMensajes = organizaComentariosExistentes;
+		return organizaComentariosExistentes;
+	}
+
+	public List<ComentarioEscale> organizaComentariosExistentes() {
+		for(ComentarioEscale c:comentarios){
 			 if(!usuarios.contains(c.usuario)){
 				 usuarios.add(c.usuario);
 			 }

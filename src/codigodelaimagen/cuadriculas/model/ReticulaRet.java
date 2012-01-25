@@ -8,11 +8,13 @@ import org.apache.commons.logging.LogFactory;
 
 import processing.core.PApplet;
 import qdmp5.escale.ComentarioEscale;
+import qdmp5.escale.EquipoEscale;
 import qdmp5.escale.Fila;
 import qdmp5.escale.UsuarioEscale;
 import codigodelaimagen.cuadriculas.calculos.RedimensionadorPosicionadorElementos;
 import codigodelaimagen.cuadriculas.calculos.CalculoProfundidadColumna;
 import codigodelaimagen.cuadriculas.interfaces.TreeDisplayable;
+import codigodelaimagen.forum.ForosXMLLoadScale;
 import codigodelaimagen.forum.ServicioMensajes;
 import codigodelaimagen.textos.RectangleConTexto;
 
@@ -36,9 +38,10 @@ public class ReticulaRet implements TreeDisplayable {
 
 	public List<ComentarioEscale> comentariosOrdenadosFecha;
 	public List<ComentarioEscale> mensajes;
+	public List<EquipoEscale> equipos;
 	public List<UsuarioEscale> usuarios;
 	CalculoProfundidadColumna cc;
-
+	ServicioMensajes servicioMensajes;
 	public ReticulaRet(String xml, float x1, float y1, float ancho, float alto, PApplet p5) {
 		super();
 
@@ -49,27 +52,48 @@ public class ReticulaRet implements TreeDisplayable {
 		this.p5 = p5;
 		loadComentariosXML(xml, p5);
 
-		cc = new CalculoProfundidadColumna(mensajes);
-		log.info("profundidad: " + cc.columnas);
-
-		generaFilasYColumnasVinculadasSinCeldasComentarios(cc);
-
-		// LAS FILAS Y LAS COLUMNAS YA ESTAN VINCULADAS
-		// AHORA HAY QUE CARGAR LAS CELDAS Y VINCULARLAS entre ellas
-		// (parent/anterior), y colcarlas en COLUMNAS de filas
-
-		cargaCeldasComentarios();
+		continuaCarga();
 
 		seleccionaPrimeraCeldaComentario();
 
 		// calculo de posiciones
 		calculaPosicionesTamanyosReticulaInicial(true);
 	}
+	public void incluye(String string) {
+		ForosXMLLoadScale loading = new ForosXMLLoadScale(p5, equipos);
+		List<ComentarioEscale> nuevos = loading.procesaXML("foros_new.xml");
+		for(ComentarioEscale c:nuevos){
+			log.info(c);
+			servicioMensajes.comentarios.add(c);
+		}		
+		servicioMensajes.organizaComentariosExistentes();
+		asignaOrganizacion();
+		continuaCarga();
+		
+	}
+
+	public void continuaCarga() {
+		cc = new CalculoProfundidadColumna(mensajes);
+		log.info("profundidad: " + cc.columnas);
+
+		generaFilasYColumnasVinculadasSinCeldasComentarios(cc);
+
+
+		cargaCeldasComentarios();
+	}
 
 	private void loadComentariosXML(String xml, PApplet p5) {
-		ServicioMensajes servicioMensajes = new ServicioMensajes(p5, xml);
+		 servicioMensajes = new ServicioMensajes(p5, xml);
+		servicioMensajes.organizaMensajes();
+		asignaOrganizacion();
+		
+		
+	}
+
+	public void asignaOrganizacion() {
 		usuarios = servicioMensajes.usuarios;
 		mensajes = servicioMensajes.organizaMensajes;
+		equipos = servicioMensajes.equipos;
 		log.info("mensajessize:" + mensajes.size());
 		comentariosOrdenadosFecha = servicioMensajes.getComentariosOrdenadosFecha();
 	}
@@ -194,6 +218,10 @@ public class ReticulaRet implements TreeDisplayable {
 	}
 
 	private void cargaCeldasComentarios() {
+		// LAS FILAS Y LAS COLUMNAS YA ESTAN VINCULADAS
+		// AHORA HAY QUE CARGAR LAS CELDAS Y VINCULARLAS entre ellas
+		// (parent/anterior), y colcarlas en COLUMNAS de filas
+
 		for (int c = 0; c < mensajes.size(); c++) {
 			ComentarioEscale comentario = mensajes.get(c);
 
@@ -613,4 +641,5 @@ public class ReticulaRet implements TreeDisplayable {
 		return celdasPrimeraColumna;
 	}
 
+	
 }
