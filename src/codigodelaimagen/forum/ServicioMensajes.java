@@ -31,12 +31,12 @@ public class ServicioMensajes {
 				 usuarios.add(c.usuario);
 			 }
 		 }
-		List<ComentarioEscale> organizaMensajes2 = organizaMensajes();
+		List<ComentarioEscale> organizaMensajes2 = organizaLosMensajes();
 		organizaMensajes.addAll(organizaMensajes2);
 		return organizaMensajes2;
 	}
 
-	private List<ComentarioEscale> organizaMensajes() {
+	private List<ComentarioEscale> organizaLosMensajes() {
 		log.info("numero mensajes:" + comentarios.size());
 		List<UsuarioEscale> usuariosParticipantes = dameUsuariosParticipantes(comentarios);
 		log.info("usuarios:" + usuariosParticipantes.size());

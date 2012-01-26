@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comentarios type="array">
+  <comentario>
+    <created-at type="datetime">2008-05-26T09:55:00Z</created-at>
+    <comentario-id type="integer" nil="true"></comentario-id>
+    <id type="integer">1</id>
+    <textoes>texto</textoes>
+    <tituloes>titulo1</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario1</nombre>
+      <id type="integer">1</id>
+      <equipo-id type="integer">1</equipo-id>
+      <email>usuario1@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+  
+  <comentario>
+    <created-at type="datetime">2008-05-27T09:55:00Z</created-at>
+    <comentario-id type="integer" >1</comentario-id>
+    <id type="integer">2</id>
+    <textoes>texto2</textoes>
+    <tituloes>titulo2</tituloes>
+    
+    <usuarioforo>
+      <nombre>usuario2</nombre>
+      <id type="integer">2</id>
+      <equipo-id type="integer">2</equipo-id>
+      <email>usuario2@mail.com</email>
+    </usuarioforo>
+    
+  </comentario>
+
+ 
+
+
+</comentarios>

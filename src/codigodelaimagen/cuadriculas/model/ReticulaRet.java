@@ -43,6 +43,9 @@ public class ReticulaRet implements TreeDisplayable {
 		List<ComentarioEscale> nuevos = servicioLoadEquipos.loadXML(xml);
 		mensajes=new ArrayList<ComentarioEscale>();
 		comentariosExistentesDB.addAll(nuevos);
+		for(ComentarioEscale cc:comentariosExistentesDB){
+			cc.children=new ArrayList<ComentarioEscale>();
+		}
 		resetReticulaConComentariosDB(true);
 		selecciona(c);
 		recalculaRet();
